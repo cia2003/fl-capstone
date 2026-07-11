@@ -1,6 +1,6 @@
 # FL Capstone
 
-A frontend application for [briefly describe the main user problem or feature].
+A frontend application for my capstone project.
 
 ## Tech Stack
 - React
