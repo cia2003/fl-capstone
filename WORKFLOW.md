@@ -18,19 +18,3 @@ This draft summarizes the difference between branch round-1 and branch round-2 u
 ## review effort
 - Round 1: Review effort was lighter because the implementation was simpler and there was no testing created by the AI to validate behavior.
 - Round 2: Review effort was significantly higher because I had to install dependencies and run tests before I could confidently review the changes.
-
-## code example
-```tsx
-// round-1: simple inline search experience
-<form onSubmit={handleSubmit}>
-  <input value={query} onChange={(e) => setQuery(e.target.value)} />
-  <button type="submit">Search</button>
-</form>
-
-// round-2: more structured and reusable approach
-<SearchBar
-  placeholder="Search"
-  onSubmit={handleSubmit}
-  ariaLabel="Search meal food"
-/>
-```
