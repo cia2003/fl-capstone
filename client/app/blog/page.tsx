@@ -1,11 +1,9 @@
-import SearchBar from "../../components/ui/SearchBar";
+﻿import SearchBar from '@/components/ui/SearchBar';
 
 export default function Blog() {
-	return (
-		<div className="flex min-h-screen items-start justify-center py-8">
-			<div className="w-full max-w-3xl px-4">
-				<SearchBar />
-			</div>
-		</div>
-	);
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 px-4 py-10 dark:bg-black">
+      <SearchBar />
+    </div>
+  );
 }
