@@ -1,16 +1,36 @@
 # WORKFLOW.md
 
+## Draft summary: round-1 vs round-2
+This draft summarizes the difference between branch round-1 and branch round-2 using the review criteria of correctness, accessibility, edge cases, and review effort.
+
 ## correctness
-- Round 1: Successfully created the SearchBar, but it included filler content such as placeholder titles and descriptions, and the component was not reusable.
-- Round 2: Better followed the specifications and produced a reusable component.
+- Round 1: The implementation was able to create a basic search experience, but it still included filler content, such as headers or titles, and the component was not yet reusable.
+- Round 2: The implementation is more aligned with the requested specification because it is more structured and closer to a reusable component approach.
 
 ## accessibility
-- Round 1: It had some basic accessibility support, but it was still limited. The input used a visually hidden label and a real submit button, which is good, but the placeholder text was not a strong substitute for a clear persistent label. There was also little feedback for screen reader users after submission.
-- Round 2: It was more accessible because the structure was clearer and more semantic. The page used a proper heading hierarchy, descriptive link text, and meaningful image alt text, which made it easier for assistive technologies to understand and navigate.
+- Round 1: The UI was functional, but it needed stronger semantic structure and clearer interaction support for keyboard and screen-reader users.
+- Round 2: The review should focus on whether labels, focus states, and form semantics are clear enough for accessible usage.
 
 ## edge cases
-- Both round 1 and round 2 did not have significant differences in edge-case handling between the two prompts. The selected feature was intentionally small and UI-focused. The reason is because no search functionality had been implemented yet, both versions had nearly identical edge-case behavior. Most potential edge cases (such as empty search results or API errors) were outside the scope of this exercise.
+- Round 1: Important edge cases include empty input, repeated submissions, and cases where no result is shown.
+- Round 2: The review should also consider empty states, long input values, invalid input, and loading or disabled states.
 
 ## review effort
-- Round 1: Review effort was relatively lighter because there was no AI-generated testing to validate.
-- Round 2: Review effort was significantly higher because I had to install dependencies and run tests before reviewing the implementation.
+- Round 1: Review effort was lighter because the implementation was simpler and there was no testing created by the AI to validate behavior.
+- Round 2: Review effort was significantly higher because I had to install dependencies and run tests before I could confidently review the changes.
+
+## code example
+```tsx
+// round-1: simple inline search experience
+<form onSubmit={handleSubmit}>
+  <input value={query} onChange={(e) => setQuery(e.target.value)} />
+  <button type="submit">Search</button>
+</form>
+
+// round-2: more structured and reusable approach
+<SearchBar
+  placeholder="Search"
+  onSubmit={handleSubmit}
+  ariaLabel="Search meal food"
+/>
+```
