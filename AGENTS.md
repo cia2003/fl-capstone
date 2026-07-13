@@ -2,6 +2,7 @@
 
 ## Commands
 Build: npm run build (tsc + esbuild, outputs to dist/)
+Dev: npm run dev
 Test: npm test --forceExit
 Lint: npm run lint (fix before commit)
 
