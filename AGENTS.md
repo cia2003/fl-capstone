@@ -24,3 +24,15 @@ Lint: npm run lint (fix before commit)
 - Before considering a feature complete, run the project's testing suite using the installed testing dependencies. New functionality should include or update tests when appropriate, and generated code should be verified by executing the tests instead of assuming they pass.
 
 - Every component must pass ESLint and all automated tests before it is considered complete. Resolve linting issues and failing tests before committing changes or opening a pull request.
+
+## Design Rules
+
+All UI implementation must follow the project's design system. 
+
+see `style.md` for:
+- colors
+- typography
+- spacing
+- buttons
+- component states
+- accessibility requirements
