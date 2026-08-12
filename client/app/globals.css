@@ -1,3 +1,77 @@
-/*
- * This file is intentionally left empty as a placeholder.
- */
+@import "tailwindcss";
+
+@theme {
+  --color-text: #22261f;
+  --color-background: #faf6ef;
+  --color-primary: #12816a;
+  --color-accent: #d85a30;
+
+  --font-heading: var(--font-sora);
+  --font-body: var(--font-source-sans);
+
+  --text-h1: 32px;
+  --text-h2: 24px;
+  --text-h3: 18px;
+  --text-body: 16px;
+  --text-caption: 13px;
+
+  --spacing-section: 64px;
+  --spacing-section-mobile: 32px;
+  --spacing-element: 16px;
+  --spacing-card: 24px;
+  --spacing-button-y: 10px;
+  --spacing-button-x: 18px;
+
+  --radius-button: 8px;
+  --radius-card: 12px;
+
+  --border-secondary: 1.5px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* @import "tailwindcss";
+
+:root {
+    --color-text: #22261f;
+    --color-background: #faf6ef;
+    --color-primary: #12816a;
+    --color-accent: #d85a30;
+
+    --font-heading: "Sora", sans-serif;
+    --font-body: "Source Sans 3", sans-serif;
+
+    --text-h1: 32px;
+    --text-h2: 24px;
+    --text-h3: 18px;
+    --text-body: 16px;
+    --text-caption: 13px;
+
+    --text-weight-heading: 600;
+    --text-weight-subheading: 500;
+    --text-weight-body: 400;
+    --text-weight-emphasis: 500;
+    --line-height-body: 1.6;
+    --letter-spacing-caption: 0.02em;
+
+    --spacing-section: 64px;
+    --spacing-section-mobile: 32px;
+    --spacing-element: 16px;
+    --spacing-card: 24px;
+    --spacing-button-y: 10px;
+    --spacing-button-x: 18px;
+
+    --radius-button: 8px;
+    --radius-card: 12px;
+    --border-secondary: 1.5px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */

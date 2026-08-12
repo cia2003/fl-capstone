@@ -25,14 +25,9 @@ Lint: npm run lint (fix before commit)
 
 - Every component must pass ESLint and all automated tests before it is considered complete. Resolve linting issues and failing tests before committing changes or opening a pull request.
 
-## Design Rules
+## Design System
 
-All UI implementation must follow the project's design system. 
+Follow the rules defined in `style.md`.
 
-see `style.md` for:
-- colors
-- typography
-- spacing
-- buttons
-- component states
-- accessibility requirements
+Do not introduce colors, typography, spacing, or component styles
+that conflict with the design system unless explicitly requested.

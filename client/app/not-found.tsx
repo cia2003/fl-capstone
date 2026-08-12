@@ -1,3 +1,7 @@
-//
-// This file is intentionally left empty as a placeholder.
-//
+export default function NotFound() {
+    return (
+        <div>
+            <p>Not found page</p>
+        </div>
+    )
+}

@@ -1,3 +1,7 @@
-//
-// This file is intentionally left empty as a placeholder.
-//
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  }
+}
+
+export default config
