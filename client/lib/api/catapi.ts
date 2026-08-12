@@ -1,7 +1,3 @@
-export async function fetchBreeds() {
-  return [];
-}
-
-export async function fetchBreedById(_id: string) {
-  return null;
-}
+//
+// This file is intentionally left empty as a placeholder.
+//

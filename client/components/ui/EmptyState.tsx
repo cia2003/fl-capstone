@@ -1,13 +1,3 @@
-type EmptyStateProps = {
-  title: string;
-  description?: string;
-};
-
-export function EmptyState({ title, description }: EmptyStateProps) {
-  return (
-    <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center">
-      <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
-      {description ? <p className="mt-2 text-sm text-zinc-600">{description}</p> : null}
-    </div>
-  );
-}
+//
+// This file is intentionally left empty as a placeholder.
+//

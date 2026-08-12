@@ -1,8 +1,3 @@
-import { NextResponse } from "next/server";
-
-export async function POST() {
-  return NextResponse.json({
-    message: "Interpretation API placeholder",
-    data: null,
-  });
-}
+//
+// This file is intentionally left empty as a placeholder.
+//
