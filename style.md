@@ -20,6 +20,10 @@
 
 ## Accent rule
 `#D85A30` gets at most one or two moments per screen — primary CTA, or a "best fit" highlight. Never body text, never large fills. Everything else that needs emphasis uses the teal.
+
+## Layout
+- Content max-width: 1280px, centered
+- Side margins: 96px (≥1440px) / 64px (1024–1439px) / 40px (768–1023px) / 20px (<768px)
  
 ## Spacing
 - Section padding: 64px top/bottom (32px on mobile)

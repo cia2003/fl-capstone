@@ -15,6 +15,9 @@
   --text-body: 16px;
   --text-caption: 13px;
 
+  /* --line-height-body: 1.6; */
+  --letter-spacing-caption: 0.02em;
+
   --spacing-section: 64px;
   --spacing-section-mobile: 32px;
   --spacing-element: 16px;
@@ -28,11 +31,11 @@
   --border-secondary: 1.5px;
 }
 
-* {
+/* @layer base {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+} */
 
 /* @import "tailwindcss";
 
