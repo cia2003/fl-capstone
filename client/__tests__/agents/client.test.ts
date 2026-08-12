@@ -1,4 +1,5 @@
 import { compareBreeds, interpretBreed } from "../../agents/client";
+import { describe, it, expect } from "@jest/globals";
 
 describe("agent client", () => {
   it("returns an interpretation payload placeholder", async () => {
