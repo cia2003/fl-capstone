@@ -1,3 +1,7 @@
-//
-// This file is intentionally left empty as a placeholder.
-//
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  return NextResponse.json({
+    message: "Breeds API",
+  });
+}
