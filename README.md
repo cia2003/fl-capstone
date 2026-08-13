@@ -6,7 +6,7 @@ A frontend application for my capstone project.
 Live: https://fl-capstone-805d7cv34-cia2003s-projects.vercel.app/
 
 ## Tech Stack
-- React
+- Next.js
 - Tailwind CSS
 
 ## Getting Started
