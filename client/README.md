@@ -1,6 +1,6 @@
-# Client
+# Ghibli Compass
 
-This folder contains the Next.js frontend for the breed matching experience.
+Next.js frontend for browsing Studio Ghibli films, saving a local watchlist, and finding recommendations from a free-text prompt.
 
 ## Structure
 
