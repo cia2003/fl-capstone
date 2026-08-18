@@ -1,3 +1,2 @@
-//
-// This file is intentionally left empty as a placeholder.
-//
+export type { Film } from "./film";
+export type { Recommendation, RecommendationResponse } from "./recommendation";

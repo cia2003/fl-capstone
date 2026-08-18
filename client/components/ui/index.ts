@@ -1,3 +1,2 @@
-//
-// This file is intentionally left empty as a placeholder.
-//
+export { Button } from "./Button";
+export { Input } from "./Input";

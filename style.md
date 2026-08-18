@@ -1,37 +1,27 @@
-# BreedWise style guide
- 
-## Fonts
-- Heading: Sora, weight 600 (500 for smaller sub-headings)
-- Body: Source Sans 3, weight 400 (500 for emphasis/buttons)
+## Ghibli Compass Style Guide (quick ref)
 
-## Sizes
-- H1: 32px / Sora 600
-- H2: 24px / Sora 600
-- H3: 18px / Sora 500
-- Body: 16px / Source Sans 3 400, line-height 1.6
-- Small label / caption: 13px / Source Sans 3 500, letter-spacing 0.02em
+**Fonts**
+- H1: Sora 600, 32px | H2: Sora 600, 24px | H3: Sora 500, 18px
+- Body: Source Sans 3 400, 16px, line-height 1.6
+- Label/caption: Source Sans 3 500, 13px, letter-spacing 0.02em
 
-## Colors
-- Text (near-black): `#22261F`
-- Background (near-white): `#FAF6EF`
-- Main (teal): `#12816A`
-- Accent (coral): `#D85A30`
-- Links: `#12816A`, underline on hover
+**Colors**
+- Text: `#2A1810`
+- Background: `#FDF6EC`
+- Main (lacquer red): `#B23A2E`
+- Accent (lantern gold): `#D4A017` — max 1–2 uses per screen (primary CTA / "best fit" highlight only, never body text or large fills)
+- Links: `#B23A2E`, underline on hover
 
-## Accent rule
-`#D85A30` gets at most one or two moments per screen — primary CTA, or a "best fit" highlight. Never body text, never large fills. Everything else that needs emphasis uses the teal.
+**Spacing**
+- Section padding: 64px top/bottom (32px mobile)
+- Element gap: 16px
+- Card padding: 24px | radius 12px
+- Button padding: 10px 18px | radius 8px
 
-## Layout
-- Content max-width: 1280px, centered
-- Side margins: 96px (≥1440px) / 64px (1024–1439px) / 40px (768–1023px) / 20px (<768px)
- 
-## Spacing
-- Section padding: 64px top/bottom (32px on mobile)
-- Element gap within a block: 16px
-- Card padding: 24px
-- Button padding: 10px 18px, radius 8px
-- Card/panel radius: 12px
+**Buttons**
+- Primary: gold fill, near-black text (not `#FDF6EC` — contrast too low)
+- Secondary: transparent, 1.5px red border, red text
 
-## Buttons
-- Primary: `#D85A30` fill, `#FAF6EF` text
-- Secondary: transparent fill, `#12816A` 1.5px border, `#12816A` text
+**Layout**
+- Max-width 1280px, centered
+- Margins: 96px (≥1440) / 64px (1024–1439) / 40px (768–1023) / 20px (<768)

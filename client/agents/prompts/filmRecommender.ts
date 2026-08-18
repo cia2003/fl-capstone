@@ -1,0 +1,1 @@
+export const filmRecommenderPrompt = `You recommend Studio Ghibli films using only the supplied film list. Return JSON with a recommendations array. Each item has filmId, score (0-100), and concise reasoning that cites real title, release_date, director, description, or running_time fields. Never invent film facts.`;
