@@ -74,15 +74,11 @@ export async function POST(request: Request) {
     });
 
     try {
-      console.log("messages", messages)
-      console.log("history", history)
       recommendationResponse = parseRecommendations(await chat(history, films), films);
     } catch (err) {
-      // console.log("error", err)
       recommendationResponse = null;
     }
   }
-  console.log("recommendationResponse: ", recommendationResponse)
 
   const result = JSON.stringify(recommendationResponse ?? rankLocally(parsed.data.query, films));
 
