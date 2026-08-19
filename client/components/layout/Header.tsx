@@ -7,7 +7,6 @@ export default function Header() {
             <Link href="/" className="font-heading text-h3 font-semibold no-underline">Ghibli Compass</Link>
             <div className="text-center">
                 <Link href="/health" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Health</Link>
-                <Link href="/profile" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Quiz</Link>
                 <Link href="/find-my-film" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Finding</Link> 
                 <Link href="/watchlist" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Watchlist</Link> 
             </div>

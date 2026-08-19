@@ -1,4 +1,4 @@
-import { FilmCard } from "@/components/features/films/FilmCard";
+// import { FilmCard } from "@/components/features/films/FilmCard";
 import { getFilms } from "@/lib/api/ghibliClient";
 
 export default async function Page() {
