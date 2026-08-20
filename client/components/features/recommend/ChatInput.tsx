@@ -7,14 +7,7 @@ import { ChatHeader } from "./ChatHeader";
 import { AIMessage } from "./ChatMessages/AIMessage";
 import { UserMessage } from "./ChatMessages/UserMessage";
 import { LuSend, LuLoader } from "react-icons/lu";
-
-type ChatMessage = {
-  type: "user_input" | "model_output";
-  content: [{
-    type: "text", 
-    text: string
-  }];
-};
+import { ChatMessage } from "@/types/chat";
 
 export function ChatInput({ films }: { films: Film[] }) {
   const [query, setQuery] = useState("");

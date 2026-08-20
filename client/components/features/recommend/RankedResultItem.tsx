@@ -10,3 +10,13 @@ export function RankedResultItem({ recommendation, film, rank }: { recommendatio
     <Link href={`/films/${film.id}`} className="mt-3 inline-block text-sm font-semibold">Check verified film details</Link>
   </li>;
 }
+
+export function RankedResultItemSkeleton() {
+  return <li className="rounded-card border border-primary/20 bg-white/35 p-card w-max">
+    <div className="text-caption font-medium tracking-caption text-text/70 antialiased w-32 bg-gray-300"></div>
+    <div className="mt-1 antialiased w-56 bg-gray-300"></div>
+    <div className="mt-2 antialiased w-72 bg-gray-300"></div>
+    <div className="mt-2 antialiased w-72 bg-gray-300"></div>
+    <div className="mt-3 inline-block text-sm font-semibold antialiased w-72 bg-gray-300"></div>
+  </li>;
+}
