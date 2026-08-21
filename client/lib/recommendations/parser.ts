@@ -16,7 +16,7 @@ export function parseRecommendations(content: string | undefined, films: Film[])
       )).slice(0, 3)
       : [];
 
-    return recommendations.length ? { recommendations } : null;
+    return { recommendations }
   } catch {
     return null;
   }

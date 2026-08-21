@@ -12,11 +12,24 @@ export function RankedResultItem({ recommendation, film, rank }: { recommendatio
 }
 
 export function RankedResultItemSkeleton() {
-  return <li className="rounded-card border border-primary/20 bg-white/35 p-card w-max">
-    <div className="text-caption font-medium tracking-caption text-text/70 antialiased w-32 bg-gray-300"></div>
-    <div className="mt-1 antialiased w-56 bg-gray-300"></div>
-    <div className="mt-2 antialiased w-72 bg-gray-300"></div>
-    <div className="mt-2 antialiased w-72 bg-gray-300"></div>
-    <div className="mt-3 inline-block text-sm font-semibold antialiased w-72 bg-gray-300"></div>
-  </li>;
+  return (
+    <li className="animate-pulse rounded-card border border-primary/20 bg-white/35 p-card">
+      <div className="flex gap-4">
+        {/* Poster */}
+        <div className="h-32 w-20 shrink-0 rounded-lg bg-muted" />
+
+        <div className="flex-1 space-y-3">
+          {/* Rank + title */}
+          <div className="h-5 w-3/4 rounded bg-muted" />
+
+          {/* Description */}
+          <div className="h-4 w-full rounded bg-muted" />
+          <div className="h-4 w-5/6 rounded bg-muted" />
+
+          {/* Score */}
+          <div className="h-4 w-20 rounded bg-muted" />
+        </div>
+      </div>
+    </li>
+  );
 }

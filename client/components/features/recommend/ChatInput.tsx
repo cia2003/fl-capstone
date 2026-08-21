@@ -1,21 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Film, Recommendation } from "@/types";
 import { Button, Input } from "@/components/ui";
 import { ChatHeader } from "./ChatHeader";
 import { AIMessage } from "./ChatMessages/AIMessage";
 import { UserMessage } from "./ChatMessages/UserMessage";
-import { LuSend, LuLoader } from "react-icons/lu";
+import { LuSend, LuLoader, LuArrowDown } from "react-icons/lu";
 import { ChatMessage } from "@/types/chat";
+import ThinkingIndicator from "@/components/ui/ThinkingIndicator";
 
 export function ChatInput({ films }: { films: Film[] }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Recommendation[][]>([]);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [streamingMessage, setStreamingMessage] = useState("");
+  const [showScrollButton, setShowScrollButton] = useState(false)
+
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  function scrollToBottom() {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+
+  function handleWindowScroll() {
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      window.scrollY -
+      window.innerHeight;
+
+    setShowScrollButton(distanceFromBottom > 100);
+  }
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -39,6 +61,8 @@ export function ChatInput({ films }: { films: Film[] }) {
 
     setMessages(nextMessages);
     setLoading(true);
+    setIsThinking(true);
+
     setError("");
     setQuery("");
     setStreamingMessage("");
@@ -97,6 +121,7 @@ export function ChatInput({ films }: { films: Film[] }) {
               };
 
           if (event.type === "message") {
+            setIsThinking(false)
             streamedMessage += event.content;            
             setStreamingMessage(streamedMessage.replace(/^MESSAGE:\s*/, ""));
           }
@@ -150,10 +175,36 @@ export function ChatInput({ films }: { films: Film[] }) {
     }
   }
 
+  useEffect(() => {
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      window.scrollY -
+      window.innerHeight;
+
+    if (distanceFromBottom < 100) {
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({
+          behavior: "auto",
+        });
+      });
+    }
+  }, [messages, streamingMessage, isThinking, results]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleWindowScroll)
+
+    return () => {
+      window.removeEventListener("scroll", handleWindowScroll)
+    }
+  }, []);
+
   return (
     <>
       {messages.length === 0 && <ChatHeader />}
 
+    <div
+      className="relative"
+    >
       {messages.map((message, index) => {
         if (message.type === "user_input") {
           return (
@@ -175,15 +226,21 @@ export function ChatInput({ films }: { films: Film[] }) {
             content={message.content[0].text}
             recommendations={results[resultIndex] ?? []}
             films={films}
+            loading={false}
           />
         );
       })}
+
+      {loading && isThinking && (
+        <ThinkingIndicator />
+      )}
 
       {loading && streamingMessage && (
         <AIMessage
           content={streamingMessage}
           recommendations={[]}
           films={films}
+          loading={loading}
         />
       )}
 
@@ -193,37 +250,51 @@ export function ChatInput({ films }: { films: Film[] }) {
         </p>
       )}
 
-      <form
-        onSubmit={submit}
-        className="mt-6 flex flex-col gap-3 sm:flex-row"
+      <div ref={bottomRef} />
+    </div>
+
+    {showScrollButton && (
+      <Button
+        type="button"
+        onClick={scrollToBottom}
+        aria-label="Scroll to latest message"
+        className="fixed bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-full cursor-pointer"
       >
-        <label
-          className="sr-only"
-          htmlFor="film-query"
+        <LuArrowDown />
+      </Button>
+    )}
+
+    <form
+      onSubmit={submit}
+      className="mt-6 flex flex-col gap-3 sm:flex-row"
+    >
+      <label
+        className="sr-only"
+        htmlFor="film-query"
+      >
+        What are you in the mood for?
+      </label>
+
+      <div className="flex w-full gap-2">
+        <Input
+          id="film-query"
+          value={query}
+          onChange={event =>
+            setQuery(event.target.value)
+          }
+          placeholder="I want a gentle, hopeful adventure…"
+          required
+        />
+
+        <Button
+          type="submit"
+          className="cursor-pointer"
+          disabled={loading}
         >
-          What are you in the mood for?
-        </label>
-
-        <div className="flex w-full gap-2">
-          <Input
-            id="film-query"
-            value={query}
-            onChange={event =>
-              setQuery(event.target.value)
-            }
-            placeholder="I want a gentle, hopeful adventure…"
-            required
-          />
-
-          <Button
-            type="submit"
-            className="cursor-pointer"
-            disabled={loading}
-          >
-            {loading ? <LuLoader /> : <LuSend />}
-          </Button>
-        </div>
-      </form>
+          {loading ? <LuLoader /> : <LuSend />}
+        </Button>
+      </div>
+    </form>
     </>
   );
 }
