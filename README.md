@@ -2,9 +2,6 @@
 
 A frontend application for my capstone project.
 
-## Live Preview URL:
-Live: https://fl-capstone-805d7cv34-cia2003s-projects.vercel.app/
-
 ## Tech Stack
 - Next.js
 - Tailwind CSS
