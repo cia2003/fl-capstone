@@ -32,3 +32,13 @@ export function addAssistantMessage(history: GeminiHistoryItem[], message: strin
 
   history.push(modelMessage);
 }
+
+export function scrollToBottom(element: React.RefObject<HTMLDivElement | null>) {
+    element.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+
+export function stopStreaming(element: React.RefObject<AbortController | null>) {
+  element.current?.abort()
+}

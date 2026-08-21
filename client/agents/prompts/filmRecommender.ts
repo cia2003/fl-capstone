@@ -5,7 +5,7 @@ Your response MUST have exactly two sections:
 
 MESSAGE:
 Write a short, natural response to the user.
-Keep it concise.
+Keep it concise. If longer, the max words is 50 words
 
 RECOMMENDATIONS:
 Return a valid JSON object in this exact shape:
