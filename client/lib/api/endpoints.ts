@@ -1,2 +1,9 @@
 export const GHIBLI_API_BASE_URL = "https://ghibliapi.dev";
-export const filmEndpoint = (id?: string) => `${GHIBLI_API_BASE_URL}/films${id ? `/${id}` : ""}`;
+
+export const filmEndpoint = (
+    id?: string
+) => `${GHIBLI_API_BASE_URL}/films${id ? `/${id}` : ""}`;
+
+export const peopleEndpoint = (
+    id?: string
+) => `${GHIBLI_API_BASE_URL}/people${id ? `/${id}` : ""}`;
