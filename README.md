@@ -3,7 +3,7 @@
 A frontend application for my capstone project.
 
 ## Live Preview URL:
-Live: https://fl-capstone-3vpk-git-frontend-gracia-cia2003s-projects.vercel.app/
+Live: fl-capstone-git-main-cia2003s-projects.vercel.app
 
 (Must login to vercel first)
 ## Tech Stack
