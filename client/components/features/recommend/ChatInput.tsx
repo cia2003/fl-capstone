@@ -6,16 +6,16 @@ import { ChatHeader } from "./ChatHeader";
 import { LuArrowDown } from "react-icons/lu";
 import ChatComposer from "./ChatMessages/ChatComposer";
 import ChatMessages from "./ChatMessages/ChatMessages";
-import { useChat } from "@/hooks/useChat";
+import { useFilmChat } from "@/hooks/useChat";
 import useAutoScroll from "@/hooks/useAutoScroll";
 
 export function ChatInput({ films }: { films: Film[] }) {
-  const chat = useChat({ films })
+  const chat = useFilmChat({ films })
+
   const scroll = useAutoScroll({
     messages: chat.messages, 
-    streamingMessage: chat.streamingMessage, 
+    isStreaming: chat.isStreaming, 
     isThinking: chat.isThinking, 
-    results: chat.results, 
     bottomRef: chat.bottomRef
   })
 
@@ -23,7 +23,7 @@ export function ChatInput({ films }: { films: Film[] }) {
     <>
     {chat.messages.length === 0 && <ChatHeader />}
 
-    <ChatMessages messages={chat.messages} results={chat.results} films={films} bottomRef={chat.bottomRef} loading={chat.loading} isThinking={chat.isThinking} streamingMessage={chat.streamingMessage} error={chat.error} />
+    <ChatMessages messages={chat.messages}  films={films} bottomRef={chat.bottomRef} loading={chat.loading} isThinking={chat.isThinking}  error={chat.error} />
 
     {scroll.showScrollButton && (
       <Button
@@ -35,7 +35,7 @@ export function ChatInput({ films }: { films: Film[] }) {
         <LuArrowDown />
       </Button>
     )}
-    <ChatComposer query={chat.query} setQuery={chat.setQuery} loading={chat.loading} onSubmit={chat.submit} onStop={() => chat.stop() } />
+    <ChatComposer loading={chat.loading} onSubmit={ chat.submit } onStop={ chat.stop } />
     </>
   );
 }
