@@ -2,22 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { scrollToBottom } from "@/lib/utils/helpers"
-import { ChatMessage } from "@/types/chat"
-import { Recommendation } from "@/types"
+import { UIMessage } from "ai"
 
 type AutoScrollProps = {
-    messages: ChatMessage[], 
-    streamingMessage: string, 
+    messages: UIMessage[],
+    isStreaming: boolean,
     isThinking: boolean, 
-    results: Recommendation[][], 
     bottomRef: React.RefObject<HTMLDivElement | null>
 }
 
 export default function useAutoScroll({
     messages, 
-    streamingMessage, 
+    isStreaming,
     isThinking, 
-    results, 
     bottomRef
 }: AutoScrollProps) {
     const [showScrollButton, setShowScrollButton] = useState(false)
@@ -41,7 +38,7 @@ export default function useAutoScroll({
                 });
             });
         }
-    }, [messages, streamingMessage, isThinking, results]);
+    }, [messages, isStreaming, isThinking]);
 
     useEffect(() => {
         window.addEventListener("scroll", handleWindowScroll)

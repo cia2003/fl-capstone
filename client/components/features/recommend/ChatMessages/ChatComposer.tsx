@@ -2,26 +2,37 @@
 
 import { LuSquare, LuSend } from "react-icons/lu"
 import { Button, Input } from "@/components/ui"
+import { useState } from "react"
+import { UseChatHelpers } from "@ai-sdk/react"
+import { FilmUIMessage } from "@/types/chat"
 
 type ChatComposerProps = {
-    query: string, 
-    setQuery: (value: string) => void, 
     loading: boolean, 
-    onSubmit: (
-        event: React.FormEvent<HTMLFormElement>
-    ) => void, 
-    onStop: () => void
+    onSubmit: UseChatHelpers<FilmUIMessage>["sendMessage"],
+    onStop: UseChatHelpers<FilmUIMessage>["stop"]
 }
 export default function ChatComposer({
-    query, 
-    setQuery, 
     loading, 
     onSubmit, 
     onStop
 }: ChatComposerProps) {
+    const [query, setQuery] = useState("")
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!query.trim()) return
+
+        onSubmit({
+            text: query
+        })
+
+        setQuery("")
+    }
+
     return (
         <form
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
             className="mt-6 flex flex-col gap-3 sm:flex-row"
         >
             <label

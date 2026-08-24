@@ -1,4 +1,6 @@
-// export type ChatRole = "user" | "assistant";
+import { FilmUIMessage } from "@/types/chat"
+import { UIMessage } from "ai"
+
 export type ChatRole = "user_input" | "model_output"
 
 export type GeminiHistoryItem = {
@@ -41,4 +43,25 @@ export function scrollToBottom(element: React.RefObject<HTMLDivElement | null>) 
 
 export function stopStreaming(element: React.RefObject<AbortController | null>) {
   element.current?.abort()
+}
+
+export function getTextFromMessage(message: UIMessage) {
+  return message.parts
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("")
+}
+
+export function getRecommendationsFromMessage(message: FilmUIMessage) {
+    for (const part of message.parts) {
+        if (part.type !== 'tool-recommendFilms') {
+            continue
+        }
+
+        if (part.state === 'output-available') {
+            return part.output
+        }
+    }
+
+    return []
 }
