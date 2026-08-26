@@ -23,7 +23,7 @@ export function ChatInput({ films }: { films: Film[] }) {
     <>
     {chat.messages.length === 0 && <ChatHeader />}
 
-    <ChatMessages messages={chat.messages}  films={films} bottomRef={chat.bottomRef} loading={chat.loading} isThinking={chat.isThinking}  error={chat.error} />
+    <ChatMessages messages={chat.messages}  films={films} bottomRef={chat.bottomRef} loading={chat.loading} isThinking={chat.isThinking}  error={chat.error} newChat={chat.newChat} />
 
     {scroll.showScrollButton && (
       <Button

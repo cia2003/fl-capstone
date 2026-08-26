@@ -1,5 +1,4 @@
 import { FilmUIMessage } from "@/types/chat"
-import { UIMessage } from "ai"
 
 export type ChatRole = "user_input" | "model_output"
 
@@ -45,23 +44,57 @@ export function stopStreaming(element: React.RefObject<AbortController | null>) 
   element.current?.abort()
 }
 
-export function getTextFromMessage(message: UIMessage) {
+export function getTextFromMessage(message: FilmUIMessage) {
   return message.parts
     .filter((part) => part.type === "text")
     .map((part) => part.text)
     .join("")
 }
 
-export function getRecommendationsFromMessage(message: FilmUIMessage) {
+export function getToolOutputFromMessage(message: FilmUIMessage) {
     for (const part of message.parts) {
-        if (part.type !== 'tool-recommendFilms') {
+        if (part.state !== "output-available") {
             continue
         }
 
-        if (part.state === 'output-available') {
-            return part.output
+        switch (part.type) {
+            case "tool-getMoviesRecommendations":
+                return {
+                    type: "recommendations" as const,
+                    output: part.output,
+                }
+
+            case "tool-getFilmInformation":
+                return {
+                    type: "film-information" as const,
+                    output: part.output,
+                }
+
+            case "tool-askMoviePreferences":
+                return {
+                    type: "preference-question" as const,
+                    output: part.output,
+                }
         }
     }
 
-    return []
+    return null
+}
+
+export function getToolErrorFromMessage(message: FilmUIMessage) {
+  for (const part of message.parts) {
+    if (part.state !== "output-error") {
+      continue
+    }
+
+    if (
+      part.type === "tool-getMoviesRecommendations" ||
+      part.type === "tool-getFilmInformation" ||
+      part.type === "tool-askMoviePreferences"
+    ) {
+      return part
+    }
+  }
+
+  return null
 }
