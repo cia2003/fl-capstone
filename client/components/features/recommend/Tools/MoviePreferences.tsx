@@ -2,11 +2,11 @@ import { FilmToolPart } from "@/types/chat";
 import ToolState from "./ToolState";
 
 type MoviePreferencesProps = {
-  part: FilmToolPart;
+  part: Extract<FilmToolPart, { type: "tool-askMoviePreferences" }>;
   addToolOutput: (args: {
-    tool: "askMoviePreferences", 
-    toolCallId: string, 
-    output: string
+    tool: "askMoviePreferences";
+    toolCallId: string;
+    output: string;
   }) => void;
 };
 
@@ -24,6 +24,11 @@ export default function MoviePreferences({
     });
   };
 
+  const result =
+    part.input?.options?.filter(
+      (option): option is string => option !== undefined
+    ) ?? [];
+
   return (
     <ToolState
       state={part.state}
@@ -36,25 +41,22 @@ export default function MoviePreferences({
           </p>
 
           <div className="flex flex-wrap gap-2">
-            {part.input?.options?.map(
-              (option: string) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => handleSelect(option)}
-                  className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted"
-                >
-                  {option}
-                </button>
-              )
-            )}
+            {result.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => handleSelect(option || "")}
+                className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted"
+              >
+                {option}
+              </button>
+            ))}
           </div>
         </div>
       }
       outputContent={
         <p className="text-sm font-medium">
-          Preference selected:{" "}
-          {part.output}
+          Preference selected: {part.output}
         </p>
       }
       errorText={part.errorText}

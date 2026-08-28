@@ -1,9 +1,10 @@
-import { Film } from "@/types";
+import { Film, Recommendation } from "@/types";
 import { RankedResultList } from "../RankedResultList";
 import ToolState from "./ToolState";
+import { FilmToolPart } from "@/types/chat";
 
 type MovieRecommendationsProps = {
-  part: any;
+  part: Extract<FilmToolPart, { type: "tool-recommendMovies" }>;
   films: Film[];
 };
 
@@ -11,6 +12,7 @@ export default function MovieRecommendations({
   part,
   films,
 }: MovieRecommendationsProps) {
+  const recommendedMovies = part.output?.recommendations as Recommendation[]
   return (
     <ToolState
       state={part.state}
@@ -29,7 +31,7 @@ export default function MovieRecommendations({
 
           <div className="mt-4">
             <RankedResultList
-              recommendations={part.output?.recommendations}
+              recommendations={recommendedMovies}
               films={films}
             />
           </div>

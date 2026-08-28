@@ -1,7 +1,8 @@
+import { ToolUIPart } from "ai";
 import { ReactNode } from "react";
 
 type ToolStateProps = {
-  state: string;
+  state: ToolUIPart["state"];
   title?: string;
   streamingText?: string;
   availableContent?: ReactNode;

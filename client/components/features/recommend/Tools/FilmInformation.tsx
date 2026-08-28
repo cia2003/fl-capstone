@@ -1,14 +1,16 @@
 import ToolState from "./ToolState";
 import { FilmCard } from "../../films/FilmCard";
 import { FilmToolPart } from "@/types/chat";
+import { Film } from "@/types";
 
 type FilmInformationProps = {
-  part: FilmToolPart;
+  part: Extract<FilmToolPart, { type: "tool-getFilmInformation" }>;
 };
 
 export default function FilmInformation({
   part,
 }: FilmInformationProps) {
+  const result = part.output?.film as Film
   return (
     <ToolState
       state={part.state}
@@ -28,7 +30,7 @@ export default function FilmInformation({
         <p className="font-medium mb-5">
           {part.output?.message}
         </p>
-        <FilmCard film={part.output?.film} />
+        <FilmCard film={result} />
         </>
       }
       errorText={part.errorText}
