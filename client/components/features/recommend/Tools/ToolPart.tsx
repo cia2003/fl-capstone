@@ -2,9 +2,10 @@ import { Film } from "@/types";
 import MovieRecommendations from "./MovieRecommendations";
 import FilmInformation from "./FilmInformation";
 import MoviePreferences from "./MoviePreferences";
+import { FilmToolPart } from "@/types/chat";
 
 type ToolPartProps = {
-  part: any;
+  part: FilmToolPart;
   addToolOutput: any;
   films: Film[];
 };

@@ -1,8 +1,13 @@
+import { FilmToolPart } from "@/types/chat";
 import ToolState from "./ToolState";
 
 type MoviePreferencesProps = {
-  part: any;
-  addToolOutput: any;
+  part: FilmToolPart;
+  addToolOutput: (args: {
+    tool: "askMoviePreferences", 
+    toolCallId: string, 
+    output: string
+  }) => void;
 };
 
 export default function MoviePreferences({

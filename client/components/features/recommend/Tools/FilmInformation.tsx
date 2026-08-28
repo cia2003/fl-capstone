@@ -1,8 +1,9 @@
 import ToolState from "./ToolState";
 import { FilmCard } from "../../films/FilmCard";
+import { FilmToolPart } from "@/types/chat";
 
 type FilmInformationProps = {
-  part: any;
+  part: FilmToolPart;
 };
 
 export default function FilmInformation({
