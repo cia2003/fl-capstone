@@ -1,36 +1,87 @@
-# FL Capstone
+# Ghibli Compass
 
-A frontend application for my capstone project.
+Next.js frontend for browsing Studio Ghibli films, saving a local watchlist, and finding recommendations from a free-text prompt.
 
-## Live Preview URL:
-Live: fl-capstone-git-main-cia2003s-projects.vercel.app
+## Structure
 
-(Must login to vercel first)
-## Tech Stack
-- Next.js
-- Tailwind CSS
+- app/ for routes and route handlers
+- components/ for reusable UI and feature modules
+- lib/ for API helpers and validation schemas
+- hooks/ for client-side state hooks
+- agents/ for AI prompt and client wrappers
+- __tests__/ for component and flow tests
 
-## Getting Started
-First, install the Next.js Apps
 
-```bash
-npx create-next-app@latest my-project --typescript --eslint --app
-cd my-project
+## AI Tool Contracts
+
+Ghibli Compass uses AI tools with Zod-validated inputs and structured outputs rendered as UI components.
+
+### `recommendMovies`
+
+**Input:**
+
+```ts
+{
+  recommendations: {
+    filmId: string;
+    score: number;      // 0–100
+    reasoning: string;
+  }[];
+}
 ```
 
-Then, install the Tailwind CSS
+**Return:**
 
-```bash
-npm install tailwindcss @tailwindcss/postcss postcss
+```ts
+{
+  message: string;
+  recommendations: {
+    filmId: string;
+    score: number;
+    reasoning: string;
+  }[];
+}
 ```
 
-Then, run the development
+**UI:** `RankedResultList`
 
-```bash
-npm run dev
+### `getFilmInformation`
+
+**Input:**
+
+```ts
+{
+  title: string;
+  explanation: string;
+}
 ```
 
-```bash
-npm install
-npm run build
-npm test
+**Return:**
+
+```ts
+{
+  message: string;
+  film: Film;
+}
+```
+
+**UI:** `FilmCard`
+
+### `askMoviePreferences`
+
+**Input:**
+
+```ts
+{
+  question: string;
+  options: string[];
+}
+```
+
+**Output:** User-selected preference returned through `addToolOutput()`.
+
+**UI:** Interactive preference buttons.
+
+### Tool Lifecycle
+
+All tools render four states: `input-streaming`, `input-available`, `output-available`, and `output-error`.
