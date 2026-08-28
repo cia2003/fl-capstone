@@ -20,7 +20,21 @@ export function useFilmChat({ films }: UseChatProps) {
       }
     }), 
 
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    sendAutomaticallyWhen: ({ messages }) => {
+      if (!lastAssistantMessageIsCompleteWithToolCalls({ messages })) {
+        return false
+      }
+      const lastMessage = messages.at(-1)
+
+      if (!lastMessage || lastMessage.role !== "assistant") {
+        return false
+      }
+
+      return lastMessage.parts.some(
+        (part) => 
+          part.type === "tool-askMoviePreferences"
+      )
+    }
   })
 
   const newChat = () => {
@@ -36,7 +50,8 @@ export function useFilmChat({ films }: UseChatProps) {
     bottomRef, 
     submit: chat.sendMessage, 
     stop: chat.stop,
-    newChat
+    newChat, 
+    addToolOutput: chat.addToolOutput
   }
 
   return result

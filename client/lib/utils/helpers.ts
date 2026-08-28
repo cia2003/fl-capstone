@@ -58,7 +58,7 @@ export function getToolOutputFromMessage(message: FilmUIMessage) {
         }
 
         switch (part.type) {
-            case "tool-getMoviesRecommendations":
+            case "tool-recommendMovies":
                 return {
                     type: "recommendations" as const,
                     output: part.output,
@@ -88,7 +88,7 @@ export function getToolErrorFromMessage(message: FilmUIMessage) {
     }
 
     if (
-      part.type === "tool-getMoviesRecommendations" ||
+      part.type === "tool-recommendMovies" ||
       part.type === "tool-getFilmInformation" ||
       part.type === "tool-askMoviePreferences"
     ) {

@@ -1,52 +1,40 @@
-import type { Film, Recommendation } from "@/types";
-import { RankedResultList } from "../RankedResultList";
+import type { Film } from "@/types";
 import ReactMarkdown from "react-markdown"
 import { FilmUIMessage } from "@/types/chat";
-import { getTextFromMessage, getToolErrorFromMessage, getToolOutputFromMessage } from "@/lib/utils/helpers";
-import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
-import { useState } from "react";
+import ToolPart from "../Tools/ToolPart";
 
 type AIMessageProps = {
   message: FilmUIMessage,
   films: Film[], 
   loading: boolean, 
-  onNewChat: () => void
+  onNewChat: () => void, 
+  addToolOutput: any
 }
 
-export function AIMessage({ message, films, loading=false, onNewChat }: AIMessageProps) {
-  const [input, setInput] = useState("")
-
-  const text = getTextFromMessage(message)
-  const toolResult = getToolOutputFromMessage(message)
-  const toolError = getToolErrorFromMessage(message)
-
-  if (toolError) {
-    return (
-      <div className="mt-6">
-        <ToolErrorCard
-          title="Something went wrong"
-          message="We couldn't complete this request. Please start a new chat and try again."
-          onNewChat={onNewChat}
-        />
-      </div>
-    )
-  }
-
-  const displayMessage = toolResult?.output.message ?? text
-
+export function AIMessage({ message, films, loading=false, onNewChat, addToolOutput }: AIMessageProps) {
   return (
     <div className="mt-6">
-      <div className="font-medium">
-        {
-        displayMessage && (
-          <ReactMarkdown >
-            {displayMessage}
-          </ReactMarkdown>
-        )
-        }
-      </div>
+      {
+        message.parts.map(
+          (part, index) => {
+            if (part.type === "text") {
+              return (
+                <div key={`text-${index}`} className="font-medium">
+                  <ReactMarkdown>
+                    {part.text}
+                  </ReactMarkdown>
+                </div>
+              )
+            }
 
-      <RankedResultList recommendations={toolResult?.output.recommendations ?? []} films={films} loading={loading} />
+            if (part.type.startsWith('tool-')) {
+              return (
+                <ToolPart key={part.toolCallId} part={part} addToolOutput={addToolOutput} films={films} />
+              )
+            }
+          }
+        )
+      }
     </div>
-  );
+  )
 }

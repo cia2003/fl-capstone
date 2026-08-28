@@ -4,20 +4,25 @@ import { tool } from "ai";
 
 
 export const filmTools = (films: Film[]) => ({
-    getMoviesRecommendations: tool({
-        description: "Find up to 3 Studio Ghibli films that best match the user's request as a recommendation", 
+    recommendMovies: tool({
+        description: "Recommend up to 3 Studio Ghibli films that best match the user's request.", 
         inputSchema: recommendationSchema, 
-        execute: async ({  message, recommendations }) => {
-            return {
-                message,
-                recommendations
-            }
+        execute: async ({ recommendations }) => {
+        const validRecommendations = recommendations.filter((recommendation) =>
+            films.some((film) => film.id === recommendation.filmId)
+        );
+
+        return {
+            message:
+            "I found a few Studio Ghibli films that match what you're looking for.",
+            recommendations: validRecommendations,
+        };
         },
     }),
     getFilmInformation: tool({
         description: "Get information about a Studio Ghibli film when the user asks about its story, plot, or general information.",
         inputSchema: filmInformationSchema,
-        execute: async ({ title }) => {
+        execute: async ({ title, explanation }) => {
             const film = films.find(
                 (film) => film.title.toLowerCase() === title.toLowerCase()
             )
@@ -27,10 +32,8 @@ export const filmTools = (films: Film[]) => ({
             }
 
             return {
-            message: `This movie was released in ${film.release_date} and was directed by ${film.director} and produced by ${film.producer}. 
-            It runs for ${film.running_time} minutes and has a Rotten Tomatoes score of ${film.rt_score}.\n\n 
-            
-            ${film.description}`
+                message: explanation,
+                film: film
         }
         }
     }), 

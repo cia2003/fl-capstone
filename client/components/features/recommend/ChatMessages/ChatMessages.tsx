@@ -14,7 +14,8 @@ type ChatMessagesProps = {
     loading: boolean, 
     isThinking: boolean, 
     error: string | undefined, 
-    newChat: () => void
+    newChat: () => void, 
+    addToolOutput: any
 }
 
 export default function ChatMessages({ 
@@ -24,7 +25,8 @@ export default function ChatMessages({
     loading, 
     isThinking, 
     error,
-    newChat
+    newChat, 
+    addToolOutput
  }: ChatMessagesProps) {
 
     return (
@@ -37,8 +39,9 @@ export default function ChatMessages({
                 }
 
                 if (message.role === "assistant") {
+                    console.log("AIMessage", message)
                     return (
-                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={newChat} />
+                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={newChat} addToolOutput={addToolOutput} />
                     )
                 }
 
@@ -52,7 +55,7 @@ export default function ChatMessages({
             }
             {
                 error && (
-                    <p role="alert" className="mt-3 text-primary">{error}</p>
+                    <p role="alert" className="mt-3 text-primary">{ error || "AI is not available right now" }</p>
                 )
             }
 

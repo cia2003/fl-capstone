@@ -1,0 +1,58 @@
+import ToolState from "./ToolState";
+
+type MoviePreferencesProps = {
+  part: any;
+  addToolOutput: any;
+};
+
+export default function MoviePreferences({
+  part,
+  addToolOutput,
+}: MoviePreferencesProps) {
+  const callId = part.toolCallId;
+
+  const handleSelect = (option: string) => {
+    addToolOutput({
+      tool: "askMoviePreferences",
+      toolCallId: callId,
+      output: option,
+    });
+  };
+
+  return (
+    <ToolState
+      state={part.state}
+      title="Movie preferences"
+      streamingText="Preparing a preference question..."
+      availableContent={
+        <div className="space-y-4">
+          <p className="text-sm">
+            {part.input?.question}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {part.input?.options?.map(
+              (option: string) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleSelect(option)}
+                  className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted"
+                >
+                  {option}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      }
+      outputContent={
+        <p className="text-sm font-medium">
+          Preference selected:{" "}
+          {part.output}
+        </p>
+      }
+      errorText={part.errorText}
+    />
+  );
+}
