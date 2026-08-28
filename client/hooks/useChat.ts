@@ -1,7 +1,7 @@
 'use client'
 
 import { useChat } from "@ai-sdk/react"
-import { DefaultChatTransport } from "ai"
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai"
 import { Film } from "@/types"
 import { useRef } from "react"
 import { FilmUIMessage } from "@/types/chat"
@@ -18,8 +18,28 @@ export function useFilmChat({ films }: UseChatProps) {
       body: {
         films,
       }
-    })
+    }), 
+
+    sendAutomaticallyWhen: ({ messages }) => {
+      if (!lastAssistantMessageIsCompleteWithToolCalls({ messages })) {
+        return false
+      }
+      const lastMessage = messages.at(-1)
+
+      if (!lastMessage || lastMessage.role !== "assistant") {
+        return false
+      }
+
+      return lastMessage.parts.some(
+        (part) => 
+          part.type === "tool-askMoviePreferences"
+      )
+    }
   })
+
+  const newChat = () => {
+    chat.setMessages([])
+  }
 
   const result = {
     messages: chat.messages, 
@@ -29,7 +49,9 @@ export function useFilmChat({ films }: UseChatProps) {
     error: chat.error?.message, 
     bottomRef, 
     submit: chat.sendMessage, 
-    stop: chat.stop
+    stop: chat.stop,
+    newChat, 
+    addToolOutput: chat.addToolOutput
   }
 
   return result

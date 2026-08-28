@@ -33,7 +33,7 @@ export default function ChatComposer({
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-6 flex flex-col gap-3 sm:flex-row"
+            className="sticky bottom-[20px] mt-6 flex flex-col gap-3 sm:flex-row"
         >
             <label
             className="sr-only"

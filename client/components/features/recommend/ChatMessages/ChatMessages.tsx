@@ -5,7 +5,7 @@ import { UserMessage } from "./UserMessage";
 import { AIMessage } from "./AIMessage";
 import { FilmUIMessage } from "@/types/chat";
 import ThinkingIndicator from "@/components/ui/ThinkingIndicator";
-import { getRecommendationsFromMessage, getTextFromMessage } from "@/lib/utils/helpers";
+import { getTextFromMessage } from "@/lib/utils/helpers";
 
 type ChatMessagesProps = {
     messages: FilmUIMessage[]
@@ -13,7 +13,9 @@ type ChatMessagesProps = {
     bottomRef: React.RefObject<HTMLDivElement | null>, 
     loading: boolean, 
     isThinking: boolean, 
-    error: string | undefined
+    error: string | undefined, 
+    newChat: () => void, 
+    addToolOutput: any
 }
 
 export default function ChatMessages({ 
@@ -23,6 +25,8 @@ export default function ChatMessages({
     loading, 
     isThinking, 
     error,
+    newChat, 
+    addToolOutput
  }: ChatMessagesProps) {
 
     return (
@@ -35,11 +39,9 @@ export default function ChatMessages({
                 }
 
                 if (message.role === "assistant") {
-                    const text = getTextFromMessage(message)
-                    const recommendations = getRecommendationsFromMessage(message)
-                    
+                    console.log("AIMessage", message)
                     return (
-                        <AIMessage key={message.id} content={text} recommendations={recommendations} films={films} loading={false} />
+                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={newChat} addToolOutput={addToolOutput} />
                     )
                 }
 
@@ -53,7 +55,7 @@ export default function ChatMessages({
             }
             {
                 error && (
-                    <p role="alert" className="mt-3 text-primary">{error}</p>
+                    <p role="alert" className="mt-3 text-primary">{ error || "AI is not available right now" }</p>
                 )
             }
 

@@ -38,7 +38,7 @@ export default function useAutoScroll({
                 });
             });
         }
-    }, [messages, isStreaming, isThinking]);
+    }, [ isStreaming, isThinking]);
 
     useEffect(() => {
         window.addEventListener("scroll", handleWindowScroll)

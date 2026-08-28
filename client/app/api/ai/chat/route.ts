@@ -4,7 +4,6 @@ import {
     convertToModelMessages, 
     createUIMessageStreamResponse, 
     toUIMessageStream,
-    tool,
     stepCountIs
 } from 'ai'
 
@@ -22,8 +21,7 @@ export async function POST(req: Request) {
         model: google("gemini-3.5-flash-lite"),
         system: `${filmRecommenderPrompt} Verified film list: ${JSON.stringify(films)}`,
         messages: await convertToModelMessages(messages), 
-        tools: filmTools, 
-        stopWhen: stepCountIs(2),
+        tools: filmTools(films), 
     })
 
     return createUIMessageStreamResponse({

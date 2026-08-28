@@ -1,0 +1,43 @@
+type ToolErrorCardProps = {
+  title: string
+  message: string
+  onNewChat: () => void
+}
+
+export function ToolErrorCard({
+  title,
+  message,
+  onNewChat,
+}: ToolErrorCardProps) {
+  return (
+    <div
+      role="alert"
+      className="max-w-md rounded-xl border border-red-200 bg-red-50 p-4 text-red-900"
+    >
+      <div className="flex gap-3">
+        <div
+          aria-hidden="true"
+          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-red-100"
+        >
+          ⚠️
+        </div>
+
+        <div className="flex-1">
+          <h3 className="font-semibold">{title}</h3>
+
+          <p className="mt-1 text-sm text-red-700">
+            {message}
+          </p>
+
+          <button
+            type="button"
+            onClick={onNewChat}
+            className="mt-4 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+          >
+            Start a new chat
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}

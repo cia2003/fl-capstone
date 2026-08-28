@@ -1,20 +1,40 @@
-import type { Film, Recommendation } from "@/types";
-import { RankedResultList } from "../RankedResultList";
+import type { Film } from "@/types";
 import ReactMarkdown from "react-markdown"
+import { FilmUIMessage } from "@/types/chat";
+import ToolPart from "../Tools/ToolPart";
 
-export function AIMessage({ content, recommendations, films, loading=false }: { content: string; recommendations: Recommendation[]; films: Film[]; loading: boolean }) {
+type AIMessageProps = {
+  message: FilmUIMessage,
+  films: Film[], 
+  loading: boolean, 
+  onNewChat: () => void, 
+  addToolOutput: any
+}
+
+export function AIMessage({ message, films, loading=false, onNewChat, addToolOutput }: AIMessageProps) {
   return (
     <div className="mt-6">
-      <div className="font-medium">
-        {
-        content && (
-          <ReactMarkdown >
-            {content}
-          </ReactMarkdown>
+      {
+        message.parts.map(
+          (part, index) => {
+            if (part.type === "text") {
+              return (
+                <div key={`text-${index}`} className="font-medium">
+                  <ReactMarkdown>
+                    {part.text}
+                  </ReactMarkdown>
+                </div>
+              )
+            }
+
+            if (part.type.startsWith('tool-')) {
+              return (
+                <ToolPart key={part.toolCallId} part={part} addToolOutput={addToolOutput} films={films} />
+              )
+            }
+          }
         )
-        }
-        </div>
-      <RankedResultList recommendations={recommendations} films={films} loading={loading} />
+      }
     </div>
-  );
+  )
 }
