@@ -7,6 +7,7 @@ export class ChatPage {
   readonly errorMessage: Locator;
   readonly thinkingIndicator: Locator;
   readonly stopButton: Locator;
+  readonly retryButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,6 +28,10 @@ export class ChatPage {
 
     this.stopButton = page.getByRole("button", {
       name: "Stop generating response",
+    });
+
+    this.retryButton = page.getByRole("button", {
+      name: "Regenerate response",
     });
 
   }

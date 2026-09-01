@@ -18,7 +18,7 @@ export default function ChatComposer({
 
         if (!query.trim()) return
 
-        if (chat.error != null) {
+        if (chat.error != null || chat.responseError != null) {
         chat.setMessages(messages =>
             messages.at(-1)?.role === 'assistant'
             ? messages.slice(0, -2)

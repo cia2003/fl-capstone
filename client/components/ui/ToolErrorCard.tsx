@@ -24,6 +24,8 @@ export function ToolErrorCard({
     onNewChat?.()
   }
 
+  const isDisabled = !onRegenerate && !onNewChat
+
   return (
     <div
       role="alert"
@@ -47,7 +49,8 @@ export function ToolErrorCard({
           <button
             type="button"
             onClick={handleAction}
-            className="mt-4 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 cursor-pointer"
+            disabled={isDisabled}
+            className="mt-4 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-red-400 disabled:hover:bg-red-400"
           >
             {actionLabel}
           </button>

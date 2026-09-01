@@ -25,8 +25,8 @@ export async function POST(req: Request) {
 
     const delayedStream = result.stream.pipeThrough(new TransformStream({
         async transform(chunk, controller) {
-            // Introduce a 100ms delay for each chunk
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Keep the stream responsive while still simulating a small network delay.
+            await new Promise(resolve => setTimeout(resolve, 100));
             controller.enqueue(chunk);
         }
     }))

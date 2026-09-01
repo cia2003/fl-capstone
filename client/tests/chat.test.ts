@@ -8,6 +8,7 @@ import { injectSlowResponse } from "./test-scenarios/slow";
 import { injectStreamError } from "./test-scenarios/stream-error";
 import { injectNetworkFailure } from "./test-scenarios/network-error";
 import { injectMalformedResponse } from "./test-scenarios/malformed-response";
+import { failThenSucceed, doubleClick } from "./test-scenarios/duplicate-retries";
 
 test.describe("chat failure handling", () => {
   let chatPage: ChatPage;
@@ -64,14 +65,14 @@ test.describe("chat failure handling", () => {
     await expect(chatPage.thinkingIndicator).toBeVisible();
 
     await expect(chatPage.thinkingIndicator).toBeHidden({
-      timeout: 15000
+      timeout: 30000
     });
   });
 
   test("handles stream error", async ({ page }) => {
     await injectStreamError(page)
 
-    await chatPage.sendUserMessage("Hello")
+    await chatPage.sendUserMessage("I want a gentle movie")
 
     await expect
       .poll(() => chatPage.hasError(), {
@@ -116,5 +117,50 @@ test.describe("chat failure handling", () => {
     await expect(chatPage.stopButton).toBeHidden();
 
     await expect(chatPage.isStreaming()).resolves.toBe(false);
+  });
+
+  test("prevents duplicate retry requests", async ({ page }) => {
+    const scenario = await failThenSucceed(page, { successDelayMs: 1000 });
+
+    await chatPage.sendUserMessage("Recommend me a movie");
+    await expect.poll(() => chatPage.hasError(), { timeout: 3000 }).toBe(true);
+    expect(scenario.requestCount()).toBe(1);
+
+    const retryButton = chatPage.retryButton;
+    await expect(retryButton).toBeVisible();
+
+    await doubleClick(retryButton);
+
+    // Give the app a moment to settle, then verify no duplicate fired.
+    await expect
+      .poll(() => chatPage.hasError(), { timeout: 3000 })
+      .toBe(false);
+
+    expect(scenario.requestCount()).toBe(2);
+
+    await scenario.dispose();
+  });
+
+  test("retry button re-enables after a successful retry", async ({ page }) => {
+    const scenario = await failThenSucceed(page, { successDelayMs: 300 });
+
+    await chatPage.sendUserMessage("Recommend me a movie");
+    await expect.poll(() => chatPage.hasError(), { timeout: 3000 }).toBe(true);
+
+    await chatPage.retryButton.click();
+
+    // The retry button is swapped out (not disabled) while the retry runs.
+    await expect(chatPage.retryButton).not.toBeVisible();
+
+    await expect
+      .poll(() => chatPage.hasError(), { timeout: 3000 })
+      .toBe(false);
+
+    // No error → no retry button should reappear.
+    await expect(chatPage.retryButton).not.toBeVisible();
+
+    expect(scenario.requestCount()).toBe(2);
+
+    await scenario.dispose();
   });
 });

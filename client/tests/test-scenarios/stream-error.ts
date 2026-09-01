@@ -11,7 +11,9 @@ export async function injectStreamError(page: Page) {
       },
       body:
         `data: {"type":"text-start","id":"test-message"}\n\n` +
-        `data: {"type":"text-delta","id":"test-message","delta":"I recommend"}\n\n`,
+        `data: {"type":"text-delta","id":"test-message","delta":"I recommend"}\n\n` +
+        `data: {"type":"error","errorText":"Something went wrong"}\n\n` +
+        `data: [DONE]\n\n`,
     });
   });
 }
