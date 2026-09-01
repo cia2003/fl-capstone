@@ -46,7 +46,7 @@ export default function MoviePreferences({
                 key={option}
                 type="button"
                 onClick={() => handleSelect(option || "")}
-                className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted"
+                className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted cursor-pointer"
               >
                 {option}
               </button>

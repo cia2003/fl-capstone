@@ -1,37 +1,34 @@
 "use client"
 
-import { Film, Recommendation } from "@/types";
+import { Film } from "@/types";
 import { UserMessage } from "./UserMessage";
 import { AIMessage } from "./AIMessage";
-import { FilmUIMessage } from "@/types/chat";
 import ThinkingIndicator from "@/components/ui/ThinkingIndicator";
 import { getTextFromMessage } from "@/lib/utils/helpers";
+import { useFilmChat } from "@/hooks/useChat";
+import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
 
 type ChatMessagesProps = {
-    messages: FilmUIMessage[]
+    chat: ReturnType<typeof useFilmChat>
     films: Film[],
-    bottomRef: React.RefObject<HTMLDivElement | null>, 
-    loading: boolean, 
-    isThinking: boolean, 
-    error: string | undefined, 
-    newChat: () => void, 
-    addToolOutput: any
+    addToolOutput: any,
+    errorMessage?: string | null,
+    setRequestError?: (value: string | null) => void,
+    setIsRequestPending?: (value: boolean) => void,
 }
 
 export default function ChatMessages({ 
-    messages, 
+    chat,
     films, 
-    bottomRef, 
-    loading, 
-    isThinking, 
-    error,
-    newChat, 
-    addToolOutput
+    addToolOutput,
+    errorMessage,
+    setRequestError,
+    setIsRequestPending,
  }: ChatMessagesProps) {
 
     return (
         <div className="relative">
-            {messages.map((message) => {
+            {chat.messages.map((message) => {
                 if (message.role === "user") {
                     return (
                         <UserMessage key={message.id} message={getTextFromMessage(message)} />
@@ -41,7 +38,7 @@ export default function ChatMessages({
                 if (message.role === "assistant") {
                     console.log("AIMessage", message)
                     return (
-                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={newChat} addToolOutput={addToolOutput} />
+                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
                     )
                 }
 
@@ -49,17 +46,25 @@ export default function ChatMessages({
             })}
 
             {
-                loading && isThinking && (
+                chat.loading && chat.isThinking && (
                     <ThinkingIndicator />
                 )
             }
-            {
-                error && (
-                    <p role="alert" className="mt-3 text-primary">{ error || "AI is not available right now" }</p>
-                )
-            }
+            {(chat.error || errorMessage) && (
+                <div className="mt-3">
+                    <ToolErrorCard
+                        title="Something went wrong"
+                        message={chat.error?.message || errorMessage || "We couldn't complete this request. Please start a new chat and try again."}
+                        onNewChat={() => {
+                            setRequestError?.(null)
+                            setIsRequestPending?.(false)
+                            chat.newChat()
+                        }}
+                    />
+                </div>
+            )}
 
-            <div ref={bottomRef} />
+            <div ref={chat.bottomRef} />
         </div>
     )
 }

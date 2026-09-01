@@ -4,7 +4,6 @@ import {
     convertToModelMessages, 
     createUIMessageStreamResponse, 
     toUIMessageStream,
-    stepCountIs
 } from 'ai'
 
 import { google } from '@ai-sdk/google'
@@ -24,9 +23,17 @@ export async function POST(req: Request) {
         tools: filmTools(films), 
     })
 
+    const delayedStream = result.stream.pipeThrough(new TransformStream({
+        async transform(chunk, controller) {
+            // Introduce a 100ms delay for each chunk
+            await new Promise(resolve => setTimeout(resolve, 500));
+            controller.enqueue(chunk);
+        }
+    }))
+
     return createUIMessageStreamResponse({
         stream: toUIMessageStream({ 
-            stream: result.stream
+            stream: delayedStream
          })
     })
 }

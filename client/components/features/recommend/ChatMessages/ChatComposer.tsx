@@ -3,27 +3,40 @@
 import { LuSquare, LuSend } from "react-icons/lu"
 import { Button, Input } from "@/components/ui"
 import { useState } from "react"
-import { UseChatHelpers } from "@ai-sdk/react"
-import { FilmUIMessage } from "@/types/chat"
+import { useFilmChat } from "@/hooks/useChat"
 
 type ChatComposerProps = {
-    loading: boolean, 
-    onSubmit: UseChatHelpers<FilmUIMessage>["sendMessage"],
-    onStop: UseChatHelpers<FilmUIMessage>["stop"]
+    chat: ReturnType<typeof useFilmChat>
+    isRequestPending: boolean
+    setIsRequestPending: (value: boolean) => void
+    requestError?: string | null
+    setRequestError?: (value: string | null) => void
 }
 export default function ChatComposer({
-    loading, 
-    onSubmit, 
-    onStop
+    chat,
+    isRequestPending,
+    setIsRequestPending,
+    setRequestError,
 }: ChatComposerProps) {
     const [query, setQuery] = useState("")
+    const isBusy = isRequestPending || chat.loading
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
         if (!query.trim()) return
 
-        onSubmit({
+        if (chat.error != null) {
+        chat.setMessages(messages =>
+            messages.at(-1)?.role === 'assistant'
+            ? messages.slice(0, -2)
+            : messages.slice(0, -1),
+        );
+        }
+
+        setRequestError?.(null)
+        setIsRequestPending(true)
+        chat.sendMessage({
             text: query
         })
 
@@ -49,17 +62,23 @@ export default function ChatComposer({
                 onChange={event =>
                 setQuery(event.target.value)
                 }
+                disabled={chat.error != null}
                 placeholder="I want a gentle, hopeful adventure…"
                 required
             />
 
             <Button
-                type={loading ? "button" : "submit"}
-                onClick={loading ? onStop : undefined}
+                type={isBusy ? "button" : "submit"}
+                onClick={isBusy ? () => {
+                    setIsRequestPending(false)
+                    setRequestError?.(null)
+                    chat.stop()
+                } : undefined}
                 className="cursor-pointer"
-                aria-label={loading ? "Stop generating response" : "Send message"}
+                aria-label={isBusy ? "Stop generating response" : "Send message"}
+                disabled={chat.error != null}
             >
-                {loading ? <LuSquare /> : <LuSend />}
+                {isBusy ? <LuSquare /> : <LuSend />}
             </Button>
             </div>
         </form>

@@ -12,18 +12,18 @@ type UseChatProps = {
 
 export function useFilmChat({ films }: UseChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
+
   const chat = useChat<FilmUIMessage>({
     transport: new DefaultChatTransport({
-      api: "/api/ai/chat", 
-      body: {
-        films,
-      }
-    }), 
+      api: "/api/ai/chat",
+      body: { films },
+    }),
 
     sendAutomaticallyWhen: ({ messages }) => {
       if (!lastAssistantMessageIsCompleteWithToolCalls({ messages })) {
         return false
       }
+
       const lastMessage = messages.at(-1)
 
       if (!lastMessage || lastMessage.role !== "assistant") {
@@ -31,28 +31,24 @@ export function useFilmChat({ films }: UseChatProps) {
       }
 
       return lastMessage.parts.some(
-        (part) => 
-          part.type === "tool-askMoviePreferences"
+        (part) => part.type === "tool-askMoviePreferences"
       )
-    }
+    },
   })
 
   const newChat = () => {
     chat.setMessages([])
+    chat.setError(null)
   }
 
-  const result = {
-    messages: chat.messages, 
+  return {
+    ...chat,
+
     isStreaming: chat.status === "streaming",
-    isThinking: chat.status === "submitted", 
-    loading: chat.status === "submitted" || chat.status === "streaming", 
-    error: chat.error?.message, 
-    bottomRef, 
-    submit: chat.sendMessage, 
-    stop: chat.stop,
-    newChat, 
-    addToolOutput: chat.addToolOutput
-  }
+    isThinking: chat.status === "submitted",
+    loading: chat.status === "submitted" || chat.status === "streaming",
 
-  return result
+    bottomRef,
+    newChat,
+  }
 }

@@ -25,7 +25,7 @@ export function ToolErrorCard({
         <div className="flex-1">
           <h3 className="font-semibold">{title}</h3>
 
-          <p className="mt-1 text-sm text-red-700">
+          <p role="alert" className="mt-1 text-sm text-red-700 text-primary">
             {message}
           </p>
 

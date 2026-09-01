@@ -1,0 +1,9 @@
+// tests/prompts/utils.ts
+
+export const TEST_PROMPTS = {
+  NORMAL: 'TEST_NORMAL_RESPONSE',
+  ERROR: 'TEST_SERVER_ERROR',
+  RATE_LIMIT: 'TEST_RATE_LIMIT',
+  SLOW: 'TEST_SLOW_RESPONSE',
+  STREAM_ERROR: 'TEST_STREAM_ERROR',
+} as const;
