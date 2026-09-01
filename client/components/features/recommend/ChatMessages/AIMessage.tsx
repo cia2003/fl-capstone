@@ -30,8 +30,6 @@ function isFilmToolPart(
 export function AIMessage({
   message,
   films,
-  loading = false,
-  onNewChat,
   addToolOutput,
 }: AIMessageProps) {
   return (

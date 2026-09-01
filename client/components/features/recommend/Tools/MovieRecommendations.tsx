@@ -2,6 +2,7 @@ import { Film, Recommendation } from "@/types";
 import { RankedResultList } from "../RankedResultList";
 import ToolState from "./ToolState";
 import { FilmToolPart } from "@/types/chat";
+import { ToolSkeleton } from "@/components/ui";
 
 type MovieRecommendationsProps = {
   part: Extract<FilmToolPart, { type: "tool-recommendMovies" }>;
@@ -12,16 +13,20 @@ export default function MovieRecommendations({
   part,
   films,
 }: MovieRecommendationsProps) {
-  const recommendedMovies = part.output?.recommendations as Recommendation[]
+  const recommedations = part.output?.recommendations 
+  const recommendedMovies: Recommendation[] | null = Array.isArray(recommedations) ? recommedations : null; 
   return (
     <ToolState
       state={part.state}
       title="Movie recommendations"
       streamingText="Understanding your preferences..."
       availableContent={
-        <p className="text-sm text-muted-foreground">
-          Finding movies based on your preferences.
-        </p>
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Finding movies based on your preferences.
+          </p>
+          <ToolSkeleton variant="recommendations" ariaLabel="Loading movie recommendations" />
+        </div>
       }
       outputContent={
         <>
@@ -30,10 +35,16 @@ export default function MovieRecommendations({
           </p>
 
           <div className="mt-4">
-            <RankedResultList
-              recommendations={recommendedMovies}
-              films={films}
-            />
+            {recommendedMovies ? (
+              <RankedResultList
+                recommendations={recommendedMovies}
+                films={films}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                We couldn't load the movie recommendations. Please try again.
+              </p>
+            )}
           </div>
         </>
       }

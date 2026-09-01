@@ -7,19 +7,11 @@ import { useFilmChat } from "@/hooks/useChat"
 
 type ChatComposerProps = {
     chat: ReturnType<typeof useFilmChat>
-    isRequestPending: boolean
-    setIsRequestPending: (value: boolean) => void
-    requestError?: string | null
-    setRequestError?: (value: string | null) => void
 }
 export default function ChatComposer({
-    chat,
-    isRequestPending,
-    setIsRequestPending,
-    setRequestError,
+    chat
 }: ChatComposerProps) {
     const [query, setQuery] = useState("")
-    const isBusy = isRequestPending || chat.loading
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,8 +26,6 @@ export default function ChatComposer({
         );
         }
 
-        setRequestError?.(null)
-        setIsRequestPending(true)
         chat.sendMessage({
             text: query
         })
@@ -62,23 +52,19 @@ export default function ChatComposer({
                 onChange={event =>
                 setQuery(event.target.value)
                 }
-                disabled={chat.error != null}
+                disabled={chat.error != null || chat.responseError != null}
                 placeholder="I want a gentle, hopeful adventure…"
                 required
             />
 
             <Button
-                type={isBusy ? "button" : "submit"}
-                onClick={isBusy ? () => {
-                    setIsRequestPending(false)
-                    setRequestError?.(null)
-                    chat.stop()
-                } : undefined}
+                type={chat.loading ? "button" : "submit"}
+                onClick={chat.loading ? chat.stop : undefined}
                 className="cursor-pointer"
-                aria-label={isBusy ? "Stop generating response" : "Send message"}
-                disabled={chat.error != null}
+                aria-label={chat.loading ? "Stop generating response" : "Send message"}
+                disabled={chat.error != null || chat.responseError != null}
             >
-                {isBusy ? <LuSquare /> : <LuSend />}
+                {chat.loading ? <LuSquare /> : <LuSend />}
             </Button>
             </div>
         </form>

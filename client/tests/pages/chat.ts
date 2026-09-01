@@ -49,11 +49,11 @@ export class ChatPage {
   }
 
   async isStreaming() {
-    await this.page
+    return this.page
       .getByRole("button", {
         name: "Stop generating response",
       })
-      .waitFor();
+      .isVisible();
   }
 
   async hasError() {

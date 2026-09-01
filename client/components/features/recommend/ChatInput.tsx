@@ -8,41 +8,9 @@ import ChatComposer from "./ChatMessages/ChatComposer";
 import ChatMessages from "./ChatMessages/ChatMessages";
 import { useFilmChat } from "@/hooks/useChat";
 import useAutoScroll from "@/hooks/useAutoScroll";
-import { useEffect, useState } from "react";
 
 export function ChatInput({ films }: { films: Film[] }) {
   const chat = useFilmChat({ films })
-  const [isRequestPending, setIsRequestPending] = useState(false)
-  const [requestError, setRequestError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (chat.error) {
-      setRequestError(chat.error.message)
-      setIsRequestPending(false)
-      return
-    }
-
-    if (!isRequestPending || chat.loading) {
-      return
-    }
-
-    const lastMessage = chat.messages.at(-1)
-    const hasValidAssistantResponse =
-      lastMessage?.role === "assistant" &&
-      lastMessage.parts.some((part) => {
-        if (part.type === "text") {
-          return part.text.trim().length > 0
-        }
-
-        return part.type.startsWith("tool-")
-      })
-
-    if (!hasValidAssistantResponse) {
-      setRequestError("We couldn't complete this request. Please start a new chat and try again.")
-    }
-
-    setIsRequestPending(false)
-  }, [chat.error, chat.loading, chat.messages, isRequestPending])
 
   const scroll = useAutoScroll({
     messages: chat.messages, 
@@ -59,9 +27,6 @@ export function ChatInput({ films }: { films: Film[] }) {
       chat={chat}
       films={films} 
       addToolOutput={chat.addToolOutput}
-      errorMessage={requestError}
-      setRequestError={setRequestError}
-      setIsRequestPending={setIsRequestPending}
        />
 
     {scroll.showScrollButton && (
@@ -74,13 +39,7 @@ export function ChatInput({ films }: { films: Film[] }) {
         <LuArrowDown />
       </Button>
     )}
-    <ChatComposer
-      chat={chat}
-      isRequestPending={isRequestPending}
-      setIsRequestPending={setIsRequestPending}
-      requestError={requestError}
-      setRequestError={setRequestError}
-    />
+    <ChatComposer chat={chat} />
     </>
   );
 }

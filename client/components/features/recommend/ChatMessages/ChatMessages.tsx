@@ -11,19 +11,13 @@ import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
 type ChatMessagesProps = {
     chat: ReturnType<typeof useFilmChat>
     films: Film[],
-    addToolOutput: any,
-    errorMessage?: string | null,
-    setRequestError?: (value: string | null) => void,
-    setIsRequestPending?: (value: boolean) => void,
+    addToolOutput: any, 
 }
 
 export default function ChatMessages({ 
     chat,
     films, 
-    addToolOutput,
-    errorMessage,
-    setRequestError,
-    setIsRequestPending,
+    addToolOutput, 
  }: ChatMessagesProps) {
 
     return (
@@ -36,7 +30,6 @@ export default function ChatMessages({
                 }
 
                 if (message.role === "assistant") {
-                    console.log("AIMessage", message)
                     return (
                         <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
                     )
@@ -50,14 +43,16 @@ export default function ChatMessages({
                     <ThinkingIndicator />
                 )
             }
-            {(chat.error || errorMessage) && (
+            {(chat.error || chat.responseError) && (
                 <div className="mt-3">
                     <ToolErrorCard
                         title="Something went wrong"
-                        message={chat.error?.message || errorMessage || "We couldn't complete this request. Please start a new chat and try again."}
+                        message={chat.error?.message || chat.responseError || "We couldn't complete this request. Please start a new chat and try again."}
+                        actionType="regenerate"
+                        onRegenerate={() => {
+                            chat.regenerate()
+                        }}
                         onNewChat={() => {
-                            setRequestError?.(null)
-                            setIsRequestPending?.(false)
                             chat.newChat()
                         }}
                     />

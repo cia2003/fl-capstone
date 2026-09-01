@@ -1,14 +1,29 @@
 type ToolErrorCardProps = {
   title: string
   message: string
-  onNewChat: () => void
+  actionType?: "regenerate" | "new-chat"
+  onRegenerate?: () => void
+  onNewChat?: () => void
 }
 
 export function ToolErrorCard({
   title,
   message,
+  actionType = "new-chat",
+  onRegenerate,
   onNewChat,
 }: ToolErrorCardProps) {
+  const actionLabel = actionType === "regenerate" ? "Regenerate response" : "Start a new chat"
+
+  const handleAction = () => {
+    if (actionType === "regenerate") {
+      onRegenerate?.()
+      return
+    }
+
+    onNewChat?.()
+  }
+
   return (
     <div
       role="alert"
@@ -31,10 +46,10 @@ export function ToolErrorCard({
 
           <button
             type="button"
-            onClick={onNewChat}
-            className="mt-4 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+            onClick={handleAction}
+            className="mt-4 rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 cursor-pointer"
           >
-            Start a new chat
+            {actionLabel}
           </button>
         </div>
       </div>
