@@ -1,4 +1,3 @@
-import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
 import { ToolUIPart } from "ai";
 import { ReactNode } from "react";
 
@@ -64,14 +63,7 @@ export default function ToolState({
       );
 
     case "output-error":
-      return (
-        <div className="mt-5 mb-5">
-          <ToolErrorCard
-            title="Something went wrong"
-            message={errorText || "The tool could not complete the request."}
-          />
-        </div>
-      );
+      return null;
 
     default:
       return null;

@@ -26,9 +26,13 @@ export default function ChatComposer({
         );
         }
 
-        chat.sendMessage({
-            text: query
-        })
+        const submittedAsPreference = chat.submitPreference(query)
+
+        if (!submittedAsPreference) {
+            chat.sendMessage({
+                text: query
+            })
+        }
 
         setQuery("")
     }

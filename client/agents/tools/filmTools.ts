@@ -38,7 +38,8 @@ export const filmTools = (films: Film[]) => ({
         }
     }), 
     askMoviePreferences: tool({
-        description: "Ask the user about their movie preferences when more information is needed before making a recommendations.",
+        description:
+            "Ask the user about their movie preferences when more information is needed before making recommendations. Use this tool when the user has not provided enough preferences or when their requested movie has no matching result. Ask about preferences such as genre, mood, themes, or story type. Do not use this tool when the user is asking for information about a specific film. After the user returns the tool output, use that preference as the input for recommendMovies.",
         inputSchema: preferenceQuestionSchema,
     })
 })

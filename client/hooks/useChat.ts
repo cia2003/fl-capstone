@@ -16,6 +16,29 @@ type UseChatProps = {
 
 type FilmPart = FilmUIMessage["parts"][number]
 
+type PreferenceToolOutput = {
+  tool: "askMoviePreferences"
+  toolCallId: string
+  output: string
+  state: "output-available"
+}
+
+function getPendingPreferenceTool(messages: FilmUIMessage[]) {
+  const lastAssistantMessage = [...messages]
+    .reverse()
+    .find((message) => message.role === "assistant")
+
+  const pendingPart = lastAssistantMessage?.parts.find(
+    (part) =>
+      part.type === "tool-askMoviePreferences" &&
+      part.state === "input-available"
+  )
+
+  return pendingPart?.type === "tool-askMoviePreferences"
+    ? pendingPart
+    : undefined
+}
+
 function isToolPart(part: FilmPart) {
   return part.type.startsWith("tool-")
 }
@@ -32,6 +55,17 @@ function isToolStillRunning(part: FilmPart) {
   return (
     part.state === "input-streaming" ||
     part.state === "input-available"
+  )
+}
+
+function isCompletedPreferenceTool(part: FilmPart) {
+  const output = "output" in part ? part.output : undefined
+
+  return (
+    part.type === "tool-askMoviePreferences" &&
+    part.state === "output-available" &&
+    typeof output === "string" &&
+    output.trim().length > 0
   )
 }
 
@@ -131,9 +165,9 @@ export function useFilmChat({ films }: UseChatProps) {
         return false
       }
 
-      return lastMessage.parts.some(
-        (part) => part.type === "tool-askMoviePreferences"
-      )
+      const lastPart = lastMessage.parts.at(-1)
+
+      return lastPart ? isCompletedPreferenceTool(lastPart) : false
     },
   })
 
@@ -182,6 +216,27 @@ export function useFilmChat({ films }: UseChatProps) {
     setResponseError(null)
   }
 
+  const submitPreference = (preference: string) => {
+    const pendingPreference = getPendingPreferenceTool(chat.messages)
+
+    if (!pendingPreference || !preference.trim()) {
+      return false
+    }
+
+    const addPreferenceOutput = chat.addToolOutput as unknown as (
+      args: PreferenceToolOutput
+    ) => void
+
+    addPreferenceOutput({
+      tool: "askMoviePreferences",
+      toolCallId: pendingPreference.toolCallId,
+      output: preference.trim(),
+      state: "output-available",
+    })
+
+    return true
+  }
+
   return {
     ...chat,
 
@@ -203,5 +258,6 @@ export function useFilmChat({ films }: UseChatProps) {
 
     bottomRef,
     newChat,
+    submitPreference,
   }
 }

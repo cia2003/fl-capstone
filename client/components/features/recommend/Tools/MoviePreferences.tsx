@@ -7,6 +7,7 @@ type MoviePreferencesProps = {
     tool: "askMoviePreferences";
     toolCallId: string;
     output: string;
+    state: "output-available";
   }) => void;
 };
 
@@ -21,6 +22,7 @@ export default function MoviePreferences({
       tool: "askMoviePreferences",
       toolCallId: callId,
       output: option,
+      state: "output-available",
     });
   };
 

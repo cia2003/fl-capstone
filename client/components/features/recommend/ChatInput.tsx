@@ -21,7 +21,9 @@ export function ChatInput({ films }: { films: Film[] }) {
 
   return (
     <>
-    {chat.messages.length === 0 && <ChatHeader />}
+    {chat.messages.length === 0 && (
+      <ChatHeader onPrompt={(prompt) => chat.sendMessage({ text: prompt })} />
+    )}
 
     <ChatMessages 
       chat={chat}

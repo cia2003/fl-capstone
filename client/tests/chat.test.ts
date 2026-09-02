@@ -9,6 +9,7 @@ import { injectStreamError } from "./test-scenarios/stream-error";
 import { injectNetworkFailure } from "./test-scenarios/network-error";
 import { injectMalformedResponse } from "./test-scenarios/malformed-response";
 import { failThenSucceed, doubleClick } from "./test-scenarios/duplicate-retries";
+import { injectPreferenceFollowUp } from "./test-scenarios/preference-follow-up";
 
 test.describe("chat failure handling", () => {
   let chatPage: ChatPage;
@@ -21,6 +22,12 @@ test.describe("chat failure handling", () => {
 
   test("can access chat", async () => {
     await expect(chatPage.input).toBeVisible()
+  })
+
+  test("sends the preferences prompt from the chat header", async ({ page }) => {
+    await page.getByRole("button", { name: "Help me find my preferences" }).click()
+
+    await expect(page.getByText("Help me find my preferences")).toBeVisible()
   })
 
   test("handles server error", async ({ page }) => {
@@ -162,5 +169,31 @@ test.describe("chat failure handling", () => {
     expect(scenario.requestCount()).toBe(2);
 
     await scenario.dispose();
+  });
+
+  test("submits a selected preference for recommendations", async ({ page }) => {
+    const scenario = await injectPreferenceFollowUp(page);
+
+    await chatPage.sendUserMessage("How about Harry Potter?");
+    const preference = page.getByRole("button", { name: "Magical adventures" });
+    await expect(preference).toBeVisible();
+    await preference.click();
+
+    await expect(page.getByText("Recommendations found")).toBeVisible();
+    expect(scenario.requestBodies).toHaveLength(2);
+    expect(JSON.stringify(scenario.requestBodies[1])).toContain("Magical adventures");
+  });
+
+  test("submits free-text preference for recommendations", async ({ page }) => {
+    const scenario = await injectPreferenceFollowUp(page);
+
+    await chatPage.sendUserMessage("How about Harry Potter?");
+    await expect(page.getByRole("button", { name: "Magical adventures" })).toBeVisible();
+
+    await chatPage.sendUserMessage("I want something with a cat");
+
+    await expect(page.getByText("Recommendations found")).toBeVisible();
+    expect(scenario.requestBodies).toHaveLength(2);
+    expect(JSON.stringify(scenario.requestBodies[1])).toContain("I want something with a cat");
   });
 });

@@ -19,6 +19,7 @@ export default function ChatMessages({
     films, 
     addToolOutput, 
  }: ChatMessagesProps) {
+    const hasError = Boolean(chat.error || chat.responseError)
 
     return (
         <div className="relative">
@@ -31,7 +32,7 @@ export default function ChatMessages({
 
                 if (message.role === "assistant") {
                     return (
-                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
+                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} hideToolParts={hasError} />
                     )
                 }
 
@@ -43,7 +44,7 @@ export default function ChatMessages({
                     <ThinkingIndicator />
                 )
             }
-            {(chat.error || chat.responseError) && (
+            { !chat.loading && (chat.error || chat.responseError) && (
                 <div className="mt-3">
                     <ToolErrorCard
                         title="Something went wrong"

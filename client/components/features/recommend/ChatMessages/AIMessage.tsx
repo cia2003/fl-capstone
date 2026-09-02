@@ -7,6 +7,7 @@ type AddToolOutput = (args: {
   tool: "askMoviePreferences";
   toolCallId: string;
   output: string;
+  state: "output-available";
 }) => void;
 
 type AIMessageProps = {
@@ -15,6 +16,7 @@ type AIMessageProps = {
   loading: boolean;
   onNewChat: () => void;
   addToolOutput: AddToolOutput;
+  hideToolParts?: boolean;
 };
 
 function isFilmToolPart(
@@ -31,6 +33,7 @@ export function AIMessage({
   message,
   films,
   addToolOutput,
+  hideToolParts = false,
 }: AIMessageProps) {
   return (
     <div className="mt-6">
@@ -45,7 +48,7 @@ export function AIMessage({
           );
         }
 
-        if (isFilmToolPart(part)) {
+        if (isFilmToolPart(part) && !hideToolParts) {
           return (
             <ToolPart
               key={part.toolCallId}
