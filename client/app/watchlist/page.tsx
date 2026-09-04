@@ -18,7 +18,7 @@ export default function Page() {
             )
             
             setFilms(results.filter(
-                (filtered): filtered is Film => filtered !== null
+                (filtered: any): filtered is Film => filtered !== null
             ))
         }
 
