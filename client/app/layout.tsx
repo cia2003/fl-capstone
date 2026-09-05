@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import Link from "next/link";
 import Header from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   )

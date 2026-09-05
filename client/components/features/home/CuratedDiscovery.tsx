@@ -197,7 +197,7 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                 </div>
 
                 {/* FILMS */}
-                <div>
+                <div className="pb-section-mobile md:pb-section-desktop">
                     {currentFilms.length > 0 ? (
                         <>
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -236,7 +236,7 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                                             className={`rounded-md px-3 py-2 ${
                                                 currentPage === page
                                                     ? "bg-primary text-white"
-                                                    : "border"
+                                                    : ""
                                             }`}
                                         >
                                             {page}
