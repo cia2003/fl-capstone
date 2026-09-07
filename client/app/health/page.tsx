@@ -1,7 +1,7 @@
 import { getFilms } from "@/lib/api/ghibliClient";
 import { FilmCard } from "@/components/features/films/FilmCard";
 
-export default async function Page() {
+export default async function Health() {
     const films = (await getFilms()).sort((a, b) => a.title.localeCompare(b.title));
     return (
     <main role="main" className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">

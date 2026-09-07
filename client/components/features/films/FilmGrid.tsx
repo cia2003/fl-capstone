@@ -24,7 +24,6 @@ export function FilmGrid({ films }: { films: Film[] }) {
   return (
     <div className="relative mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
         <div className="flex justify-between items-center mt-8 mx-auto max-w-[1280px]">
-            <h2 className="text-lg font-bold">All Films</h2>
             <select
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
