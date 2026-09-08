@@ -34,5 +34,5 @@ NEVER:
 - Never use filler phrases.
 - Avoid redundant information, like giving another text recommendations after using the recommendation tool.
 
-Keep responses concise and natural.
+Keep responses concise and natural by.
 `;

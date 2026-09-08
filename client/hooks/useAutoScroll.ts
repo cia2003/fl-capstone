@@ -1,52 +1,77 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { scrollToBottom } from "@/lib/utils/helpers"
+import { useState, useEffect, useRef } from "react"
 import { UIMessage } from "ai"
 
 type AutoScrollProps = {
     messages: UIMessage[],
     isStreaming: boolean,
     isThinking: boolean, 
-    bottomRef: React.RefObject<HTMLDivElement | null>
+    bottomRef: React.RefObject<HTMLDivElement | null>,
+    composerRef: React.RefObject<HTMLDivElement | null>
 }
 
 export default function useAutoScroll({
     messages, 
     isStreaming,
     isThinking, 
-    bottomRef
+    bottomRef,
+    composerRef
 }: AutoScrollProps) {
     const [showScrollButton, setShowScrollButton] = useState(false)
+    const shouldAutoScrollRef = useRef(true)
 
-    const scrollToLatest = () => scrollToBottom(bottomRef)
+    const updateScrollState = () => {
+        const bottomElement = bottomRef.current
+        const composerElement = composerRef.current
+        if (!bottomElement || !composerElement) return
 
-    function handleWindowScroll() {
-        const distanceFromBottom =
-            document.documentElement.scrollHeight -
-            window.scrollY -
-            window.innerHeight;
+        const bottomRect = bottomElement.getBoundingClientRect()
+        const composerRect = composerElement.getBoundingClientRect()
+        const distanceFromLatest = bottomRect.bottom - composerRect.top
+        const latestMessageIsOutOfRange = distanceFromLatest > 100
 
-        setShowScrollButton(distanceFromBottom > 100);
+        shouldAutoScrollRef.current = !latestMessageIsOutOfRange
+        setShowScrollButton(messages.length > 0 && latestMessageIsOutOfRange)
+    }
+
+    const scrollToLatest = (behavior: ScrollBehavior = "smooth") => {
+        const bottomElement = bottomRef.current
+        const composerElement = composerRef.current
+        if (!bottomElement || !composerElement) return
+
+        const bottomRect = bottomElement.getBoundingClientRect()
+        const composerRect = composerElement.getBoundingClientRect()
+        const scrollOffset = bottomRect.bottom - composerRect.top
+
+        shouldAutoScrollRef.current = true
+        window.scrollTo({
+            top: window.scrollY + scrollOffset,
+            behavior,
+        })
     }
 
     useEffect(() => {
-        if (!showScrollButton) {
+        if (shouldAutoScrollRef.current) {
             requestAnimationFrame(() => {
-                bottomRef.current?.scrollIntoView({
-                    behavior: "auto",
-                });
+                scrollToLatest("auto")
+                updateScrollState()
             });
+        } else {
+            updateScrollState()
         }
-    }, [ isStreaming, isThinking]);
+    }, [messages, isStreaming, isThinking, bottomRef, composerRef]);
 
     useEffect(() => {
-        window.addEventListener("scroll", handleWindowScroll)
+        updateScrollState()
+        window.addEventListener("scroll", updateScrollState)
+        window.addEventListener("resize", updateScrollState)
 
         return () => {
-        window.removeEventListener("scroll", handleWindowScroll)
+        window.removeEventListener("scroll", updateScrollState)
+        window.removeEventListener("resize", updateScrollState)
         }
-    }, []);
+    }, [messages.length, bottomRef, composerRef]);
 
     const scroll = {
         scrollToLatest, 

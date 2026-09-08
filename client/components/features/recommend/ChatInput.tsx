@@ -1,47 +1,31 @@
 "use client";
 
 import type { Film } from "@/types";
-import { Button } from "@/components/ui";
 import { ChatHeader } from "./ChatHeader";
-import { LuArrowDown } from "react-icons/lu";
 import ChatComposer from "./ChatMessages/ChatComposer";
 import ChatMessages from "./ChatMessages/ChatMessages";
 import { useFilmChat } from "@/hooks/useChat";
-import useAutoScroll from "@/hooks/useAutoScroll";
+import { useRef } from "react";
 
 export function ChatInput({ films }: { films: Film[] }) {
   const chat = useFilmChat({ films })
-
-  const scroll = useAutoScroll({
-    messages: chat.messages, 
-    isStreaming: chat.isStreaming, 
-    isThinking: chat.isThinking, 
-    bottomRef: chat.bottomRef
-  })
+  const composerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <>
-    {chat.messages.length === 0 && (
-      <ChatHeader onPrompt={(prompt) => chat.sendMessage({ text: prompt })} />
-    )}
+    <div className="flex flex-col">
+      {chat.messages.length === 0 && (
+        <ChatHeader onPrompt={(prompt) => chat.sendMessage({ text: prompt })} />
+      )}
 
-    <ChatMessages 
-      chat={chat}
-      films={films} 
-      addToolOutput={chat.addToolOutput}
-       />
+      <main>
+        <ChatMessages 
+          chat={chat}
+          films={films} 
+          addToolOutput={chat.addToolOutput}
+        />
+      </main>
 
-    {scroll.showScrollButton && (
-      <Button
-        type="button"
-        onClick={ () => scroll.scrollToLatest() }
-        aria-label="Scroll to latest message"
-        className="fixed bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-full cursor-pointer"
-      >
-        <LuArrowDown />
-      </Button>
-    )}
-    <ChatComposer chat={chat} />
-    </>
+      <ChatComposer chat={chat} composerRef={composerRef} />
+    </div>
   );
 }

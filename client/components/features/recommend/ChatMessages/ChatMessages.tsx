@@ -32,7 +32,7 @@ export default function ChatMessages({
 
                 if (message.role === "assistant") {
                     return (
-                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} hideToolParts={hasError} />
+                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
                     )
                 }
 
