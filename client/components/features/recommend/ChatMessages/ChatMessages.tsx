@@ -14,6 +14,24 @@ type ChatMessagesProps = {
     addToolOutput: any, 
 }
 
+function getErrorMessage(error: unknown) {
+    if (typeof error !== "string") {
+        return "We couldn't complete this request. Please try again."
+    }
+
+    try {
+        const parsed = JSON.parse(error)
+
+        if (typeof parsed.error === "string") {
+            return parsed.error
+        }
+
+        return error
+    } catch {
+        return error
+    }
+}
+
 export default function ChatMessages({ 
     chat,
     films, 
@@ -48,7 +66,11 @@ export default function ChatMessages({
                 <div className="mt-3">
                     <ToolErrorCard
                         title="Something went wrong"
-                        message={chat.error?.message || chat.responseError || "We couldn't complete this request. Please start a new chat and try again."}
+                        message={    getErrorMessage(
+                                    chat.error?.message ||
+                                    chat.responseError ||
+                                    "We couldn't complete this request. Please start a new chat and try again."
+                                )}
                         actionType="regenerate"
                         onRegenerate={() => {
                             chat.regenerate()

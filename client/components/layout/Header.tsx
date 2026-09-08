@@ -12,7 +12,8 @@ export default function Header() {
             <div className="text-center">
                 {/* <Link href="/health" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Health</Link> */}
                 <Link href="/find-my-film" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Finding</Link> 
-                <Link href="/watchlist" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Watchlist</Link> 
+                <Link href="/watchlist" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">Watchlist</Link>
+                <Link href="/about" className="rounded-button border-primary px-button-x py-button-y text-sm font-semibold no-underline">About</Link> 
             </div>
             
           </nav>

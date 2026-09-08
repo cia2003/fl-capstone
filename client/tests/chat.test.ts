@@ -40,7 +40,7 @@ test.describe("chat failure handling", () => {
     const errorMessage = await chatPage.getErrorMessage()
 
     await expect(errorMessage).toBe(
-      "{\"error\":\"This is a test server error\"}"
+      "This is a test server error"
     )
   });
 
@@ -54,7 +54,7 @@ test.describe("chat failure handling", () => {
     const errorMessage = await chatPage.getErrorMessage()
 
     await expect(errorMessage).toBe(
-      "{\"error\":\"Too many requests\"}"
+      "Too many requests"
     )
   });
 

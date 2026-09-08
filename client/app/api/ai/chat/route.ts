@@ -16,6 +16,20 @@ export const runtime = "nodejs"
 export async function POST(req: Request) {
     const { messages, films }: { messages: UIMessage[], films: Film[] } = await req.json()
 
+    // if (process.env.TEST_ERROR === "429") {
+    //     return new Response(
+    //         JSON.stringify({
+    //             error: "Too Many Requests",
+    //         }), 
+    //         {
+    //             status: 429, 
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         }
+    //     )
+    // }
+
     const result = streamText({
         model: google("gemini-3.5-flash-lite"),
         system: `${filmRecommenderPrompt} Verified film list: ${JSON.stringify(films)}`,
