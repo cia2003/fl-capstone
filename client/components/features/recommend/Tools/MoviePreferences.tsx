@@ -1,4 +1,5 @@
 import { FilmToolPart } from "@/types/chat";
+import { Button } from "@/components/ui";
 import ToolState from "./ToolState";
 
 type MoviePreferencesProps = {
@@ -44,14 +45,16 @@ export default function MoviePreferences({
 
           <div className="flex flex-wrap gap-2">
             {result.map((option) => (
-              <button
+              <Button
                 key={option}
                 type="button"
-                onClick={() => handleSelect(option || "")}
+                idleLabel={option}
+                loadingLabel="Selecting..."
+                successLabel="Selected"
+                errorLabel="Retry"
+                onAction={() => handleSelect(option || "")}
                 className="rounded-full border px-4 py-2 text-sm transition hover:bg-muted cursor-pointer"
-              >
-                {option}
-              </button>
+              />
             ))}
           </div>
         </div>

@@ -5,5 +5,17 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 
 export function WatchlistButton({ filmId }: { filmId: string }) {
   const { has, toggle } = useWatchlist();
-  return <Button variant="secondary" className="mt-6 cursor-pointer" onClick={() => toggle(filmId)}>{has(filmId) ? "Remove from watchlist" : "Save to watchlist"}</Button>;
+  const saved = has(filmId);
+
+  return (
+    <Button
+      variant="secondary"
+      className="mt-6 cursor-pointer"
+      idleLabel={saved ? "Remove from watchlist" : "Save to watchlist"}
+      loadingLabel="Saving..."
+      successLabel={saved ? "Removed" : "Saved"}
+      errorLabel="Retry"
+      onAction={() => toggle(filmId)}
+    />
+  );
 }

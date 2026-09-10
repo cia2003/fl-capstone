@@ -24,7 +24,7 @@ export class ChatPage {
         'p[role="alert"].text-primary'
     )
 
-    this.thinkingIndicator = page.getByTestId("thinking-indicator");
+    this.thinkingIndicator = page.getByText("AI is thinking");
 
     this.stopButton = page.getByRole("button", {
       name: "Stop generating response",

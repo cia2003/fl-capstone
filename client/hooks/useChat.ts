@@ -197,6 +197,9 @@ export function useFilmChat({ films }: UseChatProps) {
     // Tool masih berjalan.
     // Tunggu sampai tool selesai sebelum melakukan validation.
     if (toolParts.some(isToolStillRunning)) {
+      // Hapus error dari snapshot assistant sebelumnya selama response baru
+      // masih berjalan, agar error card tidak muncul di tengah generation.
+      setResponseError(null)
       return
     }
 

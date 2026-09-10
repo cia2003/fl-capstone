@@ -13,15 +13,21 @@ export function ChatHeader({ onPrompt }: ChatHeaderProps) {
       <div className="mt-6 flex gap-3 align-center justify-center">
         <Button
           type="button"
-          onClick={() => onPrompt("Help me find my preferences")}
+          idleLabel="Help me find my preferences"
+          loadingLabel="Preparing..."
+          successLabel="Ready"
+          errorLabel="Retry"
+          onAction={() => onPrompt("Help me find my preferences")}
         >
-          Help me find my preferences
         </Button>
         <Button
           type="button"
-          onClick={() => onPrompt("Show me a random film")}
+          idleLabel="Show me a random film"
+          loadingLabel="Preparing..."
+          successLabel="Ready"
+          errorLabel="Retry"
+          onAction={() => onPrompt("Show me a random film")}
         >
-          Show me a random film
         </Button>
       </div>
     </>

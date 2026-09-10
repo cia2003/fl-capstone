@@ -7,6 +7,7 @@ import ThinkingIndicator from "@/components/ui/ThinkingIndicator";
 import { getTextFromMessage } from "@/lib/utils/helpers";
 import { useFilmChat } from "@/hooks/useChat";
 import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
+import { useState } from "react";
 
 type ChatMessagesProps = {
     chat: ReturnType<typeof useFilmChat>
@@ -38,6 +39,22 @@ export default function ChatMessages({
     addToolOutput, 
  }: ChatMessagesProps) {
     const hasError = Boolean(chat.error || chat.responseError)
+    const [isRegenerating, setIsRegenerating] = useState(false)
+
+    const handleRegenerate = async () => {
+        setIsRegenerating(true)
+
+        try {
+            await chat.regenerate()
+
+            window.setTimeout(() => setIsRegenerating(false), 800)
+        } catch (err) {
+            setIsRegenerating(false)
+            throw err
+        }
+    }
+
+    const showRegenerateCard = isRegenerating || (!chat.loading && hasError)
 
     return (
         <div className="relative">
@@ -58,26 +75,24 @@ export default function ChatMessages({
             })}
 
             {
-                chat.loading && chat.isThinking && (
+                chat.loading && chat.isThinking && !isRegenerating && (
                     <ThinkingIndicator />
                 )
             }
-            { !chat.loading && (chat.error || chat.responseError) && (
+            { showRegenerateCard && (
                 <div className="mt-3">
                     <ToolErrorCard
                         title="Something went wrong"
-                        message={    getErrorMessage(
+                        message={ hasError ? getErrorMessage(
                                     chat.error?.message ||
                                     chat.responseError ||
-                                    "We couldn't complete this request. Please start a new chat and try again."
-                                )}
+                                    "We couldn't complete this request. Please try again."
+                                ) : undefined}
                         actionType="regenerate"
-                        onRegenerate={() => {
-                            chat.regenerate()
-                        }}
-                        onNewChat={() => {
-                            chat.newChat()
-                        }}
+                        onRegenerate={handleRegenerate}
+                        onNewChat={chat.newChat}
+                        chatStatus={chat.status}
+                        chatError={chat.error || chat.responseError}
                     />
                 </div>
             )}

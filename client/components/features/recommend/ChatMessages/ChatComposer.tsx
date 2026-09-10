@@ -15,6 +15,9 @@ export default function ChatComposer({
     composerRef
 }: ChatComposerProps) {
     const [query, setQuery] = useState("")
+    const [lastSubmittedQuery, setLastSubmittedQuery] = useState("")
+    const hasError = chat.error != null || chat.responseError != null
+    const buttonState = hasError ? "error" : chat.loading ? "generating" : "idle"
     const scroll = useAutoScroll({
         messages: chat.messages,
         isStreaming: chat.isStreaming,
@@ -26,7 +29,9 @@ export default function ChatComposer({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (!query.trim()) return
+        const submittedQuery = query.trim() || (hasError ? lastSubmittedQuery : "")
+
+        if (!submittedQuery) return
 
         if (chat.error != null || chat.responseError != null) {
         chat.setMessages(messages =>
@@ -36,14 +41,15 @@ export default function ChatComposer({
         );
         }
 
-        const submittedAsPreference = chat.submitPreference(query)
+        const submittedAsPreference = chat.submitPreference(submittedQuery)
 
         if (!submittedAsPreference) {
             chat.sendMessage({
-                text: query
+                text: submittedQuery
             })
         }
 
+        setLastSubmittedQuery(submittedQuery)
         setQuery("")
     }
 
@@ -77,19 +83,31 @@ export default function ChatComposer({
                         onChange={event =>
                         setQuery(event.target.value)
                         }
-                        disabled={chat.error != null || chat.responseError != null}
                         placeholder="I want a gentle, hopeful adventure…"
-                        required
+                        required={!lastSubmittedQuery}
+                        disabled={hasError}
                     />
 
                     <Button
                         type={chat.loading ? "button" : "submit"}
                         onClick={chat.loading ? chat.stop : undefined}
-                        className="cursor-pointer"
-                        aria-label={chat.loading ? "Stop generating response" : "Send message"}
-                        disabled={chat.error != null || chat.responseError != null}
+                        className="chat-send-control cursor-pointer"
+                        aria-label={chat.loading ? "Stop generating response" : hasError ? "Retry message" : "Send message"}
+                        data-button-state={buttonState}
+                        disabled={hasError}
                     >
-                        {chat.loading ? <LuSquare /> : <LuSend />}
+                        <span
+                            aria-hidden="true"
+                            className={`chat-send-icon ${chat.loading ? "chat-send-icon--hidden" : "chat-send-icon--visible"}`}
+                        >
+                            <LuSend />
+                        </span>
+                        <span
+                            aria-hidden="true"
+                            className={`chat-send-icon ${chat.loading ? "chat-send-icon--visible" : "chat-send-icon--hidden"}`}
+                        >
+                            <LuSquare />
+                        </span>
                     </Button>
                 </div>
             </form>            

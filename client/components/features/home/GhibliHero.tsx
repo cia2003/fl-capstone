@@ -61,18 +61,26 @@ export function GhibliHero({ films }: { films: Film[] }) {
           <div className="mt-8 flex items-center gap-3">
             <Button
               variant="primary"
-              onClick={() => (window.location.href = "/find-my-film")}
+              idleLabel="Talk to Ghibli Compass"
+              loadingLabel="Opening..."
+              successLabel="Opened"
+              errorLabel="Retry"
+              onAction={() => {
+                window.location.href = "/find-my-film";
+              }}
             >
-              Talk to Ghibli Compass
             </Button>
 
             <Button
               variant="secondary"
-              onClick={() =>
-                (window.location.href = `/films/${getRandomFilm().id}`)
-              }
+              idleLabel="Surprise Me!"
+              loadingLabel="Choosing..."
+              successLabel="Selected"
+              errorLabel="Retry"
+              onAction={() => {
+                window.location.href = `/films/${getRandomFilm().id}`;
+              }}
             >
-              Surprise Me!
             </Button>
           </div>
         </div>

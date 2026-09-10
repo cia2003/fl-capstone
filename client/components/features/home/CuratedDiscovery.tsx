@@ -4,6 +4,7 @@ import type { Film } from "@/types/film";
 import { FilmCard } from "../films/FilmCard";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 import { LuSearch } from "react-icons/lu";
 
 export function CuratedDiscovery({ films }: { films: Film[] }) {
@@ -212,48 +213,54 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                             {/* PAGINATION */}
                             {totalPages > 1 && (
                                 <div className="mt-8 flex items-center justify-center gap-2">
-                                    <button
+                                    <Button
                                         disabled={currentPage === 1}
-                                        onClick={() =>
+                                        onAction={() =>
                                             setCurrentPage((page) =>
                                                 page - 1
                                             )
                                         }
+                                        idleLabel="←"
+                                        loadingLabel="..."
+                                        successLabel="←"
+                                        errorLabel="Retry"
                                         className="rounded-md border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-40"
-                                    >
-                                        ←
-                                    </button>
+                                    />
 
                                     {Array.from(
                                         { length: totalPages },
                                         (_, index) => index + 1
                                     ).map((page) => (
-                                        <button
+                                        <Button
                                             key={page}
-                                            onClick={() =>
+                                            onAction={() =>
                                                 setCurrentPage(page)
                                             }
+                                            idleLabel={String(page)}
+                                            loadingLabel="..."
+                                            successLabel={String(page)}
+                                            errorLabel="Retry"
                                             className={`rounded-md px-3 py-2 ${
                                                 currentPage === page
                                                     ? "bg-primary text-white"
                                                     : ""
                                             }`}
-                                        >
-                                            {page}
-                                        </button>
+                                        />
                                     ))}
 
-                                    <button
+                                    <Button
                                         disabled={currentPage === totalPages}
-                                        onClick={() =>
+                                        onAction={() =>
                                             setCurrentPage((page) =>
                                                 page + 1
                                             )
                                         }
+                                        idleLabel="→"
+                                        loadingLabel="..."
+                                        successLabel="→"
+                                        errorLabel="Retry"
                                         className="rounded-md border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-40"
-                                    >
-                                        →
-                                    </button>
+                                    />
                                 </div>
                             )}
                         </>
