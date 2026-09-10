@@ -1,4 +1,5 @@
 import { Locator, Page, Route } from "@playwright/test";
+import { fulfillUiMessageStream } from "./ai-stream";
 
 type FailThenSucceedOptions = {
   /** URL pattern to intercept. Defaults to the chat endpoint. */
@@ -57,7 +58,13 @@ export async function failThenSucceed(
     if (successDelayMs > 0) {
       await new Promise((resolve) => setTimeout(resolve, successDelayMs));
     }
-    await route.continue();
+    await fulfillUiMessageStream(route, [
+      { type: "start", messageId: "retry-success" },
+      { type: "text-start", id: "retry-text" },
+      { type: "text-delta", id: "retry-text", delta: "A retry succeeded." },
+      { type: "text-end", id: "retry-text" },
+      { type: "finish", finishReason: "stop" },
+    ], successDelayMs);
   };
 
   await page.route(urlPattern, handler);
