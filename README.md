@@ -11,6 +11,22 @@ Next.js frontend for browsing Studio Ghibli films, saving a local watchlist, and
 - agents/ for AI prompt and client wrappers
 - __tests__/ for component and flow tests
 
+## 3D Movie Carousel
+
+The home page includes a lazy-loaded React Three Fiber carousel with a Three.js WebGPU renderer and poster textures from the nine highest-rated films. It supports horizontal drag/swipe, horizontal wheel input, snapping, previous/next controls, and clicking a poster to open its film detail page.
+
+For reduced-motion preferences, missing WebGPU, or devices with limited CPU/memory hints, the page uses a clickable static poster grid instead of loading the 3D chunk. The carousel keeps the film count at nine and loads only those poster textures. No GLB models or additional large runtime libraries are used.
+
+### FE-10 Performance Check
+
+Record the following in a desktop and mobile browser before release:
+
+1. In DevTools Network, reload the home page and note the transferred size of the JavaScript/WebGPU chunk and the nine poster requests.
+2. In DevTools Performance, record 5–10 seconds while dragging and note the average FPS and any long frames.
+3. Repeat on a throttled mobile profile and with `prefers-reduced-motion: reduce`; confirm the static fallback appears and remains clickable.
+
+With more time, the next improvements would be poster thumbnail variants, explicit texture disposal when leaving the route, and automated mobile performance screenshots.
+
 
 ## AI Tool Contracts
 

@@ -1,0 +1,125 @@
+"use client";
+
+import { Suspense } from "react";
+import { Canvas, type GLProps } from "@react-three/fiber";
+import { useState, useMemo } from "react";
+import * as THREE from "three/webgpu";
+import type { Film } from "@/types";
+import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
+import { CarouselScene } from "./CarouselScene";
+import { useRouter } from "next/navigation";
+
+type R3FDefaultGLProps = Parameters<
+    Extract<GLProps, (...args: never[]) => unknown>
+>[0];
+
+async function createWebGpuRenderer(props: R3FDefaultGLProps) {
+    const renderer = new THREE.WebGPURenderer(
+        { ...props, alpha: true } as THREE.WebGPURendererParameters
+    )
+
+    await renderer.init()
+    renderer.setClearColor(0x000000, 0)
+    return renderer
+}
+
+
+const defaultControls: CarouselControlValues = {
+    radius: 5.8,
+    imageWidth: 2.85,
+    imageHeight: 4.05,
+    cornerRadius: 0.05,
+    bendAmount: 0.1,
+    backgroundColor: "transparent",
+    centerOpacity: 1.0,
+    adjacentOpacity: 0.9,
+    farOpacity: 0.8,
+    friction: 90,
+    wheelSensitivity: 100,
+    dragSensitivity: 300,
+    enableSnapping: true,
+};
+
+export function MovieCarousel3D({ films }: { films: Film[] }) {
+    const router = useRouter()
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [controls, setControls] = useState(defaultControls);
+    const topFilms = useMemo(() => films.slice(0, 9), [films]);
+
+    const images = useMemo(
+    () => topFilms.map((film) => film.image),
+    [topFilms]
+    );
+
+    // OLD / DEBUG: console.log("MovieCarousel3D RENDER", { activeIndex, images, topFilms });
+    const handleFilmClick = (index: number) => {
+        const film = topFilms[index];
+        if (film) router.push(`/films/${film.id}`)
+    }
+    function updateControl<Key extends keyof CarouselControlValues>(key: Key, value: CarouselControlValues[Key]) {
+        setControls((current) => ({ ...current, [key]: value }));
+    }
+
+  return (
+
+    <section className="mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+        <div className="mx-auto max-w-[1280px] pt-section-mobile md:pt-section-desktop">
+            <h2 className="mb-4 text-2xl font-semibold">Top Movies</h2>
+            <p className="mb-6 text-sm text-muted-foreground">
+                Explore the top-rated Studio Ghibli movies based on their Rotten Tomatoes scores.
+            </p>
+        </div>
+        <Canvas
+            camera={{ position: [0, 0, 11], fov: 55 }}
+            shadows={false}
+            style={{ width: "100%", height: "500px", background: "transparent" }}
+            gl={createWebGpuRenderer}
+            onCreated={({ gl }) => {
+                gl.shadowMap.type = THREE.PCFShadowMap
+            }}
+        >
+            <Suspense
+            // OLD / DEBUG: Gray loading cube kept here for debugging if needed.
+                /* fallback={
+                    <mesh>
+                    <boxGeometry args={[1, 1, 1]} />
+                    <meshBasicMaterial color="gray" />
+                    </mesh>
+                } */
+                fallback={null}
+            >
+                <CarouselScene
+                    images={images}
+                    selectedIndex={activeIndex}
+                    onIndexChange={setActiveIndex}
+                    radius={controls.radius}
+                    imageWidth={controls.imageWidth}
+                    imageHeight={controls.imageHeight}
+                    cornerRadius={controls.cornerRadius}
+                    bendAmount={controls.bendAmount}
+                    centerOpacity={controls.centerOpacity}
+                    adjacentOpacity={controls.adjacentOpacity}
+                    farOpacity={controls.farOpacity}
+                    friction={controls.friction / 100}
+                    wheelSensitivity={controls.wheelSensitivity}
+                    dragSensitivity={controls.dragSensitivity}
+                    enableSnapping={controls.enableSnapping}
+                    onImageClick={handleFilmClick}
+                />
+            </Suspense>        
+        </Canvas>
+        <div className="-mt-8 sm:-mt-18">
+            <CarouselControls
+                activeIndex={activeIndex}
+                films={topFilms}
+                values={controls}
+                onChange={updateControl}
+                onPrevious={() => setActiveIndex((index) => (index - 1 + topFilms.length) % topFilms.length)}
+                onNext={() => setActiveIndex((index) => (index + 1) % topFilms.length)}
+                onSelect={setActiveIndex}
+            />
+        </div>
+        </section>
+
+  );
+}

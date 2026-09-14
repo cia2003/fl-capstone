@@ -2,9 +2,10 @@ import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode 
 import { cn } from "@/lib/utils/cn";
 
 type ChatStatus = "ready" | "submitted" | "streaming" | "error";
+type ButtonVariant = "primary" | "secondary" | "transparent";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary";
+  variant?: ButtonVariant;
   idleLabel?: string;
   loadingLabel?: string;
   successLabel?: string;
@@ -181,7 +182,9 @@ export function Button({
         "group rounded-button px-button-x py-button-y text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
         variant === "primary"
           ? "bg-accent text-[#21170d] hover:bg-accent/85"
-          : "border-[1.5px] border-primary bg-transparent text-primary hover:bg-primary/10",
+          : variant === "secondary"
+            ? "border-[1.5px] border-primary bg-transparent text-primary hover:bg-primary/10"
+            : "bg-transparent text-primary hover:bg-primary/10",
         className
       )}
       disabled={disabled || currentStatus === "loading"}

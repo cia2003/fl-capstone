@@ -4,7 +4,6 @@ import { Film } from "@/types";
 import { UserMessage } from "./UserMessage";
 import { AIMessage } from "./AIMessage";
 import ThinkingIndicator from "@/components/ui/ThinkingIndicator";
-import { getTextFromMessage } from "@/lib/utils/helpers";
 import { useFilmChat } from "@/hooks/useChat";
 import { ToolErrorCard } from "@/components/ui/ToolErrorCard";
 import { useState } from "react";
@@ -13,6 +12,13 @@ type ChatMessagesProps = {
     chat: ReturnType<typeof useFilmChat>
     films: Film[],
     addToolOutput: any, 
+}
+
+function getTextFromMessage(message: ReturnType<typeof useFilmChat>["messages"][number]) {
+    return message.parts
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
+        .join("")
 }
 
 function getErrorMessage(error: unknown) {
