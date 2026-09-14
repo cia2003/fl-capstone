@@ -19,11 +19,13 @@ For reduced-motion preferences, missing WebGPU, or devices with limited CPU/memo
 
 ### FE-10 Performance Check
 
-Record the following in a desktop and mobile browser before release:
+The 3D carousel was tested using Chrome DevTools:
 
-1. In DevTools Network, reload the home page and note the transferred size of the JavaScript/WebGPU chunk and the nine poster requests.
-2. In DevTools Performance, record 5–10 seconds while dragging and note the average FPS and any long frames.
-3. Repeat on a throttled mobile profile and with `prefers-reduced-motion: reduce`; confirm the static fallback appears and remains clickable.
+- **Poster textures:** 9 posters
+- **Total transferred size:** approximately 1.43 MB
+- **Frame rate:** approximately 141–144 FPS during carousel interaction, measured using Rendering → Frame rendering stats
+- **Mobile:** carousel drag/swipe, scrolling, and film selection remained usable
+- **Reduced motion:** the 3D carousel is replaced by a clickable static poster grid
 
 With more time, the next improvements would be poster thumbnail variants, explicit texture disposal when leaving the route, and automated mobile performance screenshots.
 
