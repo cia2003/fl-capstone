@@ -27,7 +27,7 @@ The 3D carousel was tested using Chrome DevTools:
 - **Mobile:** carousel drag/swipe, scrolling, and film selection remained usable
 - **Reduced motion:** the 3D carousel is replaced by a clickable static poster grid
 
-With more time, the next improvements would be poster thumbnail variants, explicit texture disposal when leaving the route, and automated mobile performance screenshots.
+With more time, I would add subtle poster animations to make the carousel feel more alive and enable automatic rotation after a few seconds of user inactivity.
 
 
 ## AI Tool Contracts
