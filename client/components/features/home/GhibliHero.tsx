@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.jpg";
 import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.jpg";
 import { Film } from "@/types/film";
+import Image from "next/image";
 
 export function GhibliHero({ films }: { films: Film[] }) {
   const getRandomFilm = () => {
@@ -20,10 +21,13 @@ export function GhibliHero({ films }: { films: Film[] }) {
           media="(max-width: 767px)"
           srcSet={HeroMobileImage.src}
         />
-        <img
-          src={HeroDesktopImage.src}
+        <Image
+          src={HeroDesktopImage}
           alt=""
-          className="h-full w-full object-cover object-center"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
         />
       </picture>
 

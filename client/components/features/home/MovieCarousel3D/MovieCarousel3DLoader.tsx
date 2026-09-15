@@ -5,9 +5,14 @@ import { useEffect, useState } from "react";
 import type { Film } from "@/types";
 import CarouselFallback from "./CarouselFallback";
 
+const CAROUSEL_HEIGHT = 500;
+
 const LazyMovieCarousel3D = dynamic(
   () => import("./MovieCarousel3D").then((module) => module.MovieCarousel3D),
-  { ssr: false, loading: () => null },
+  {
+    ssr: false,
+    loading: () => <CarouselFallback movies={[]} />,
+  },
 );
 
 type LoaderState = "checking" | "3d" | "fallback";
@@ -36,9 +41,13 @@ export function MovieCarousel3DLoader({ films }: { films: Film[] }) {
     setState(canRunCarousel3D() ? "3d" : "fallback");
   }, []);
 
-  if (state !== "3d") {
-    return <CarouselFallback movies={films} />;
-  }
-
-  return <LazyMovieCarousel3D films={films} />;
+  return (
+    <div style={{ minHeight: CAROUSEL_HEIGHT }} className="w-full">
+      {state !== "3d" ? (
+        <CarouselFallback movies={films} />
+      ) : (
+        <LazyMovieCarousel3D films={films} />
+      )}
+    </div>
+  );
 }

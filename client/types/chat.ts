@@ -1,5 +1,5 @@
-import { filmTools } from "@/agents/tools/filmTools";
-import { InferUITools, ToolUIPart, UIMessage } from "ai";
+import type { filmTools } from "@/agents/tools/filmTools";
+import type { InferUITools, ToolUIPart, UIMessage } from "ai";
 
 export type ChatMessage = {
   type: "user_input" | "model_output";
