@@ -158,3 +158,192 @@
     animation: none;
   }
 }
+
+/*
+ * Cat animation adapted from:
+ * "Pure CSS cat animation" by Johan Mouchet
+ * https://codepen.io/johanmouchet/pen/OXxvqM
+ *
+ * MIT License.
+ *
+ * The animation is used as a visual loading/error/not-found element
+ * in Ghibli Compass.
+ */
+
+.cat-animation {
+  --cat-size: 120px;
+
+  position: relative;
+  width: var(--cat-size);
+  height: var(--cat-size);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cat-animation--sm {
+  --cat-size: 80px;
+}
+
+.cat-animation--md {
+  --cat-size: 120px;
+}
+
+.cat-animation--lg {
+  --cat-size: 160px;
+}
+
+.cat {
+  position: relative;
+  width: 80%;
+  height: 80%;
+}
+
+.cat__body {
+  position: absolute;
+  inset: 25% 15% 0;
+  background: #2a1810;
+  border-radius: 50% 50% 45% 45%;
+}
+
+.cat__head {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  left: 14%;
+  top: -12%;
+  background: #2a1810;
+  border-radius: 48% 48% 45% 45%;
+  z-index: 2;
+}
+
+.cat__ear {
+  position: absolute;
+  width: 38%;
+  height: 42%;
+  top: -22%;
+  background: #2a1810;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+.cat__ear--left {
+  left: 0;
+  transform: rotate(-8deg);
+}
+
+.cat__ear--right {
+  right: 0;
+  transform: rotate(8deg);
+}
+
+.cat__face {
+  position: absolute;
+  inset: 20% 10% 10%;
+}
+
+.cat__eye {
+  position: absolute;
+  top: 24%;
+  width: 18%;
+  height: 24%;
+  background: #fdf6ec;
+  border-radius: 50%;
+  overflow: hidden;
+  animation: cat-blink 5s infinite;
+  transform-origin: center;
+}
+
+.cat__eye--left {
+  left: 20%;
+}
+
+.cat__eye--right {
+  right: 20%;
+}
+
+.cat__pupil {
+  position: absolute;
+  width: 45%;
+  height: 65%;
+  top: 20%;
+  left: 28%;
+  background: #2a1810;
+  border-radius: 50%;
+  animation: cat-look-around 4s infinite;
+}
+
+.cat__muzzle {
+  position: absolute;
+  width: 32%;
+  height: 20%;
+  left: 34%;
+  bottom: 18%;
+  background: #fdf6ec;
+  border-radius: 50%;
+}
+
+.cat__muzzle::before {
+  content: "";
+  position: absolute;
+  width: 24%;
+  height: 28%;
+  left: 38%;
+  top: 10%;
+  background: #b23a2e;
+  border-radius: 50%;
+}
+
+.cat__muzzle::after {
+  content: "";
+  position: absolute;
+  width: 45%;
+  height: 35%;
+  left: 28%;
+  bottom: 5%;
+  border-bottom: 2px solid #2a1810;
+  border-radius: 50%;
+}
+
+@keyframes cat-blink {
+  0%,
+  45%,
+  48%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  46%,
+  47% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes cat-look-around {
+  0%,
+  20% {
+    transform: translateX(0);
+  }
+
+  25%,
+  40% {
+    transform: translateX(-25%);
+  }
+
+  45%,
+  65% {
+    transform: translateX(20%);
+  }
+
+  70%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat__eye,
+  .cat__pupil {
+    animation: none;
+  }
+}
