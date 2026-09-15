@@ -1,55 +1,64 @@
-// components/features/home/GhibliHero.tsx
+// components/features/about/AboutHero.tsx
 "use client";
 
-import { Button } from "@/components/ui/Button";
-import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.jpg";
-import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.jpg";
+import HeroDesktopImage from "@/public/images/about/kikis-delivery-desktop.jpg";
 
 export function AboutHero() {
-
   return (
     <section className="relative overflow-hidden">
-      {/* Responsive Hero Background */}
-      <picture className="absolute inset-0">
-        <source
-          media="(max-width: 767px)"
-          srcSet={HeroMobileImage.src}
-        />
-        <img
-          src={HeroDesktopImage.src}
-          alt=""
-          className="h-full w-full object-cover object-center"
-        />
-      </picture>
-
-      {/* Overlay */}
-      <div
-      className="
-        absolute inset-0
-        bg-gradient-to-t
-        from-background
-        via-background/50
-        to-background/0
-        md:bg-gradient-to-r
-        md:from-background
-        md:via-background/50
-        md:to-background/0
-      "
-    />
-
-      {/* Content */}
-      <div className="relative mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+      <div className="mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
         <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section">
-          <h1 className="mt-2">
-            Discover the Ghibli film that fits your mood.
-          </h1>
+          <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_1.15fr] md:gap-8 lg:gap-12">
+            <div className="order-1 w-full md:order-2 md:justify-self-end">
+              <img
+                src={HeroDesktopImage.src}
+                alt="Kiki overlooking a seaside town"
+                className="
+                  w-full
+                  max-w-[700px]
+                  object-contain
+                  object-center
 
-          <p className="mt-4 max-w-2xl">
-            Browse verified film details, save your favourites locally,
-            or ask Ghibli Compass for a thoughtful starting point.
-          </p>
+                  [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_92%)]
+                  [-webkit-mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_92%)]
 
-          <div className="mt-8 flex items-center gap-3">
+                  md:max-w-[650px]
+                  lg:max-w-[700px]
+                "
+              />
+            </div>
+
+            <div className="order-2 md:order-1">
+              <p className="text-caption font-medium tracking-caption text-primary">
+                About
+              </p>
+
+              <h1 className="mt-2">Ghibli Compass</h1>
+
+              <p className="mt-4 max-w-[420px] text-lg leading-relaxed md:text-xl lg:text-[22px]">
+                A simpler way to find your next Ghibli story.
+              </p>
+
+              <p className="mt-4 max-w-[560px] text-sm leading-relaxed text-text/80 md:text-base">
+                Ghibli Compass is a friendly guide for anyone who loves Studio
+                Ghibli. Whether you&apos;re new to the world of Ghibli or a
+                lifelong fan, our goal is to help you discover the perfect film
+                — based on your mood, interests, and curiosity.
+              </p>
+
+              <div className="mt-6 flex items-center gap-3 md:justify-start">
+                <div className="h-px flex-1 bg-primary/40" />
+                <span className="text-primary" aria-hidden="true">
+                  ✧
+                </span>
+                <div className="h-px flex-1 bg-primary/40 " />
+              </div>
+
+              <p className="mt-4 text-center font-heading text-base italic leading-relaxed text-primary md:mt-5 md:text-left md:text-lg">
+                “Every journey begins
+                with a single story.”
+              </p>
+            </div>
           </div>
         </div>
       </div>
