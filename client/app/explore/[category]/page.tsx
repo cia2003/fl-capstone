@@ -18,6 +18,24 @@ const categoryInfo: Record<
     description:
       "Discover Studio Ghibli films through the unique visions and storytelling styles of its directors.",
   },
+
+  "highly-rated": {
+    title: "Highly Rated",
+    description:
+      "Discover some of the most highly rated Studio Ghibli films, loved by audiences around the world.",
+  },
+
+  classics: {
+    title: "Classics",
+    description:
+      "Revisit the timeless Studio Ghibli films that helped shape the studio's beloved legacy.",
+  },
+
+  "short-and-simple": {
+    title: "Short & Simple",
+    description:
+      "Looking for something easy to watch? Explore shorter Ghibli films that make for a simple and enjoyable viewing experience.",
+  },
 };
 
 export default async function FilmPage({
@@ -154,6 +172,93 @@ export default async function FilmPage({
             );
           })}
         </div>
+      </main>
+    );
+  }
+
+  /*
+   * Highly Rated
+   */
+  if (category === "highly-rated") {
+    const highlyRatedFilms = films
+      .filter((film) => Number(film.rt_score) >= 90)
+      .sort((a, b) => Number(b.rt_score) - Number(a.rt_score));
+
+    return (
+      <main role="main">
+        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
+          <div className="mx-auto max-w-[1280px]">
+            <h1 className="mb-2 text-2xl font-semibold">
+              {info.title}
+            </h1>
+
+            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+              {info.description}
+            </p>
+          </div>
+        </section>
+
+        <FilmGrid films={highlyRatedFilms} />
+      </main>
+    );
+  }
+
+  /*
+   * Classics
+   */
+  if (category === "classics") {
+    const classicFilms = films
+      .filter((film) => Number(film.release_date) < 2000)
+      .sort(
+        (a, b) =>
+          Number(a.release_date) - Number(b.release_date)
+      );
+
+    return (
+      <main role="main">
+        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
+          <div className="mx-auto max-w-[1280px]">
+            <h1 className="mb-2 text-2xl font-semibold">
+              {info.title}
+            </h1>
+
+            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+              {info.description}
+            </p>
+          </div>
+        </section>
+
+        <FilmGrid films={classicFilms} />
+      </main>
+    );
+  }
+
+  /*
+   * Short & Simple
+   */
+  if (category === "short-and-simple") {
+    const shortFilms = films
+      .filter((film) => Number(film.running_time) <= 90)
+      .sort(
+        (a, b) =>
+          Number(a.running_time) - Number(b.running_time)
+      );
+
+    return (
+      <main role="main">
+        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
+          <div className="mx-auto max-w-[1280px]">
+            <h1 className="mb-2 text-2xl font-semibold">
+              {info.title}
+            </h1>
+
+            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+              {info.description}
+            </p>
+          </div>
+        </section>
+
+        <FilmGrid films={shortFilms} />
       </main>
     );
   }
