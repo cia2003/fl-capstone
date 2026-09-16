@@ -1,5 +1,5 @@
-import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.avif";
-import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.avif";
+import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.webp";
+import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.webp";
 import type { Film } from "@/types/film";
 import Image from "next/image";
 import { HeroActions } from "./HeroActions";
@@ -7,27 +7,22 @@ import { HeroActions } from "./HeroActions";
 export function GhibliHero({ films }: { films: Film[] }) {
   return (
     <section className="relative overflow-hidden">
-      {/* 1. Hero Mobile Image (Aktif & fetchPriority="high" pada layar < 768px) */}
-      <Image
-        src={HeroMobileImage}
-        alt=""
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover object-center md:hidden"
-      />
+      <picture className="absolute inset-0">
+        <source
+          media="(max-width: 767px)"
+          srcSet={HeroMobileImage.src}
+        />
 
-      {/* 2. Hero Desktop Image (Aktif & fetchPriority="high" pada layar >= 768px) */}
-      <Image
-        src={HeroDesktopImage}
-        alt=""
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="hidden object-cover object-center md:block"
-      />
+        <Image
+          src={HeroDesktopImage}
+          alt=""
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </picture>
 
       {/* Overlay */}
       <div
