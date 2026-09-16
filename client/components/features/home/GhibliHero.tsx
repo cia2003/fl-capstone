@@ -1,42 +1,46 @@
 import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.jpg";
 import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.jpg";
-import { Film } from "@/types/film";
+import type { Film } from "@/types/film";
 import Image from "next/image";
 import { HeroActions } from "./HeroActions";
 
 export function GhibliHero({ films }: { films: Film[] }) {
   return (
     <section className="relative overflow-hidden">
-      {/* Responsive Hero Background */}
-      <picture className="absolute inset-0">
-        <source
-          media="(max-width: 767px)"
-          srcSet={HeroMobileImage.src}
-        />
-        <Image
-          src={HeroDesktopImage}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </picture>
+      {/* Desktop Hero */}
+      <Image
+        src={HeroDesktopImage}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="hidden object-cover object-center md:block"
+      />
+
+      {/* Mobile Hero */}
+      <Image
+        src={HeroMobileImage}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center md:hidden"
+      />
 
       {/* Overlay */}
       <div
-      className="
-        absolute inset-0
-        bg-gradient-to-t
-        from-background
-        via-background/50
-        to-background/0
-        md:bg-gradient-to-r
-        md:from-background
-        md:via-background/50
-        md:to-background/0
-      "
-    />
+        className="
+          absolute inset-0
+          bg-gradient-to-t
+          from-background
+          via-background/50
+          to-background/0
+          md:bg-gradient-to-r
+          md:from-background
+          md:via-background/50
+          md:to-background/0
+        "
+      />
 
       {/* Content */}
       <div className="relative mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">

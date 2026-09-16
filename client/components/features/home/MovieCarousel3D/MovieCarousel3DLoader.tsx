@@ -38,11 +38,33 @@ function canRunCarousel3D() {
 
 export function MovieCarousel3DLoader({ films }: { films: Film[] }) {
   const [state, setState] = useState<LoaderState>("checking");
+  const [inView, setInView] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<MovieCarousel3DHandle>(null);
 
   useEffect(() => {
-    setState(canRunCarousel3D() ? "3d" : "fallback");
+    const node = containerRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (inView) {
+      setState(canRunCarousel3D() ? "3d" : "fallback");
+    }
+  }, [inView]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "ArrowLeft") {
@@ -55,7 +77,11 @@ export function MovieCarousel3DLoader({ films }: { films: Film[] }) {
   }
 
   return (
-    <div style={{ minHeight: CAROUSEL_HEIGHT }} className="w-full">
+    <div
+      ref={containerRef}
+      style={{ minHeight: CAROUSEL_HEIGHT }}
+      className="w-full"
+    >
       <div
         role="region"
         aria-roledescription="carousel"
