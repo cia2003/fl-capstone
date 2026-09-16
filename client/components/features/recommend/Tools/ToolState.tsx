@@ -21,7 +21,7 @@ export default function ToolState({
   switch (state) {
     case "input-streaming":
       return (
-        <div className="mt-5 bg-muted/40 mb-5">
+        <div className="mt-5 mb-5">
           <div className="flex items-center gap-3">
             <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-primary" />
 
@@ -37,7 +37,7 @@ export default function ToolState({
 
     case "input-available":
       return (
-        <div className="mt-5 bg-muted/40 mb-5">
+        <div className="mt-5 mb-5">
           <div className="mb-3 flex items-center gap-3">
             <div className="h-2.5 w-2.5 rounded-full bg-primary" />
 

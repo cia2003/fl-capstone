@@ -1,82 +1,169 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { UIMessage } from "ai"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 type AutoScrollProps = {
-    messages: UIMessage[],
-    isStreaming: boolean,
-    isThinking: boolean, 
-    bottomRef: React.RefObject<HTMLDivElement | null>,
+    messages: unknown[]
+    isStreaming: boolean
+    isThinking: boolean
+    bottomRef: React.RefObject<HTMLDivElement | null>
     composerRef: React.RefObject<HTMLDivElement | null>
 }
 
 export default function useAutoScroll({
-    messages, 
+    messages,
     isStreaming,
-    isThinking, 
+    isThinking,
     bottomRef,
-    composerRef
+    composerRef,
 }: AutoScrollProps) {
     const [showScrollButton, setShowScrollButton] = useState(false)
-    const shouldAutoScrollRef = useRef(true)
 
-    const updateScrollState = () => {
+    const shouldAutoScrollRef = useRef(true)
+    const rafRef = useRef<number | null>(null)
+
+    /**
+     * Read DOM geometry once per frame.
+     */
+    const getScrollDistance = useCallback(() => {
         const bottomElement = bottomRef.current
         const composerElement = composerRef.current
-        if (!bottomElement || !composerElement) return
+
+        if (!bottomElement || !composerElement) {
+            return null
+        }
 
         const bottomRect = bottomElement.getBoundingClientRect()
         const composerRect = composerElement.getBoundingClientRect()
-        const distanceFromLatest = bottomRect.bottom - composerRect.top
+
+        return bottomRect.bottom - composerRect.top
+    }, [bottomRef, composerRef])
+
+    /**
+     * Update whether the user is currently near the latest message.
+     */
+    const updateScrollState = useCallback(() => {
+        const distanceFromLatest = getScrollDistance()
+
+        if (distanceFromLatest === null) return
+
         const latestMessageIsOutOfRange = distanceFromLatest > 100
 
         shouldAutoScrollRef.current = !latestMessageIsOutOfRange
-        setShowScrollButton(messages.length > 0 && latestMessageIsOutOfRange)
-    }
 
-    const scrollToLatest = (behavior: ScrollBehavior = "smooth") => {
-        const bottomElement = bottomRef.current
-        const composerElement = composerRef.current
-        if (!bottomElement || !composerElement) return
+        setShowScrollButton((previous) => {
+            const next =
+                messages.length > 0 && latestMessageIsOutOfRange
 
-        const bottomRect = bottomElement.getBoundingClientRect()
-        const composerRect = composerElement.getBoundingClientRect()
-        const scrollOffset = bottomRect.bottom - composerRect.top
-
-        shouldAutoScrollRef.current = true
-        window.scrollTo({
-            top: window.scrollY + scrollOffset,
-            behavior,
+            return previous === next ? previous : next
         })
-    }
+    }, [getScrollDistance, messages.length])
 
-    useEffect(() => {
-        if (shouldAutoScrollRef.current) {
-            requestAnimationFrame(() => {
-                scrollToLatest("auto")
-                updateScrollState()
-            });
-        } else {
-            updateScrollState()
+    /**
+     * Scroll to the latest message.
+     */
+    const scrollToLatest = useCallback(
+        (behavior: ScrollBehavior = "smooth") => {
+            const distanceFromLatest = getScrollDistance()
+
+            if (distanceFromLatest === null) return
+
+            shouldAutoScrollRef.current = true
+
+            window.scrollTo({
+                top: window.scrollY + distanceFromLatest,
+                behavior,
+            })
+
+            setShowScrollButton(false)
+        },
+        [getScrollDistance]
+    )
+
+    /**
+     * Schedule DOM reads/writes into one animation frame.
+     *
+     * If React updates the chat several times during streaming,
+     * we only process the latest update once per frame.
+     */
+    const scheduleScrollUpdate = useCallback(() => {
+        if (rafRef.current !== null) {
+            cancelAnimationFrame(rafRef.current)
         }
-    }, [messages, isStreaming, isThinking, bottomRef, composerRef]);
 
+        rafRef.current = requestAnimationFrame(() => {
+            rafRef.current = null
+
+            if (shouldAutoScrollRef.current) {
+                scrollToLatest("auto")
+            }
+
+            updateScrollState()
+        })
+    }, [scrollToLatest, updateScrollState])
+
+    /**
+     * React to chat/message changes.
+     *
+     * During streaming, messages can change many times.
+     * requestAnimationFrame prevents us from doing layout work
+     * for every single React update.
+     */
     useEffect(() => {
+        scheduleScrollUpdate()
+    }, [
+        messages,
+        isStreaming,
+        isThinking,
+        scheduleScrollUpdate,
+    ])
+
+    /**
+     * Track manual scrolling and window resizing.
+     *
+     * Both events can fire very frequently, so they are
+     * also throttled through requestAnimationFrame.
+     */
+    useEffect(() => {
+        const handleScroll = () => {
+            if (rafRef.current !== null) return
+
+            rafRef.current = requestAnimationFrame(() => {
+                rafRef.current = null
+                updateScrollState()
+            })
+        }
+
+        const handleResize = () => {
+            if (rafRef.current !== null) return
+
+            rafRef.current = requestAnimationFrame(() => {
+                rafRef.current = null
+                updateScrollState()
+            })
+        }
+
+        window.addEventListener("scroll", handleScroll, {
+            passive: true,
+        })
+
+        window.addEventListener("resize", handleResize)
+
         updateScrollState()
-        window.addEventListener("scroll", updateScrollState)
-        window.addEventListener("resize", updateScrollState)
 
         return () => {
-        window.removeEventListener("scroll", updateScrollState)
-        window.removeEventListener("resize", updateScrollState)
+            window.removeEventListener("scroll", handleScroll)
+            window.removeEventListener("resize", handleResize)
+
+            if (rafRef.current !== null) {
+                cancelAnimationFrame(rafRef.current)
+                rafRef.current = null
+            }
         }
-    }, [messages.length, bottomRef, composerRef]);
+    }, [updateScrollState])
 
-    const scroll = {
-        scrollToLatest, 
-        showScrollButton
+    return {
+        scrollToLatest,
+        showScrollButton,
     }
-
-    return scroll
 }
