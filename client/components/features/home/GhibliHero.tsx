@@ -7,25 +7,20 @@ import { HeroActions } from "./HeroActions";
 export function GhibliHero({ films }: { films: Film[] }) {
   return (
     <section className="relative overflow-hidden">
-      {/* Desktop Hero */}
-      <Image
-        src={HeroDesktopImage}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="hidden object-cover object-center md:block"
-      />
-
-      {/* Mobile Hero */}
-      <Image
-        src={HeroMobileImage}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center md:hidden"
-      />
+      <picture>
+        <source
+          media="(max-width: 767px)"
+          srcSet={HeroMobileImage.src}
+        />
+        <Image
+          src={HeroDesktopImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </picture>
 
       {/* Overlay */}
       <div

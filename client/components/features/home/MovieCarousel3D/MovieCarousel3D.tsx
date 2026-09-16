@@ -89,14 +89,9 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
             }}
         >
             <Suspense
-            // OLD / DEBUG: Gray loading cube kept here for debugging if needed.
-                /* fallback={
-                    <mesh>
-                    <boxGeometry args={[1, 1, 1]} />
-                    <meshBasicMaterial color="gray" />
-                    </mesh>
-                } */
-                fallback={null}
+                fallback={
+                    null
+                }
             >
                 <CarouselScene
                     images={images}

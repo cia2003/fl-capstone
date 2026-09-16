@@ -6,6 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   // konfigurasi Next.js lainnya bisa ditambah di sini nanti
   images: {
+    minimumCacheTTL: 2592000,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
