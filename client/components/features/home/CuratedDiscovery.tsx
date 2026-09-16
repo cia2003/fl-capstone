@@ -5,6 +5,7 @@ import { FilmCard } from "../films/FilmCard";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { FilterSelect } from "@/components/ui/FilterSelect";
 import { LuSearch } from "react-icons/lu";
 
 export function CuratedDiscovery({ films }: { films: Film[] }) {
@@ -18,11 +19,11 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
     const filmsPerPage = 6;
 
     const releaseYears = Array.from(
-        new Set(films.map((film) => film.release_date))
+        new Set(films.map((film) => String(film.release_date)))
     ).sort((a, b) => Number(a) - Number(b));
 
     const rtScores = Array.from(
-        new Set(films.map((film) => film.rt_score))
+        new Set(films.map((film) => String(film.rt_score)))
     ).sort((a, b) => Number(a) - Number(b));
 
     const directors = Array.from(
@@ -30,7 +31,7 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
     ).sort();
 
     const runningTimes = Array.from(
-        new Set(films.map((film) => film.running_time))
+        new Set(films.map((film) => String(film.running_time)))
     ).sort((a, b) => Number(a) - Number(b));
 
     // Filter + search
@@ -41,16 +42,16 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                 .includes(search.toLowerCase());
 
             const matchesReleaseYear =
-                releaseYear === "" || film.release_date === releaseYear;
+                releaseYear === "" || String(film.release_date) === releaseYear;
 
             const matchesRtScore =
-                rtScore === "" || film.rt_score === rtScore;
+                rtScore === "" || String(film.rt_score) === rtScore;
 
             const matchesDirector =
                 director === "" || film.director === director;
 
             const matchesRunningTime =
-                runningTime === "" || film.running_time === runningTime;
+                runningTime === "" || String(film.running_time) === runningTime;
 
             return (
                 matchesSearch &&
@@ -148,83 +149,53 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                         </h3>
 
                         <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-1">
-                            <select
+                            <FilterSelect
+                                label="Release Year"
                                 value={releaseYear}
-                                className="min-w-0 rounded-md border px-3 py-2 text-sm hover:cursor-pointer"
                                 onChange={(e) =>
-                                    handleFilterChange(
-                                        setReleaseYear,
-                                        e.target.value
-                                    )
+                                    handleFilterChange(setReleaseYear, e.target.value)
                                 }
-                            >
-                                <option value="">Release Year</option>
+                                options={releaseYears.map((year) => ({
+                                    value: year,
+                                    label: year,
+                                }))}
+                            />
 
-                                {releaseYears.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
+                            <FilterSelect
+                                label="Rotten Tomatoes Score"
                                 value={rtScore}
-                                className="min-w-0 rounded-md border px-3 py-2 text-sm hover:cursor-pointer"
                                 onChange={(e) =>
-                                    handleFilterChange(
-                                        setRtScore,
-                                        e.target.value
-                                    )
+                                    handleFilterChange(setRtScore, e.target.value)
                                 }
-                            >
-                                <option value="">
-                                    Rotten Tomatoes Score
-                                </option>
+                                options={rtScores.map((score) => ({
+                                    value: score,
+                                    label: score,
+                                }))}
+                            />
 
-                                {rtScores.map((score) => (
-                                    <option key={score} value={score}>
-                                        {score}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
+                            <FilterSelect
+                                label="Director"
                                 value={director}
-                                className="min-w-0 rounded-md border px-3 py-2 text-sm hover:cursor-pointer"
                                 onChange={(e) =>
-                                    handleFilterChange(
-                                        setDirector,
-                                        e.target.value
-                                    )
+                                    handleFilterChange(setDirector, e.target.value)
                                 }
-                            >
-                                <option value="">Director</option>
+                                options={directors.map((d) => ({
+                                    value: d,
+                                    label: d,
+                                }))}
+                            />
 
-                                {directors.map((director) => (
-                                    <option key={director} value={director}>
-                                        {director}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
+                            <FilterSelect
+                                label="Running Time"
                                 value={runningTime}
-                                className="min-w-0 rounded-md border px-3 py-2 text-sm hover:cursor-pointer"
                                 onChange={(e) =>
-                                    handleFilterChange(
-                                        setRunningTime,
-                                        e.target.value
-                                    )
+                                    handleFilterChange(setRunningTime, e.target.value)
                                 }
-                            >
-                                <option value="">Running Time</option>
-
-                                {runningTimes.map((time) => (
-                                    <option key={time} value={time}>
-                                        {time}
-                                    </option>
-                                ))}
-                            </select>
+                                options={runningTimes.map((t) => ({
+                                    value: t,
+                                    label: t,
+                                }))}
+                            />
                         </div>
                     </div>
                 </aside>

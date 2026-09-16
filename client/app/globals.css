@@ -5,6 +5,8 @@
   --color-background: #FDF6EC;
   --color-primary: #B23A2E;
   --color-accent: #D4A017;
+  --color-muted: #E8DCCB;
+  --color-muted-foreground: #6D5A4E;
 
   --font-heading: var(--font-sora);
   --font-body: var(--font-source-sans);
@@ -24,6 +26,7 @@
   --spacing-card: 24px;
   --spacing-button-y: 10px;
   --spacing-button-x: 18px;
+  --spacing-18: 4.5rem;
 
   --radius-button: 8px;
   --radius-card: 12px;

@@ -1,8 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
 import { Canvas, type GLProps } from "@react-three/fiber";
-import { useState, useMemo } from "react";
+import { forwardRef, useImperativeHandle, useState, useMemo, Suspense } from "react";
 import * as THREE from "three/webgpu";
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
@@ -40,7 +39,12 @@ const defaultControls: CarouselControlValues = {
     enableSnapping: true,
 };
 
-export function MovieCarousel3D({ films }: { films: Film[] }) {
+export type MovieCarousel3DHandle = {
+  goToPrevious: () => void;
+  goToNext: () => void;
+};
+
+export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
     const router = useRouter()
     const [activeIndex, setActiveIndex] = useState(0);
     const [controls, setControls] = useState(defaultControls);
@@ -59,6 +63,12 @@ export function MovieCarousel3D({ films }: { films: Film[] }) {
     function updateControl<Key extends keyof CarouselControlValues>(key: Key, value: CarouselControlValues[Key]) {
         setControls((current) => ({ ...current, [key]: value }));
     }
+
+    useImperativeHandle(ref, () => ({
+      goToPrevious: () =>
+        setActiveIndex((i) => (i - 1 + topFilms.length) % topFilms.length),
+      goToNext: () => setActiveIndex((i) => (i + 1) % topFilms.length),
+    }));
 
   return (
 
