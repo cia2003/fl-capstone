@@ -1,6 +1,3 @@
-// components/features/about/AboutHero.tsx
-"use client";
-
 import HeroDesktopImage from "@/public/images/about/kikis-delivery-desktop.jpg";
 
 export function AboutHero() {

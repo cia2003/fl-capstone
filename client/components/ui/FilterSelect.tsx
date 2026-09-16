@@ -1,6 +1,4 @@
 // components/ui/FilterSelect.tsx
-"use client";
-
 import type { SelectHTMLAttributes } from "react";
 
 type FilterSelectProps = SelectHTMLAttributes<HTMLSelectElement> & {

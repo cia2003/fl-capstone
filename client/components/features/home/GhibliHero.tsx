@@ -1,18 +1,10 @@
-// components/features/home/GhibliHero.tsx
-"use client";
-
-import { Button } from "@/components/ui/Button";
 import HeroDesktopImage from "@/public/images/home/ghibli-desktop-hero.jpg";
 import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.jpg";
 import { Film } from "@/types/film";
 import Image from "next/image";
+import { HeroActions } from "./HeroActions";
 
 export function GhibliHero({ films }: { films: Film[] }) {
-  const getRandomFilm = () => {
-    const randomIndex = Math.floor(Math.random() * films.length);
-    return films[randomIndex];
-  };
-
   return (
     <section className="relative overflow-hidden">
       {/* Responsive Hero Background */}
@@ -62,31 +54,7 @@ export function GhibliHero({ films }: { films: Film[] }) {
             or ask Ghibli Compass for a thoughtful starting point.
           </p>
 
-          <div className="mt-8 flex items-center gap-3">
-            <Button
-              variant="primary"
-              idleLabel="Talk to Ghibli Compass"
-              loadingLabel="Opening..."
-              successLabel="Opened"
-              errorLabel="Retry"
-              onAction={() => {
-                window.location.href = "/find-my-film";
-              }}
-            >
-            </Button>
-
-            <Button
-              variant="secondary"
-              idleLabel="Surprise Me!"
-              loadingLabel="Choosing..."
-              successLabel="Selected"
-              errorLabel="Retry"
-              onAction={() => {
-                window.location.href = `/films/${getRandomFilm().id}`;
-              }}
-            >
-            </Button>
-          </div>
+          <HeroActions films={films} />
         </div>
       </div>
     </section>

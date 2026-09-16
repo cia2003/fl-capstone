@@ -1,19 +1,20 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function CategoryCard({
     category,
     description,
     imageUrl,
-    onClick,
+    href,
 }: {
     category: string;
     description: string;
     imageUrl: string;
-    onClick: () => void;
+    href: string;
 }) {
     return (
-        <div
-            onClick={onClick}
+        <Link
+            href={href}
             className="relative w-full h-48 rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform transform hover:scale-105"
         >
             <Image
@@ -28,6 +29,6 @@ export function CategoryCard({
                 <h3 className="text-white text-xl font-semibold">{category}</h3>
                 <p className="text-white text-sm mt-2">{description}</p>
             </div>
-        </div>
+        </Link>
     );
 }
