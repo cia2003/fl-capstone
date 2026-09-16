@@ -1,3 +1,4 @@
+import Image from "next/image";
 import HeroDesktopImage from "@/public/images/about/kikis-delivery-desktop.jpg";
 
 export function AboutHero() {
@@ -7,11 +8,14 @@ export function AboutHero() {
         <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section">
           <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_1.15fr] md:gap-8 lg:gap-12">
             <div className="order-1 w-full md:order-2 md:justify-self-end">
-              <img
-                src={HeroDesktopImage.src}
+              <Image
+                src={HeroDesktopImage}
                 alt="Kiki overlooking a seaside town"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 650px, 700px"
                 className="
                   w-full
+                  h-auto
                   max-w-[700px]
                   object-contain
                   object-center

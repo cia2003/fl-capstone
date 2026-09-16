@@ -1,6 +1,5 @@
 import { GhibliHero } from "@/components/features/home/GhibliHero";
 import { getFilms } from "@/lib/api/ghibliClient";
-// import { TopMovies } from "@/components/features/home/TopMovies";
 import { StartingPoint } from "@/components/features/home/StartingPoint";
 import { CuratedDiscovery } from "@/components/features/home/CuratedDiscovery";
 import { MovieCarousel3DLoader } from "@/components/features/home/MovieCarousel3D/MovieCarousel3DLoader";

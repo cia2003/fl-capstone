@@ -2,6 +2,7 @@
 
 import type { Film } from "@/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type CarouselFallbackProps = {
   movies: Film[];
@@ -68,9 +69,10 @@ export default function CarouselFallback({
               {movie.release_date} · {movie.running_time} min
             </p>
           </div>
-          <img
+          <Image
             src={movie.image}
-            alt=""
+            alt={movie.title}
+            sizes="(max-width: 768px) 100vw, 25vw"
             className="absolute inset-0 z-0 h-full w-full object-cover"
           />
         </button>

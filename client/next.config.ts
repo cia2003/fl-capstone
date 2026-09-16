@@ -5,6 +5,21 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // konfigurasi Next.js lainnya bisa ditambah di sini nanti
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
+        pathname: "/t/p/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.themoviedb.org",
+        pathname: "/t/p/**",
+      },
+    ],
+  },
 }
 
 module.exports = withBundleAnalyzer(nextConfig)

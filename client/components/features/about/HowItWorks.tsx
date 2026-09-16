@@ -1,4 +1,5 @@
 // components/features/about/HowItWorks.tsx
+import Image from "next/image";
 
 export function HowItWorks() {
   const steps = [
@@ -80,10 +81,11 @@ export function HowItWorks() {
                     </p>
 
                     <div className="relative mt-5 aspect-[4/3] w-full overflow-hidden rounded-[8px]">
-                      <img
+                      <Image
                         src={step.image}
                         alt={step.alt}
-                        className="h-full w-full object-cover"
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="object-cover"
                       />
                     </div>
                   </div>
