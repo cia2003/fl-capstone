@@ -1,7 +1,7 @@
 import { CategoryCard } from "@/components/features/films/CategoryCard";
-import SpiritedAwayImage from "@/public/images/category/spirited-away-thumb.jpg";
-import TotoroImage from "@/public/images/category/totoro-thumb.jpg";
-import CatReturnsImage from "@/public/images/category/cat-returns-thumb.jpg";
+import SpiritedAwayImage from "@/public/images/category/spirited-away-thumb.avif";
+import TotoroImage from "@/public/images/category/totoro-thumb.avif";
+import CatReturnsImage from "@/public/images/category/cat-returns-thumb.avif";
 
 export function StartingPoint() {
   return (
