@@ -1,4 +1,4 @@
-import { Database, ExternalLink, Info } from "lucide-react";
+import { LuDatabase, LuExternalLink, LuInfo } from "react-icons/lu";
 
 export function AboutData() {
   const dataSources = [
@@ -31,7 +31,7 @@ export function AboutData() {
           <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Database
+                <LuDatabase
                   className="h-5 w-5"
                   strokeWidth={1.8}
                   aria-hidden="true"
@@ -54,7 +54,7 @@ export function AboutData() {
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
             >
-              <Database
+              <LuDatabase
                 className="h-4 w-4"
                 strokeWidth={1.8}
                 aria-hidden="true"
@@ -62,7 +62,7 @@ export function AboutData() {
 
               <span>Source: Ghibli API</span>
 
-              <ExternalLink
+              <LuExternalLink
                 className="h-3.5 w-3.5"
                 strokeWidth={1.8}
                 aria-hidden="true"
@@ -94,7 +94,7 @@ export function AboutData() {
           <div className="mt-10 rounded-xl border border-primary/15 bg-primary/5 px-5 py-4 md:mt-14 md:px-6 md:py-5">
             <div className="flex items-center gap-3">
               <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Info
+                <LuInfo
                   className="h-4 w-4"
                   strokeWidth={1.8}
                   aria-hidden="true"
