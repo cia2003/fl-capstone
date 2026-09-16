@@ -5,10 +5,14 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Film } from "@/types";
 import CarouselFallback from "./CarouselFallback";
 import { CarouselSkeleton } from "./CarouselSkeleton";
-import type { MovieCarousel3DHandle } from "./MovieCarousel3D";
 
 const CAROUSEL_HEIGHT = 500;
 const TOP_FILM_COUNT = 9;
+
+type MovieCarousel3DHandle = {
+  goToPrevious: () => void;
+  goToNext: () => void;
+};
 
 const LazyMovieCarousel3D = dynamic(
   () =>
@@ -52,16 +56,8 @@ export function MovieCarousel3DLoader({
   const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<MovieCarousel3DHandle>(null);
 
-  // Only the films actually displayed by the carousel/fallback.
   const topFilms = films.slice(0, TOP_FILM_COUNT);
 
-  /**
-   * Wait until the carousel actually reaches the viewport
-   * before loading the Three.js bundle.
-   *
-   * Using 0px instead of 200px prevents the heavy 3D bundle
-   * from being loaded unnecessarily early.
-   */
   useEffect(() => {
     const node = containerRef.current;
 

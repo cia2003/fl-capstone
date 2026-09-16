@@ -19,9 +19,9 @@ export default async function Page() {
     <main>
       <GhibliHero films={sortedFilms} />
 
-      <MovieCarousel3DLoader films={topFilms} />
-
       <StartingPoint />
+
+      <MovieCarousel3DLoader films={topFilms} />
 
       <CuratedDiscovery films={sortedFilms} />
     </main>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, type GLProps } from "@react-three/fiber";
-import { forwardRef, useImperativeHandle, useState, useMemo, Suspense } from "react";
+import { useImperativeHandle, useState, useMemo, Suspense } from "react";
 import * as THREE from "three/webgpu";
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
@@ -37,11 +37,6 @@ const defaultControls: CarouselControlValues = {
     wheelSensitivity: 100,
     dragSensitivity: 300,
     enableSnapping: true,
-};
-
-export type MovieCarousel3DHandle = {
-  goToPrevious: () => void;
-  goToNext: () => void;
 };
 
 export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
