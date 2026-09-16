@@ -7,20 +7,18 @@ import { FilmToolPart } from "@/types/chat";
 type ToolPartProps = {
   part: FilmToolPart;
   addToolOutput: any;
-  films: Film[];
 };
 
 export default function ToolPart({
   part,
   addToolOutput,
-  films,
 }: ToolPartProps) {
+  console.log("ToolPart is looping")
   switch (part.type) {
     case "tool-recommendMovies":
       return (
         <MovieRecommendations
           part={part}
-          films={films}
         />
       );
 

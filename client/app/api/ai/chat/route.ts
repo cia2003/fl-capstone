@@ -7,14 +7,16 @@ import {
 } from 'ai'
 
 import { google } from '@ai-sdk/google'
-import { Film } from '@/types'
+// import { Film } from '@/types'
 import { filmRecommenderPrompt } from '@/agents/prompts/filmRecommender'
 import { filmTools } from '@/agents/tools/filmTools'
+import { getFilms } from '@/lib/api/ghibliClient'
 
 export const runtime = "nodejs"
 
 export async function POST(req: Request) {
-    const { messages, films }: { messages: UIMessage[], films: Film[] } = await req.json()
+    const { messages }: { messages: UIMessage[]} = await req.json()
+    const films = await getFilms()
 
     // if (process.env.TEST_ERROR === "429") {
     //     return new Response(

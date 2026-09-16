@@ -10,10 +10,6 @@ import { useEffect, useRef, useState } from "react"
 import { Film } from "@/types"
 import { FilmUIMessage } from "@/types/chat"
 
-type UseChatProps = {
-  films: Film[]
-}
-
 type FilmPart = FilmUIMessage["parts"][number]
 
 type PreferenceToolOutput = {
@@ -142,7 +138,7 @@ function hasValidAssistantResponse(
   )
 }
 
-export function useFilmChat({ films }: UseChatProps) {
+export function useFilmChat() {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   // Error yang berasal dari validasi response aplikasi sendiri.
@@ -151,7 +147,6 @@ export function useFilmChat({ films }: UseChatProps) {
   const chat = useChat<FilmUIMessage>({
     transport: new DefaultChatTransport({
       api: "/api/ai/chat",
-      body: { films },
     }),
 
     sendAutomaticallyWhen: ({ messages }) => {

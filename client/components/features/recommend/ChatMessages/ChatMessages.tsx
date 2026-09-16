@@ -10,7 +10,6 @@ import { useState } from "react";
 
 type ChatMessagesProps = {
     chat: ReturnType<typeof useFilmChat>
-    films: Film[],
     addToolOutput: any, 
 }
 
@@ -41,7 +40,6 @@ function getErrorMessage(error: unknown) {
 
 export default function ChatMessages({ 
     chat,
-    films, 
     addToolOutput, 
  }: ChatMessagesProps) {
     const hasError = Boolean(chat.error || chat.responseError)
@@ -61,7 +59,7 @@ export default function ChatMessages({
     }
 
     const showRegenerateCard = isRegenerating || (!chat.loading && hasError)
-
+    console.log("ChatMessages is looping")
     return (
         <div className="relative">
             {chat.messages.map((message) => {
@@ -73,7 +71,7 @@ export default function ChatMessages({
 
                 if (message.role === "assistant") {
                     return (
-                        <AIMessage key={message.id} message={message} films={films} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
+                        <AIMessage key={message.id} message={message} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
                     )
                 }
 

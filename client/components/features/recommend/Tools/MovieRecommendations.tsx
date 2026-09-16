@@ -6,12 +6,10 @@ import { ToolSkeleton } from "@/components/ui";
 
 type MovieRecommendationsProps = {
   part: Extract<FilmToolPart, { type: "tool-recommendMovies" }>;
-  films: Film[];
 };
 
 export default function MovieRecommendations({
   part,
-  films,
 }: MovieRecommendationsProps) {
   const recommedations = part.output?.recommendations 
   const recommendedMovies: Recommendation[] | null = Array.isArray(recommedations) ? recommedations : null; 
@@ -38,7 +36,6 @@ export default function MovieRecommendations({
             {recommendedMovies ? (
               <RankedResultList
                 recommendations={recommendedMovies}
-                films={films}
               />
             ) : (
               <p className="text-sm text-muted-foreground">

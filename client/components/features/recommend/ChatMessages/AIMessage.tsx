@@ -1,4 +1,4 @@
-import type { Film } from "@/types";
+// import type { Film } from "@/types";
 import ReactMarkdown from "react-markdown";
 import { FilmToolPart, FilmUIMessage } from "@/types/chat";
 import ToolPart from "../Tools/ToolPart";
@@ -12,7 +12,6 @@ type AddToolOutput = (args: {
 
 type AIMessageProps = {
   message: FilmUIMessage;
-  films: Film[];
   loading: boolean;
   onNewChat: () => void;
   addToolOutput: AddToolOutput;
@@ -31,10 +30,10 @@ function isFilmToolPart(
 
 export function AIMessage({
   message,
-  films,
   addToolOutput,
   hideToolParts = false,
 }: AIMessageProps) {
+  console.log("AI Message is looping")
   return (
     <div className="mt-6">
       {message.parts.map((part, index) => {
@@ -54,7 +53,6 @@ export function AIMessage({
               key={part.toolCallId}
               part={part}
               addToolOutput={addToolOutput}
-              films={films}
             />
           );
         }
