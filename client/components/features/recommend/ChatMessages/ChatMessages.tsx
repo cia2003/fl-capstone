@@ -59,7 +59,6 @@ export default function ChatMessages({
     }
 
     const showRegenerateCard = isRegenerating || (!chat.loading && hasError)
-    console.log("ChatMessages is looping")
     return (
         <div className="relative">
             {chat.messages.map((message) => {

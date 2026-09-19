@@ -33,7 +33,6 @@ export function AIMessage({
   addToolOutput,
   hideToolParts = false,
 }: AIMessageProps) {
-  console.log("AI Message is looping")
   return (
     <div className="mt-6">
       {message.parts.map((part, index) => {

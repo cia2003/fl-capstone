@@ -20,7 +20,7 @@ export default async function Page() {
         <h1 className="mt-2">
           These are your favorite movies
         </h1>
-        <WatchlistClientSection initialFilms={films} initialWatchlist={watchlist} />
+        <WatchlistClientSection initialFilms={films} />
       </section>
     </main>
   )

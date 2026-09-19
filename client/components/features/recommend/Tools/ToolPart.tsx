@@ -13,7 +13,6 @@ export default function ToolPart({
   part,
   addToolOutput,
 }: ToolPartProps) {
-  console.log("ToolPart is looping")
   switch (part.type) {
     case "tool-recommendMovies":
       return (

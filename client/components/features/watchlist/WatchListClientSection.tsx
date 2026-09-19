@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Film } from "@/types";
 import { FilmCard } from "@/components/features/films/FilmCard";
@@ -8,15 +7,13 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 
 interface WatchlistClientSectionProps {
   initialFilms: Film[];
-  initialWatchlist: string[];
 }
 
 export default function WatchlistClientSection({
   initialFilms,
-  initialWatchlist,
 }: WatchlistClientSectionProps) {
   // Pass initialWatchlist dari server ke hook
-  const { watchlist, toggle } = useWatchlist(initialWatchlist);
+  const { watchlist, toggle } = useWatchlist();
 
   // Filter lokal secara real-time saat user melakukan toggle (hapus item)
   const activeFilms = initialFilms.filter((film) =>
