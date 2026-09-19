@@ -86,6 +86,7 @@ export function HowItWorks() {
                         alt={step.alt}
                         sizes="(max-width: 768px) 100vw, 25vw"
                         className="object-cover"
+                        fill
                       />
                     </div>
                   </div>

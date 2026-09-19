@@ -12,6 +12,8 @@ export function AboutHero() {
                 src={HeroDesktopImage}
                 alt="Kiki overlooking a seaside town"
                 priority
+                width={0}
+                height={0}
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 650px, 700px"
                 className="
                   w-full
