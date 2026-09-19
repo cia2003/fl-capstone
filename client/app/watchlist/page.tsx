@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 
 import { useWatchlist } from "@/hooks/useWatchlist"
-import { getFilm } from "@/lib/api/ghibliClient"
+import { getFilms } from "@/lib/api/ghibliClient"
 import { Film } from "@/types"
 import { FilmCard } from "@/components/features/films/FilmCard"
 import { CatAnimation } from "@/components/ui/CatAnimation"
@@ -28,16 +28,14 @@ export default function Page() {
       setIsLoading(true)
 
       try {
-        const results = await Promise.all(
-          watchlist.map((id) => getFilm(id))
+        const allFilms = await getFilms()
+
+        const watchlistFilms = allFilms.filter((film) =>
+          watchlist.includes(film.id)
         )
 
         if (!cancelled) {
-          setFilms(
-            results.filter(
-              (film): film is Film => film !== null
-            )
-          )
+          setFilms(watchlistFilms)
         }
       } finally {
         if (!cancelled) {

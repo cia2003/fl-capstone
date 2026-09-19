@@ -74,40 +74,43 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
                 Explore the top-rated Studio Ghibli movies based on their Rotten Tomatoes scores.
             </p>
         </div>
-        <Canvas
-            camera={{ position: [0, 0, 11], fov: 55 }}
-            shadows={false}
-            style={{ width: "100%", height: "500px", background: "transparent" }}
-            gl={createWebGpuRenderer}
-            onCreated={({ gl }) => {
-                gl.shadowMap.type = THREE.PCFShadowMap
-            }}
-        >
-            <Suspense
-                fallback={
-                    null
-                }
+
+        <div className="h-[500px] w-full">
+            <Canvas
+                camera={{ position: [0, 0, 11], fov: 55 }}
+                shadows={false}
+                gl={createWebGpuRenderer}
+                onCreated={({ gl }) => {
+                    gl.shadowMap.type = THREE.PCFShadowMap
+                }}
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    background: "transparent",
+                }}
             >
-                <CarouselScene
-                    images={images}
-                    selectedIndex={activeIndex}
-                    onIndexChange={setActiveIndex}
-                    radius={controls.radius}
-                    imageWidth={controls.imageWidth}
-                    imageHeight={controls.imageHeight}
-                    cornerRadius={controls.cornerRadius}
-                    bendAmount={controls.bendAmount}
-                    centerOpacity={controls.centerOpacity}
-                    adjacentOpacity={controls.adjacentOpacity}
-                    farOpacity={controls.farOpacity}
-                    friction={controls.friction / 100}
-                    wheelSensitivity={controls.wheelSensitivity}
-                    dragSensitivity={controls.dragSensitivity}
-                    enableSnapping={controls.enableSnapping}
-                    onImageClick={handleFilmClick}
-                />
-            </Suspense>        
-        </Canvas>
+                <Suspense fallback={null}>
+                    <CarouselScene
+                        images={images}
+                        selectedIndex={activeIndex}
+                        onIndexChange={setActiveIndex}
+                        radius={controls.radius}
+                        imageWidth={controls.imageWidth}
+                        imageHeight={controls.imageHeight}
+                        cornerRadius={controls.cornerRadius}
+                        bendAmount={controls.bendAmount}
+                        centerOpacity={controls.centerOpacity}
+                        adjacentOpacity={controls.adjacentOpacity}
+                        farOpacity={controls.farOpacity}
+                        friction={controls.friction / 100}
+                        wheelSensitivity={controls.wheelSensitivity}
+                        dragSensitivity={controls.dragSensitivity}
+                        enableSnapping={controls.enableSnapping}
+                        onImageClick={handleFilmClick}
+                    />
+                </Suspense>
+            </Canvas>
+        </div>
         <div className="-mt-8 sm:-mt-18">
             <CarouselControls
                 activeIndex={activeIndex}

@@ -3,7 +3,7 @@ import { formatReleaseDate, formatRuntime } from "@/lib/utils/format";
 import { WatchlistButton } from "@/components/features/watchlist/WatchlistButton";
 
 export function FilmDetail({ film }: { film: Film }) {
-  return <article className="mx-auto max-w-4xl">
+  return <article className="mx-auto max-w-[1280px]">
     <div className="grid gap-8 md:grid-cols-[240px_1fr]">
       {film.image && <img src={film.image} alt={`Poster for ${film.title}`} className="w-full rounded-card" />}
       <div>
