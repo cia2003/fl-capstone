@@ -70,7 +70,7 @@ describe("chat message renderer", () => {
   it("shows the pending thinking state", () => {
     const chat = createChat({ loading: true, isThinking: true })
 
-    render(<ChatMessages chat={chat as never} films={[]} addToolOutput={vi.fn()} />)
+    render(<ChatMessages chat={chat as never} addToolOutput={vi.fn()} />)
 
     expect(screen.getByText("AI is thinking")).toBeTruthy()
   })
@@ -85,7 +85,6 @@ describe("chat message renderer", () => {
     render(
       <AIMessage
         message={chatMessage}
-        films={[]}
         loading={true}
         onNewChat={vi.fn()}
         addToolOutput={vi.fn()}
@@ -101,7 +100,7 @@ describe("chat message renderer", () => {
       responseError: JSON.stringify({ error: "The response was incomplete." }),
     })
 
-    render(<ChatMessages chat={chat as never} films={[]} addToolOutput={vi.fn()} />)
+    render(<ChatMessages chat={chat as never} addToolOutput={vi.fn()} />)
 
     expect(screen.getByText("The response was incomplete.")).toBeTruthy()
     expect((screen.getByRole("button", { name: "Regenerate response" }) as HTMLButtonElement).disabled).toBe(false)
