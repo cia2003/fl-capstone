@@ -7,7 +7,7 @@ import { LuBookmark, LuStar } from "react-icons/lu";
 import { useWatchlist } from "@/hooks/useWatchlist";
 
 export function FilmCard({ film, priority=false }: { film: Film, priority?:boolean }) {
-  const { has, toggle } = useWatchlist();
+  const { toggle } = useWatchlist();
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,7 +35,7 @@ export function FilmCard({ film, priority=false }: { film: Film, priority?:boole
       <div className="p-card">
         <LuBookmark
           className={`absolute right-3 top-3 rounded-full border border-primary/20 bg-white p-2 text-primary ${
-            has(film.id) ? "fill-current" : ""
+            film ? "fill-current" : ""
           }`}
           size={35}
           onClick={handleBookmarkClick}
