@@ -32,9 +32,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sora.variable} ${sourceSans.variable}`}>
-      <head>
-        <Link rel="preconnect" href="https://ghibliapi.dev" />
-      </head>
       <body>
         <Header />
         {children}
