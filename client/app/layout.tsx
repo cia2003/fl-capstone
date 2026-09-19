@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import Link from "next/link";
 
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
@@ -31,6 +32,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sora.variable} ${sourceSans.variable}`}>
+      <head>
+        <Link rel="preconnect" href="https://ghibliapi.dev" />
+      </head>
       <body>
         <Header />
         {children}

@@ -72,8 +72,8 @@ export default function Page() {
           </div>
         ) : films.length > 0 ? (
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {films.map((film) => (
-              <FilmCard key={film.id} film={film} />
+            {films.map((film, index) => (
+              <FilmCard key={film.id} film={film} priority={index === 0} />
             ))}
           </div>
         ) : (

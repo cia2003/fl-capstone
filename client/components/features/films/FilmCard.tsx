@@ -6,7 +6,7 @@ import { formatReleaseDate, formatRuntime } from "@/lib/utils/format";
 import { LuBookmark, LuStar } from "react-icons/lu";
 import { useWatchlist } from "@/hooks/useWatchlist";
 
-export function FilmCard({ film }: { film: Film }) {
+export function FilmCard({ film, priority=false }: { film: Film, priority?:boolean }) {
   const { has, toggle } = useWatchlist();
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
@@ -24,6 +24,7 @@ export function FilmCard({ film }: { film: Film }) {
           <Image
             src={film.image}
             alt={film.title}
+            priority={priority}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover"
