@@ -116,6 +116,7 @@ describe("chat composer", () => {
     render(<ChatComposer chat={chat as never} composerRef={composerRef} />)
 
     const input = screen.getByLabelText("What are you in the mood for?")
+    expect(input.getAttribute("maxLength")).toBe("1000")
     fireEvent.submit(input.closest("form") as HTMLFormElement)
     expect(chat.sendMessage).not.toHaveBeenCalled()
 

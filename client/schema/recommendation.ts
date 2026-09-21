@@ -23,3 +23,7 @@ export const preferenceQuestionSchema = z.object({
     question: z.string(),
     options: z.array(z.string()).max(4)
 })
+
+export const inputSchema = z.object({
+    message: z.string().min(1).max(1000),
+})

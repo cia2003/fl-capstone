@@ -84,6 +84,7 @@ export default function ChatComposer({
                         setQuery(event.target.value)
                         }
                         placeholder="I want a gentle, hopeful adventure…"
+                        maxLength={1000}
                         required={!lastSubmittedQuery}
                         disabled={hasError}
                     />
