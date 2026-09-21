@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import type { Film } from "@/types/film";
 
 export function HeroActions({ films }: { films: Film[] }) {
@@ -11,27 +10,25 @@ export function HeroActions({ films }: { films: Film[] }) {
 
   return (
     <div className="mt-8 flex items-center gap-3">
-      <Button
-        variant="primary"
-        idleLabel="Talk to Ghibli Compass"
-        loadingLabel="Opening..."
-        successLabel="Opened"
-        errorLabel="Retry"
-        onAction={() => {
+      <button
+        type="button"
+        className="cursor-pointer rounded-button bg-accent px-button-x py-button-y text-sm font-semibold text-[#21170d] transition-colors hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        onClick={() => {
           window.location.href = "/find-my-film";
         }}
-      />
+      >
+        Talk to Ghibli Compass
+      </button>
 
-      <Button
-        variant="secondary"
-        idleLabel="Surprise Me!"
-        loadingLabel="Choosing..."
-        successLabel="Selected"
-        errorLabel="Retry"
-        onAction={() => {
+      <button
+        type="button"
+        className="cursor-pointer rounded-button border-[1.5px] border-primary bg-transparent px-button-x py-button-y text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        onClick={() => {
           window.location.href = `/films/${getRandomFilm().id}`;
         }}
-      />
+      >
+        Surprise Me!
+      </button>
     </div>
   );
 }

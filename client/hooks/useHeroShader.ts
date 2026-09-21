@@ -20,17 +20,28 @@ export function useHeroShader(
 
     let disposed = false;
     let stop: (() => void) | undefined;
+    let cancelIdle: (() => void) | undefined;
 
-    // Tunggu idle: gambar hero (LCP) dan teks tampil dulu, baru shader.
-    const cancelIdle = whenIdle(async () => {
-      const three = await loadThree(); // chunk terpisah, tidak masuk bundle awal
-      if (disposed) return;
-      stop = startHeroShader(three, wrap, host, { horizon, intensity });
-    });
+    // Biarkan LCP dan resource kritis selesai dulu; shader tetap dimuat saat
+    // browser benar-benar idle, bukan selama render awal.
+    const startWhenIdle = () => {
+      cancelIdle = whenIdle(async () => {
+        const three = await loadThree();
+        if (disposed) return;
+        stop = startHeroShader(three, wrap, host, { horizon, intensity });
+      }, 3000);
+    };
+
+    if (document.readyState === "complete") {
+      startWhenIdle();
+    } else {
+      window.addEventListener("load", startWhenIdle, { once: true });
+    }
 
     return () => {
       disposed = true;
-      cancelIdle();
+      window.removeEventListener("load", startWhenIdle);
+      cancelIdle?.();
       stop?.();
     };
   }, [wrapRef, horizon, intensity]);

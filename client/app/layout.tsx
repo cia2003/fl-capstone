@@ -8,16 +8,15 @@ import { Footer } from "@/components/layout/Footer";
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
   variable: '--font-sora',
-  weight: '100 800'
+  weight: '100 800',
+  display: 'swap',
 })
 
 const sourceSans = localFont({
-  src: [
-    { path: '../public/fonts/Source_Sans_3/SourceSans3-VariableFont_wght.ttf', style: 'normal' },
-    { path: '../public/fonts/Source_Sans_3/SourceSans3-Italic-VariableFont_wght.ttf', style: 'italic' },
-  ],
+  src: '../public/fonts/Source_Sans_3/SourceSans3-VariableFont_wght.ttf',
   variable: '--font-source-sans',
-  weight: '200 900'
+  weight: '200 900',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

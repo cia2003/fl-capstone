@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Film } from "@/types";
-import CarouselFallback from "./CarouselFallback";
 import { CarouselSkeleton } from "./CarouselSkeleton";
 
 const CAROUSEL_HEIGHT = 500;
@@ -23,6 +22,11 @@ const LazyMovieCarousel3D = dynamic(
     ssr: false,
     loading: () => <CarouselSkeleton height={CAROUSEL_HEIGHT} />,
   },
+);
+
+const LazyCarouselFallback = dynamic(
+  () => import("./CarouselFallback"),
+  { ssr: false },
 );
 
 type LoaderState = "checking" | "3d" | "fallback";
@@ -124,7 +128,7 @@ export function MovieCarousel3DLoader({
         )}
 
         {state === "fallback" && (
-          <CarouselFallback movies={topFilms} />
+          <LazyCarouselFallback movies={topFilms} />
         )}
 
         {state === "3d" && (

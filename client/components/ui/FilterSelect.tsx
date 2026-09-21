@@ -14,10 +14,15 @@ export function FilterSelect({
   ...props
 }: FilterSelectProps) {
   const hasValue = Boolean(value);
+  const labelId = `filter-select-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
   return (
     <div className="relative">
+      <label htmlFor={labelId} className="sr-only">
+        {label}
+      </label>
       <select
+        id={labelId}
         value={value}
         className={`peer min-w-0 w-full rounded-md border bg-background px-3 pb-2 pt-4 text-sm outline-none hover:cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${className}`}
         {...props}

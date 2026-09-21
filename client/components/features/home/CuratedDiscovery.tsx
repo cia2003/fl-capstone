@@ -1,5 +1,5 @@
 import type { Film } from "@/types/film";
-import { FilterableFilmGrid } from "./FilterableFilmGrid";
+import { DeferredFilterableFilmGrid } from "./DeferredFilterableFilmGrid";
 
 export function CuratedDiscovery({ films }: { films: Film[] }) {
     return (
@@ -13,7 +13,7 @@ export function CuratedDiscovery({ films }: { films: Film[] }) {
                     carefully chosen to suit every taste and mood.
                 </p>
             </div>
-            <FilterableFilmGrid films={films} />
+            <DeferredFilterableFilmGrid films={films} />
         </section>
     );
 }

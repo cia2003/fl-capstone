@@ -2,8 +2,7 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { TextureLoader } from "three";
+import { TextureLoader, Group, Texture, RGBAFormat, SRGBColorSpace, DataTexture } from "three";
 import { ImagePlane } from "./ImagePlane";
 
 const TMDB_IMAGE_HOSTS = new Set(["image.tmdb.org", "www.themoviedb.org"]);
@@ -57,13 +56,12 @@ export function CarouselScene({
   farOpacity = 0.3,
   friction = 0.95,
   wheelSensitivity = 0.002,
-  dragSensitivity = 0.005,
   enableSnapping = true,
   selectedIndex,
   onIndexChange,
   onImageClick,
 }: CarouselSceneProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
   const { gl } = useThree();
 
   // Smooth rotation state
@@ -82,7 +80,7 @@ export function CarouselScene({
   const isSnapping = useRef(false);
   const isSnapSuppressed = useRef(false);
 
-  const [textures, setTextures] = useState<THREE.Texture[]>([]);
+  const [textures, setTextures] = useState<Texture[]>([]);
 
   const handleImageClick =(index: number) => {
     const dragDistance = Math.abs(lastMouseX.current - dragStartX.current);
@@ -121,24 +119,24 @@ export function CarouselScene({
     loader.crossOrigin = "anonymous";
 
     const fallbackTexture = () => {
-      const texture = new THREE.DataTexture(
+      const texture = new DataTexture(
         new Uint8Array([226, 226, 226, 255]),
         1,
         1,
-        THREE.RGBAFormat,
+        RGBAFormat,
       );
-      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.colorSpace = SRGBColorSpace;
       texture.needsUpdate = true;
       return texture;
     };
 
     const loadedTextures = images.map(
       (image) =>
-        new Promise<THREE.Texture>((resolve) => {
+        new Promise<Texture>((resolve) => {
           loader.load(
             textureUrl(image),
             (texture) => {
-              texture.colorSpace = THREE.SRGBColorSpace;
+              texture.colorSpace = SRGBColorSpace;
               resolve(texture);
             },
             undefined,

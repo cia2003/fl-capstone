@@ -6,13 +6,26 @@
  */
 const VAR_X = "--hero-px";
 const VAR_Y = "--hero-py";
+let previousX = "";
+let previousY = "";
 
 export function setParallaxVars(host: HTMLElement, x: number, y: number) {
-  host.style.setProperty(VAR_X, x.toFixed(3));
-  host.style.setProperty(VAR_Y, y.toFixed(3));
+  const nextX = x.toFixed(3);
+  const nextY = y.toFixed(3);
+
+  if (nextX !== previousX) {
+    host.style.setProperty(VAR_X, nextX);
+    previousX = nextX;
+  }
+  if (nextY !== previousY) {
+    host.style.setProperty(VAR_Y, nextY);
+    previousY = nextY;
+  }
 }
 
 export function clearParallaxVars(host: HTMLElement) {
   host.style.removeProperty(VAR_X);
   host.style.removeProperty(VAR_Y);
+  previousX = "";
+  previousY = "";
 }

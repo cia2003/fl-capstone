@@ -2,7 +2,6 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, type MutableRefObject } from "react";
-// import * as THREE from "three";
 import { Texture, Mesh, FrontSide } from "three/webgpu"
 import {
   abs,

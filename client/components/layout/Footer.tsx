@@ -7,7 +7,7 @@ export function Footer() {
             <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 lg:grid-cols-2 py-section-mobile md:py-section-desktop md:gap-12">
                 <div className="self-start">
                     <Link href="/" className="flex items-center gap-3 font-heading text-h2 text-white font-semibold no-underline">
-                        <Image src="/images/logo.png" alt="" width={56} height={56} />
+                        <Image src="/images/logo.webp" alt="" width={56} height={56} />
                         Ghibli Compass
                     </Link>
                     <p>Find your next favorite Studio Ghibli film!</p>                    

@@ -10,11 +10,16 @@ export function createFrameLoop({ target, onFrame, onStill }: FrameLoopOptions):
   let last = 0;
   let inView = true;
   let pageVisible = !document.hidden;
+  const frameInterval = 1000 / 30;
+  let lastDraw = 0;
 
   const tick = (now: number) => {
-    const dt = Math.min((now - last) / 1000, 0.05);
-    last = now;
-    onFrame(dt);
+    if (now - lastDraw >= frameInterval) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      lastDraw = now;
+      onFrame(dt);
+    }
     raf = requestAnimationFrame(tick);
   };
 
@@ -29,6 +34,7 @@ export function createFrameLoop({ target, onFrame, onStill }: FrameLoopOptions):
       onStill();
     } else if (inView && pageVisible) {
       last = performance.now();
+      lastDraw = last - frameInterval;
       raf = requestAnimationFrame(tick);
     }
   };

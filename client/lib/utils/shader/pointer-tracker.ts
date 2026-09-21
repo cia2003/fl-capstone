@@ -12,7 +12,6 @@ export function createPointerTracker(area: HTMLElement): PointerTracker {
 
   const onMove = (e: PointerEvent) => {
     if (e.pointerType === "touch") return;
-    const r = area.getBoundingClientRect();
 
     client.x = e.clientX;
     client.y = e.clientY;
