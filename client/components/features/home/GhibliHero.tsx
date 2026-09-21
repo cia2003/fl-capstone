@@ -8,12 +8,6 @@ import { HeroShader } from "./HeroShader";
 export function GhibliHero({ films }: { films: Film[] }) {
   return (
     <section className="relative overflow-hidden">
-      {/*
-        Lapisan paling belakang. HeroShader menulis --hero-px / --hero-py (-1..1)
-        ke <section> ini, jadi gambar bergeser sedikit berlawanan arah pointer.
-        scale(1.04) menyisakan margin agar tepi gambar tidak terlihat saat bergeser.
-        Tanpa JS / WebGL, variabel bernilai 0 dan gambar diam.
-      */}
       <picture
         className="absolute inset-0 will-change-transform"
         style={{
@@ -37,10 +31,8 @@ export function GhibliHero({ films }: { films: Film[] }) {
         />
       </picture>
 
-      {/* Awan berlapis (three.js). Harus anak langsung <section>. */}
       <HeroShader className="absolute inset-0" />
 
-      {/* Overlay */}
       <div
         className="
           absolute inset-0
@@ -57,7 +49,7 @@ export function GhibliHero({ films }: { films: Film[] }) {
 
       {/* Content */}
       <div className="relative mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
-        <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section md:h-100 grid grid-cols-2 items-center">
+        <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section md:min-h-100 grid lg:grid-cols-2 items-center">
           <div>
             <p className="text-caption font-medium tracking-caption text-primary">
               {films.length} FILMS, ENDLESS STORIES
