@@ -4,7 +4,7 @@ import { AboutData } from "@/components/features/about/AboutData";
 
 export default async function Page() {
   return (
-    <main role="main" className="bg-background">
+    <main id="main-content" tabIndex={-1} role="main" className="bg-background">
       <AboutHero />
       <HowItWorks />
       <AboutData />

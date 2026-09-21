@@ -11,6 +11,7 @@ const TOP_FILM_COUNT = 9;
 type MovieCarousel3DHandle = {
   goToPrevious: () => void;
   goToNext: () => void;
+  focusActiveSlide: () => void;
 };
 
 const LazyMovieCarousel3D = dynamic(
@@ -101,11 +102,13 @@ export function MovieCarousel3DLoader({
     if (event.key === "ArrowLeft") {
       event.preventDefault();
       carouselRef.current?.goToPrevious();
+      carouselRef.current?.focusActiveSlide();
     }
 
     if (event.key === "ArrowRight") {
       event.preventDefault();
       carouselRef.current?.goToNext();
+      carouselRef.current?.focusActiveSlide();
     }
   }
 
@@ -121,7 +124,6 @@ export function MovieCarousel3DLoader({
         aria-label="Daftar film unggulan, gunakan panah kiri dan kanan untuk navigasi"
         tabIndex={0}
         onKeyDown={handleKeyDown}
-        className="outline-none"
       >
         {state === "checking" && (
           <CarouselSkeleton height={CAROUSEL_HEIGHT} />

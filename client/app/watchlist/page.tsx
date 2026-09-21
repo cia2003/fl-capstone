@@ -11,7 +11,7 @@ export default async function Page() {
   const films = allFilms.filter((film) => watchlist.includes(film.id))
 
   return (
-    <main className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+    <main id="main-content" tabIndex={-1} className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
       <section className="mx-auto max-w-[1280px] py-8 md:py-16">
         <p className="text-caption font-medium tracking-caption text-primary">
           Watchlist

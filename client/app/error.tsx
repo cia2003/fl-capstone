@@ -5,7 +5,7 @@ import { CatAnimation } from "@/components/ui/CatAnimation"
 
 export default function Error() {
   return (
-    <main className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+    <main id="main-content" tabIndex={-1} className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
       <section className="mx-auto flex max-w-[1280px] flex-col items-center py-8 text-center md:py-16">
         <CatAnimation size="md" />
 

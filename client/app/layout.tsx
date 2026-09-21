@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SkipLink } from "@/components/ui/SkipLink";
 
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${sora.variable} ${sourceSans.variable}`}>
       <body>
         <Header />
+        <SkipLink />
         {children}
         <Footer />
       </body>

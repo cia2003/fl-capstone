@@ -59,6 +59,10 @@ export default function ChatMessages({
     }
 
     const showRegenerateCard = isRegenerating || (!chat.loading && hasError)
+    const lastAssistantMessageId = [...chat.messages]
+        .reverse()
+        .find((message) => message.role === "assistant")?.id
+
     return (
         <div className="relative">
             {chat.messages.map((message) => {
@@ -70,7 +74,13 @@ export default function ChatMessages({
 
                 if (message.role === "assistant") {
                     return (
-                        <AIMessage key={message.id} message={message} loading={false} onNewChat={chat.newChat} addToolOutput={addToolOutput} />
+                        <AIMessage
+                            key={message.id}
+                            message={message}
+                            isStreaming={chat.isStreaming && message.id === lastAssistantMessageId}
+                            onNewChat={chat.newChat}
+                            addToolOutput={addToolOutput}
+                        />
                     )
                 }
 

@@ -4,7 +4,7 @@ import { FilmCard } from "@/components/features/films/FilmCard";
 export default async function Health() {
     const films = (await getFilms()).sort((a, b) => a.title.localeCompare(b.title));
     return (
-    <main role="main" className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+    <main id="main-content" tabIndex={-1} role="main" className="mx-5 min-h-[calc(100vh-64px)] md:mx-10 lg:mx-16 min-[1440px]:mx-24">
         <section className="mx-auto max-w-[1280px] py-section-mobile md:py-section">
             <p className="text-caption font-medium tracking-caption text-primary">Health Check Page</p>
             <h1 className="mt-2">Find a story for your next quiet evening.</h1><p className="mt-4 max-w-2xl">Browse verified film details, save your favourites locally, or ask Ghibli Compass for a thoughtful starting point.</p>

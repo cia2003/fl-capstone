@@ -15,7 +15,7 @@ export function CategoryCard({
   return (
     <Link
       href={href}
-      className="relative h-48 w-full overflow-hidden rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
+      className="relative h-48 w-full cursor-pointer overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
     >
       <Image
         src={imageUrl}

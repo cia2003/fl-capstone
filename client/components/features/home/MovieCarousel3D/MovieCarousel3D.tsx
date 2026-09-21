@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, type GLProps } from "@react-three/fiber";
-import { useImperativeHandle, useState, useMemo, Suspense } from "react";
+import { useImperativeHandle, useState, useMemo, Suspense, useRef } from "react";
 import { WebGPURenderer, WebGPURendererParameters } from "three/webgpu"
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
@@ -44,6 +44,7 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [controls, setControls] = useState(defaultControls);
     const topFilms = useMemo(() => films.slice(0, 9), [films]);
+    const activeSlideRef = useRef<HTMLButtonElement>(null);
 
     const images = useMemo(
     () => topFilms.map((film) => film.image),
@@ -63,6 +64,9 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
       goToPrevious: () =>
         setActiveIndex((i) => (i - 1 + topFilms.length) % topFilms.length),
       goToNext: () => setActiveIndex((i) => (i + 1) % topFilms.length),
+      focusActiveSlide: () => {
+        requestAnimationFrame(() => activeSlideRef.current?.focus());
+      },
     }));
 
   return (
@@ -75,7 +79,7 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
             </p>
         </div>
 
-        <div className="h-[500px] w-full">
+        <div className="relative h-[500px] w-full">
             <Canvas
                 camera={{ position: [0, 0, 11], fov: 55 }}
                 shadows={false}
@@ -88,6 +92,7 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
                     height: "100%",
                     background: "transparent",
                 }}
+                // className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
             >
                 <Suspense fallback={null}>
                     <CarouselScene
@@ -110,6 +115,16 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
                     />
                 </Suspense>
             </Canvas>
+            {topFilms[activeIndex] && (
+                <button
+                    ref={activeSlideRef}
+                    type="button"
+                    tabIndex={-1}
+                    aria-label={`Open ${topFilms[activeIndex].title}`}
+                    onClick={() => handleFilmClick(activeIndex)}
+                    className="pointer-events-none absolute left-1/2 top-[200px] h-[min(56vw,360px)] w-[min(38vw,250px)] -translate-x-1/2 -translate-y-1/2 rounded-xl focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                />
+            )}
         </div>
         <div className="-mt-8 sm:-mt-18">
             <CarouselControls

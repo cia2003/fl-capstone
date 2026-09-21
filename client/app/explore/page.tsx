@@ -6,7 +6,7 @@ export default async function Explore() {
 	const films = (await getFilms()) as Film[];
 
 	return (
-		<main role="main">
+		<main id="main-content" tabIndex={-1} role="main">
 			<section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
 				<div className="mx-auto max-w-[1280px]">
 					<h1 className="mb-2 text-2xl font-semibold">All Movies</h1>

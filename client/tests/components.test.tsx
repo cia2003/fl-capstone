@@ -85,13 +85,14 @@ describe("chat message renderer", () => {
     render(
       <AIMessage
         message={chatMessage}
-        loading={true}
+        isStreaming
         onNewChat={vi.fn()}
         addToolOutput={vi.fn()}
       />,
     )
 
     expect(screen.getByText("A partial answer")).toBeTruthy()
+    expect(screen.getByText("A partial answer").closest("[aria-live]")?.getAttribute("aria-live")).toBe("polite")
     expect(screen.getByRole("status").textContent).toContain("Movie tool result")
   })
 

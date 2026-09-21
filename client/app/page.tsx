@@ -16,7 +16,7 @@ export default async function Page() {
     .slice(0, 9);
 
   return (
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <GhibliHero films={sortedFilms} />
 
       <StartingPoint />

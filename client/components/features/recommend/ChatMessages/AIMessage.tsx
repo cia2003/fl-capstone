@@ -12,7 +12,7 @@ type AddToolOutput = (args: {
 
 type AIMessageProps = {
   message: FilmUIMessage;
-  loading: boolean;
+  isStreaming?: boolean;
   onNewChat: () => void;
   addToolOutput: AddToolOutput;
   hideToolParts?: boolean;
@@ -30,6 +30,7 @@ function isFilmToolPart(
 
 export function AIMessage({
   message,
+  isStreaming = false,
   addToolOutput,
   hideToolParts = false,
 }: AIMessageProps) {
@@ -38,7 +39,13 @@ export function AIMessage({
       {message.parts.map((part, index) => {
         if (part.type === "text") {
           return (
-            <div key={`text-${index}`} className="font-medium">
+            <div
+              key={`text-${index}`}
+              className="font-medium"
+              aria-live={isStreaming ? "polite" : undefined}
+              aria-atomic="false"
+              aria-relevant="additions text"
+            >
               <ReactMarkdown>
                 {part.text}
               </ReactMarkdown>
