@@ -4,7 +4,6 @@ import localFont from 'next/font/local'
 import './globals.css'
 import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import Link from "next/link";
 
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
