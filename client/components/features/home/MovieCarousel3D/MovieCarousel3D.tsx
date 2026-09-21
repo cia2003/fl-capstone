@@ -2,7 +2,6 @@
 
 import { Canvas, type GLProps } from "@react-three/fiber";
 import { useImperativeHandle, useState, useMemo, Suspense } from "react";
-// import * as THREE from "three/webgpu";
 import { WebGPURenderer, WebGPURendererParameters } from "three/webgpu"
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
