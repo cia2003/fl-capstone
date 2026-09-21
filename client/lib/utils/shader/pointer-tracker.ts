@@ -2,26 +2,27 @@ import type { PointerTracker } from "@/types/shader";
 
 const clamp = (v: number) => Math.max(-1, Math.min(1, v));
 
-/**
- * Melacak posisi mouse relatif terhadap `area`, lalu menghaluskannya.
- * Tanpa mouse (layar sentuh, atau pointer di luar jendela) posisinya melayang
- * pelan sendiri, jadi parallax tetap terasa hidup.
- */
 export function createPointerTracker(area: HTMLElement): PointerTracker {
   const target = { x: 0, y: 0 }; // nilai mentah dari mouse
   const current = { x: 0, y: 0 }; // nilai yang dihaluskan
+  const client = { x: 0, y:0 };
+
   let active = false;
+  let pending = false;
 
   const onMove = (e: PointerEvent) => {
     if (e.pointerType === "touch") return;
     const r = area.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    target.x = clamp(((e.clientX - r.left) / r.width) * 2 - 1);
-    target.y = clamp(-(((e.clientY - r.top) / r.height) * 2 - 1)); // y dibalik: atas = positif
+
+    client.x = e.clientX;
+    client.y = e.clientY;
+
+    pending = true;
     active = true;
   };
   const onLeave = () => {
     active = false;
+    pending = false
   };
 
   area.addEventListener("pointermove", onMove, { passive: true });
@@ -36,6 +37,16 @@ export function createPointerTracker(area: HTMLElement): PointerTracker {
     },
 
     update(dt, time) {
+      if (pending) {
+        pending = false;
+        const r = area.getBoundingClientRect();
+
+        if (r.width && r.height) {
+            target.x = clamp(((client.x - r.left)/r.width) * 2 - 1)
+            target.y = clamp(((client.y - r.top)/r.height) * 2 - 1)
+        }
+      }
+
       if (!active) {
         target.x = Math.sin(time * 0.15) * 0.5;
         target.y = Math.cos(time * 0.11) * 0.15;
@@ -49,6 +60,7 @@ export function createPointerTracker(area: HTMLElement): PointerTracker {
     reset() {
       target.x = target.y = current.x = current.y = 0;
       active = false;
+      pending = false;
     },
 
     dispose() {

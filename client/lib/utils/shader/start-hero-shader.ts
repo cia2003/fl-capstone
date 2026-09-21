@@ -4,19 +4,9 @@ import { createFrameLoop } from "./frame-loop";
 import { clearParallaxVars, setParallaxVars } from "./parallax-vars";
 import { createPointerTracker } from "./pointer-tracker";
 
-/** Resolusi render relatif terhadap ukuran CSS. 0.5 = seperempat jumlah piksel. */
 const RENDER_SCALE = 0.5;
-
-/** Waktu (detik) yang dibekukan saat pengguna memilih reduced motion. */
 const STILL_TIME = 8;
 
-/**
- * Merangkai semua bagian. Tidak ada logika rendering atau matematika di sini,
- * hanya "siapa memanggil siapa". Mengembalikan fungsi untuk membersihkan semuanya.
- *
- *   wrap : elemen tempat <canvas> dipasang
- *   host : <section> hero (area pointer + tempat CSS variable ditulis)
- */
 export function startHeroShader(
   three: Three,
   wrap: HTMLElement,
@@ -32,6 +22,7 @@ export function startHeroShader(
 
   const pointer = createPointerTracker(host);
   let time = 0;
+  let ready = false;
 
   const draw = () => {
     scene.render({ time, pointerX: pointer.x, pointerY: pointer.y });
@@ -41,24 +32,36 @@ export function startHeroShader(
   const loop = createFrameLoop({
     target: host,
     onFrame(dt) {
+      if (!ready) return;
       time += dt;
-      pointer.update(dt, time);
-      draw();
+      pointer.update(dt, time); // baca dulu (getBoundingClientRect)...
+      draw(); // ...baru tulis (CSS variable). Urutan ini mencegah forced reflow.
     },
     onStill() {
+      if (!ready) return;
       time = STILL_TIME;
       pointer.reset();
       draw();
     },
   });
-
-  const resize = () => {
-    const width = wrap.clientWidth;
-    const height = wrap.clientHeight;
+  
+  const resizeObserver = new ResizeObserver(([entry]) => {
+    const { width, height } = entry.contentRect;
     if (!width || !height) return;
+
     scene.resize(width, height);
-    if (!loop.running) draw();
-  };
+
+    if (!ready) {
+      ready = true;
+      loop.sync();
+      requestAnimationFrame(() => {
+        canvas.style.opacity = "1"; // fade-in setelah ukuran siap
+      });
+    } else if (!loop.running) {
+      draw(); // loop sedang berhenti (reduced motion / offscreen): gambar ulang statis
+    }
+  });
+  resizeObserver.observe(wrap);
 
   const onContextLost = (e: Event) => {
     e.preventDefault(); // wajib, agar browser boleh memulihkan context
@@ -71,15 +74,6 @@ export function startHeroShader(
   };
   canvas.addEventListener("webglcontextlost", onContextLost);
   canvas.addEventListener("webglcontextrestored", onContextRestored);
-
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(wrap);
-
-  resize();
-  loop.sync();
-  requestAnimationFrame(() => {
-    canvas.style.opacity = "1"; // fade-in setelah frame pertama
-  });
 
   // Bersih-bersih (penting untuk React StrictMode dan navigasi Next.js).
   return () => {
