@@ -3,6 +3,7 @@ import HeroMobileImage from "@/public/images/home/ghibli-mobile-hero.webp";
 import type { Film } from "@/types/film";
 import Image from "next/image";
 import { HeroActions } from "./HeroActions";
+import { HeroShader } from "./HeroShader";
 
 export function GhibliHero({ films }: { films: Film[] }) {
   return (
@@ -23,6 +24,8 @@ export function GhibliHero({ films }: { films: Film[] }) {
           className="object-cover object-center"
         />
       </picture>
+
+      <HeroShader />
 
       {/* Overlay */}
       <div
