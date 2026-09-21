@@ -31,8 +31,10 @@ export function GhibliHero({ films }: { films: Film[] }) {
         />
       </picture>
 
+      {/* Shader */}
       <HeroShader className="absolute inset-0" />
 
+      {/* Overlay Content: can be used as a static fallback */}
       <div
         className="
           absolute inset-0
@@ -49,7 +51,7 @@ export function GhibliHero({ films }: { films: Film[] }) {
 
       {/* Content */}
       <div className="relative mx-5 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
-        <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section md:min-h-100 grid lg:grid-cols-2 items-center">
+        <div className="mx-auto max-w-[1280px] py-section-mobile md:py-section md:min-h-150 grid lg:grid-cols-2 items-center">
           <div>
             <p className="text-caption font-medium tracking-caption text-primary">
               {films.length} FILMS, ENDLESS STORIES

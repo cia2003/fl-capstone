@@ -1,9 +1,5 @@
 import type { FrameLoop, FrameLoopOptions } from "@/types/shader";
 
-/**
- * Loop animasi yang otomatis berhenti saat elemen keluar layar, tab tidak
- * aktif, atau pengguna meminta reduced motion.
- */
 export function createFrameLoop({ target, onFrame, onStill }: FrameLoopOptions): FrameLoop {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let raf = 0;
@@ -30,8 +26,12 @@ export function createFrameLoop({ target, onFrame, onStill }: FrameLoopOptions):
 
   const sync = () => {
     stop();
+    // Do not run the animation
     if (reducedMotion.matches) {
       onStill();
+
+      // If element is visible (on the screen) 
+      // and the page is active, start the animation's loop
     } else if (inView && pageVisible) {
       last = performance.now();
       lastDraw = last - frameInterval;
@@ -48,6 +48,7 @@ export function createFrameLoop({ target, onFrame, onStill }: FrameLoopOptions):
     inView = entry.isIntersecting;
     sync();
   });
+
   intersectionObserver.observe(target);
   document.addEventListener("visibilitychange", onVisibility);
   reducedMotion.addEventListener("change", sync);

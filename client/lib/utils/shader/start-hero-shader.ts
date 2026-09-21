@@ -13,29 +13,36 @@ export function startHeroShader(
   host: HTMLElement,
   { horizon, intensity }: HeroShaderOptions,
 ): (() => void) | undefined {
+  // create cloud animation
   const scene = createCloudScene(three, { horizon, intensity, renderScale: RENDER_SCALE });
-  if (!scene) return undefined; // WebGL tidak ada -> gambar statis tetap tampil
+  if (!scene) return undefined;
 
+  // create container "canvas", set the width and height 100% from it's parent
   const { canvas } = scene;
   canvas.className = "block h-full w-full opacity-0 transition-opacity duration-1000";
   wrap.appendChild(canvas);
 
+  // Track the cursor
   const pointer = createPointerTracker(host);
   let time = 0;
   let ready = false;
 
+  // Draw one frame based on time and cursor's position
+  // setParallaxVars write position of cursor as a variable of css in host, so that other element
+  // Not only the clouds, the background image will move based on cursor's movement in area
   const draw = () => {
     scene.render({ time, pointerX: pointer.x, pointerY: pointer.y });
-    setParallaxVars(host, pointer.x, pointer.y); // gambar latar ikut bergeser
+    setParallaxVars(host, pointer.x, pointer.y);
   };
 
+  // Start the loop if ready: run the time, update the cursor's position, re-draw the frame
   const loop = createFrameLoop({
     target: host,
     onFrame(dt) {
       if (!ready) return;
       time += dt;
-      pointer.update(dt, time); // baca dulu (getBoundingClientRect)...
-      draw(); // ...baru tulis (CSS variable). Urutan ini mencegah forced reflow.
+      pointer.update(dt, time);
+      draw(); 
     },
     onStill() {
       if (!ready) return;
@@ -45,6 +52,7 @@ export function startHeroShader(
     },
   });
   
+  // If the size is ready, run the loop
   const resizeObserver = new ResizeObserver(([entry]) => {
     const { width, height } = entry.contentRect;
     if (!width || !height) return;
@@ -58,16 +66,20 @@ export function startHeroShader(
         canvas.style.opacity = "1"; // fade-in setelah ukuran siap
       });
     } else if (!loop.running) {
-      draw(); // loop sedang berhenti (reduced motion / offscreen): gambar ulang statis
+      draw(); // if loop is stopped (reduced motion / offscreen): redraw statically
     }
   });
+
   resizeObserver.observe(wrap);
 
+  // Stop drawing the frame and hide it
   const onContextLost = (e: Event) => {
-    e.preventDefault(); // wajib, agar browser boleh memulihkan context
+    e.preventDefault();
     loop.stop();
     canvas.style.opacity = "0";
   };
+
+  // Run the loop
   const onContextRestored = () => {
     canvas.style.opacity = "1";
     loop.sync();
@@ -75,7 +87,7 @@ export function startHeroShader(
   canvas.addEventListener("webglcontextlost", onContextLost);
   canvas.addEventListener("webglcontextrestored", onContextRestored);
 
-  // Bersih-bersih (penting untuk React StrictMode dan navigasi Next.js).
+  // Clean up the shader
   return () => {
     loop.dispose();
     pointer.dispose();

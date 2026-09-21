@@ -3,21 +3,18 @@ import type { WebGLRenderer } from "three";
 import { cloudFragmentShader } from "./glsl/cloud.frag";
 import { cloudVertexShader } from "./glsl/cloud.vert";
 
-/**
- * Satu-satunya file yang "tahu" three.js. Tidak menyentuh React, event, atau
- * halaman: hanya menerima ukuran + state frame, lalu menggambar ke canvas.
- * Mengembalikan null jika WebGL tidak tersedia.
- */
+// This file makes the "stage" to draw the cloud with WebGL (Three.js)
+// It returns a canvas and 3 tools: resize, render, and dispose
 export function createCloudScene(
   three: Three,
   { horizon, intensity, renderScale }: CloudSceneOptions,
 ): CloudScene | null {
-  /* 1. Renderer: kanvas WebGL transparan agar gambar hero terlihat di belakangnya */
+  // Render a transparent canvas, so the background hero can be seen behind the cloud
   let renderer: WebGLRenderer;
   try {
     renderer = new three.WebGLRenderer({
       alpha: true,
-      antialias: false, // awan sudah lembut, MSAA hanya buang GPU
+      antialias: false, 
       powerPreference: "low-power",
     });
   } catch {
@@ -25,7 +22,8 @@ export function createCloudScene(
   }
   renderer.setClearColor(0x000000, 0);
 
-  /* 2. Scene: satu quad layar penuh + kamera orthographic (kamera tidak berpengaruh) */
+  // Create a one-flat square that covers the full screen, by making the camera flat
+  // cloud.frag use uTime to move the cloud: if the time is stopped, the cloud is not moving to the left
   const scene = new three.Scene();
   const camera = new three.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
@@ -37,16 +35,17 @@ export function createCloudScene(
     uIntensity: { value: intensity },
   };
 
+  // Create a flat square, then color it
   const geometry = new three.PlaneGeometry(2, 2);
   const material = new three.ShaderMaterial({
     vertexShader: cloudVertexShader,
     fragmentShader: cloudFragmentShader,
     uniforms,
-    // Shader sudah mengeluarkan warna premultiplied, jadi jangan di-blend lagi.
     blending: three.NoBlending,
     depthTest: false,
     depthWrite: false,
   });
+
   scene.add(new three.Mesh(geometry, material));
 
   return {
@@ -54,21 +53,24 @@ export function createCloudScene(
 
     resize(width, height) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2) * renderScale);
-      renderer.setSize(width, height, false); // false = CSS yang mengatur ukuran tampilan
+      renderer.setSize(width, height, false);
       uniforms.uAspect.value = width / height;
     },
 
+    // Run on every frame
+    // Send the latest time and cursor offset to the shader, then draw one frame
     render({ time, pointerX, pointerY }) {
       uniforms.uTime.value = time;
       uniforms.uPointer.value.set(pointerX, pointerY);
       renderer.render(scene, camera);
     },
 
+    // Free the GPU memory when we do not need the scene anymore
     dispose() {
       geometry.dispose();
       material.dispose();
       renderer.dispose();
-      renderer.forceContextLoss(); // browser membatasi jumlah WebGL context aktif
+      renderer.forceContextLoss(); // browser limited number of active WebGL context
     },
   };
 }

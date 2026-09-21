@@ -5,23 +5,22 @@ import { useRef } from "react";
 
 type HeroShaderProps = {
   className?: string;
-  /** Tinggi garis langit, 0-1 dihitung dari bawah. Naikkan jika awan menutupi tanah. */
   horizon?: number;
-  /** Opasitas keseluruhan awan, 0-1. */
   intensity?: number;
 };
 
-/**
- * Letakkan LANGSUNG di dalam <section class="relative"> hero, di antara gambar
- * dan overlay gradient. Semua logika ada di useHeroShader.
- */
+
 export function HeroShader({
   className = "",
+  // Make the area of cloud upper or lower
   horizon = 0.35,
-  intensity = 0.85,
+  // Cloud's opacity, from 0-1
+  intensity = 0.80,
 }: HeroShaderProps) {
+  // Wrapper 
   const wrapRef = useRef<HTMLDivElement>(null);
 
+  // All logics are here
   useHeroShader(wrapRef, { horizon, intensity });
 
   return (
