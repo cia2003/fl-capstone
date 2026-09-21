@@ -2,7 +2,8 @@
 
 import { Canvas, type GLProps } from "@react-three/fiber";
 import { useImperativeHandle, useState, useMemo, Suspense } from "react";
-import * as THREE from "three/webgpu";
+// import * as THREE from "three/webgpu";
+import { WebGPURenderer, WebGPURendererParameters } from "three/webgpu"
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
 import { CarouselScene } from "./CarouselScene";
@@ -13,8 +14,8 @@ type R3FDefaultGLProps = Parameters<
 >[0];
 
 async function createWebGpuRenderer(props: R3FDefaultGLProps) {
-    const renderer = new THREE.WebGPURenderer(
-        { ...props, alpha: true } as THREE.WebGPURendererParameters
+    const renderer = new WebGPURenderer(
+        { ...props, alpha: true } as WebGPURendererParameters
     )
 
     await renderer.init()
@@ -80,9 +81,9 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
                 camera={{ position: [0, 0, 11], fov: 55 }}
                 shadows={false}
                 gl={createWebGpuRenderer}
-                onCreated={({ gl }) => {
-                    gl.shadowMap.type = THREE.PCFShadowMap
-                }}
+                // onCreated={({ gl }) => {
+                //     gl.shadowMap.type = THREE.PCFShadowMap
+                // }}
                 style={{
                     width: "100%",
                     height: "100%",

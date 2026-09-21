@@ -1,36 +1,34 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-
-// // Global Variable
-
-// const RENDER_SCALE = 0.5;
-// const REDUCED_MOTION_TIME = 8;
-
-// type Three = Pick<
-//     typeof import ("three"), 
-//     | "WebGLRenderer"
-//     | "Scene"
-//     | "OrthographicCamera"
-//     | "PlaneGeometry"
-//     | "ShaderMaterial"
-//     | "Mesh"
-//     | "Vector2"
-//     | "NoBlending"
-// >
+import { useHeroShader } from "@/hooks/useHeroShader";
+import { useRef } from "react";
 
 type HeroShaderProps = {
-    className?: string;
-    horizon?: number;
-    intensity?: number;
-}
+  className?: string;
+  /** Tinggi garis langit, 0-1 dihitung dari bawah. Naikkan jika awan menutupi tanah. */
+  horizon?: number;
+  /** Opasitas keseluruhan awan, 0-1. */
+  intensity?: number;
+};
 
+/**
+ * Letakkan LANGSUNG di dalam <section class="relative"> hero, di antara gambar
+ * dan overlay gradient. Semua logika ada di useHeroShader.
+ */
 export function HeroShader({
-    className = "", 
-    horizon = 0.35, 
-    intensity = 0.85
+  className = "",
+  horizon = 0.35,
+  intensity = 0.85,
 }: HeroShaderProps) {
-    return (
-        <div></div>
-    )
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useHeroShader(wrapRef, { horizon, intensity });
+
+  return (
+    <div
+      ref={wrapRef}
+      aria-hidden="true"
+      className={`pointer-events-none ${className}`}
+    />
+  );
 }

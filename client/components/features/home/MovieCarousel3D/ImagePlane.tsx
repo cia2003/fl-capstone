@@ -2,7 +2,8 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, type MutableRefObject } from "react";
-import * as THREE from "three";
+// import * as THREE from "three";
+import { Texture, Mesh, FrontSide } from "three/webgpu"
 import {
   abs,
   add,
@@ -21,7 +22,7 @@ import {
 import { NodeMaterial } from "three/webgpu";
 
 interface ImagePlaneProps {
-  texture: THREE.Texture;
+  texture: Texture;
   index: number;
   total: number;
   currentIndexRef: MutableRefObject<number>;
@@ -51,7 +52,7 @@ export function ImagePlane({
   farOpacity,
   onClick,
 }: ImagePlaneProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<Mesh>(null);
   const { gl } = useThree()
 
   const angle = (index * Math.PI * 2) / total;
@@ -141,7 +142,7 @@ export function ImagePlane({
     material.transparent = true;
 
     // Keep the normal front face.
-    material.side = THREE.FrontSide;
+    material.side = FrontSide;
 
     return material;
   }, [

@@ -24,8 +24,8 @@ export function createPointerTracker(area: HTMLElement): PointerTracker {
     active = false;
   };
 
-  window.addEventListener("pointermove", onMove, { passive: true });
-  document.documentElement.addEventListener("pointerleave", onLeave);
+  area.addEventListener("pointermove", onMove, { passive: true });
+  area.addEventListener("pointerleave", onLeave);
 
   return {
     get x() {
@@ -52,8 +52,8 @@ export function createPointerTracker(area: HTMLElement): PointerTracker {
     },
 
     dispose() {
-      window.removeEventListener("pointermove", onMove);
-      document.documentElement.removeEventListener("pointerleave", onLeave);
+      area.removeEventListener("pointermove", onMove);
+      area.removeEventListener("pointerleave", onLeave);
     },
   };
 }
