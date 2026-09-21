@@ -1,6 +1,5 @@
 "use client"
 
-import { Film } from "@/types";
 import { UserMessage } from "./UserMessage";
 import { AIMessage } from "./AIMessage";
 import ThinkingIndicator from "@/components/ui/ThinkingIndicator";

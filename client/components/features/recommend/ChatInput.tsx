@@ -10,8 +10,6 @@ export function ChatInput() {
   const chat = useFilmChat();
   const composerRef = useRef<HTMLDivElement>(null);
 
-  console.count("ChatInput render");
-
   return (
     <div className="flex flex-col">
       {chat.messages.length === 0 && (

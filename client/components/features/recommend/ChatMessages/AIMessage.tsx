@@ -34,6 +34,10 @@ export function AIMessage({
   addToolOutput,
   hideToolParts = false,
 }: AIMessageProps) {
+
+  console.log("[AIMessage] message:", message);
+  console.log("[AIMessage] parts:", message.parts);
+  console.log("[AIMessage] hideToolParts:", hideToolParts);
   return (
     <div className="mt-6">
       {message.parts.map((part, index) => {
