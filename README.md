@@ -19,21 +19,35 @@ Users can:
 
 ### Desktop
 
-![Desktop — Landing Page](/client/public/images/readme/desktop-landing-page.png)
+<table> 
+    <tr> 
+        <td align="center"> 
+            <img src="/client/public/images/readme/desktop-landing-page.png" width="400"><br> 
+            <sub>Landing Page</sub> 
+        </td> 
+        <td align="center"> 
+            <img src="/client/public/images/readme/desktop-find-my-film-page.png" width="400"><br> 
+            <sub>AI Chat</sub> 
+        </td> 
+    </tr> 
+</table>
 
-![Desktop — AI Chat](/client/public/images/readme/desktop-find-my-film-page.png)
-
-### AI Recommendation Flow
-
-![AI Recommendation Flow]()
 
 ### Mobile
 
-![Mobile — Landing](/client/public/images/readme/mobile-landing-page.png)
+<table> 
+    <tr> 
+        <td align="center"> 
+            <img src="/client/public/images/readme/mobile-landing-page.png" width="200"><br> 
+            <sub>Landing</sub> 
+        </td> 
+        <td align="center"> 
+            <img src="/client/public/images/readme/mobile-find-my-film-page.png" width="200"><br> 
+            <sub>AI Chat</sub> 
+        </td> 
+    </tr> 
+</table>
 
-![Mobile — AI Chat](/client/public/images/readme/mobile-find-my-film-page.png)
-
-## Run Instructions
 
 ## Run Instructions
 
@@ -79,7 +93,7 @@ NEXT_PUBLIC_API_BASE_URL=https://ghibliapi.dev
 GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
 ```
 
-## Architecture Overview
+### AI Recommendation Flow
 
 ```
 User
@@ -101,6 +115,34 @@ Stream response to User
 ```
 
 Film data comes from the Studio Ghibli API and is provided to the AI before generating a response.
+
+## Architecture Overview
+
+```
+client/
+├── agents/
+│   ├── prompts/
+│   └── tools/
+├── app/
+│   ├── about/
+│   ├── api/
+│   ├── explore/
+│   ├── films/
+│   ├── find-my-film/
+│   ├── health/
+│   └── watchlist/
+├── components/
+├── hooks/
+├── lib/
+├── public/
+├── schema/
+├── tests/
+├── types/
+├── next.config.ts
+├── playwright.config.ts
+├── vitest.config.ts
+└── package.json
+```
 
 ## Key Decisions
 
