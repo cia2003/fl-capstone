@@ -19,9 +19,9 @@ Users can:
 
 ### Desktop
 
-![Desktop — Landing Page](client\public\images\readme\desktop-landing-page.png)
+![Desktop — Landing Page](/client/public/images/readme/desktop-landing-page.png)
 
-![Desktop — AI Chat](client\public\images\readme\desktop-find-my-film-page.png)
+![Desktop — AI Chat](/client/public/images/readme/desktop-find-my-film-page.png)
 
 ### AI Recommendation Flow
 
@@ -29,9 +29,9 @@ Users can:
 
 ### Mobile
 
-![Mobile — Landing](client\public\images\readme\mobile-landing-page.png)
+![Mobile — Landing](/client/public/images/readme/mobile-landing-page.png)
 
-![Mobile — AI Chat](client\public\images\readme\mobile-find-my-film-page.png)
+![Mobile — AI Chat](/client/public/images/readme/mobile-find-my-film-page.png)
 
 ## Run Instructions
 
