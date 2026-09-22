@@ -5,11 +5,13 @@ export function CategoryCard({
   category,
   description,
   imageUrl,
+  imageAlt,
   href,
 }: {
   category: string;
   description: string;
   imageUrl: string;
+  imageAlt: string;
   href: string;
 }) {
   return (
@@ -19,7 +21,7 @@ export function CategoryCard({
     >
       <Image
         src={imageUrl}
-        alt={category}
+        alt={imageAlt}
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-cover"

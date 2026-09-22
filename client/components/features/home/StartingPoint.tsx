@@ -13,9 +13,9 @@ export function StartingPoint() {
             </p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mx-auto max-w-[1280px]">
-            <CategoryCard category="Highly Rated" description="Experience the magic of animation with Studio Ghibli's timeless classics." imageUrl={SpiritedAwayImage.src} href="/explore/highly-rated" />
-            <CategoryCard category="Classics" description="Dive into fantastical worlds and imaginative storytelling." imageUrl={TotoroImage.src} href="/explore/classics" />
-            <CategoryCard category="Short & Simple" description="Embark on thrilling adventures with unforgettable characters." imageUrl={CatReturnsImage.src} href="/explore/short-and-simple" />
+            <CategoryCard category="Highly Rated" description="Experience the magic of animation with Studio Ghibli's timeless classics." imageUrl={SpiritedAwayImage.src} imageAlt="spirited-away-img" href="/explore/highly-rated" />
+            <CategoryCard category="Classics" description="Dive into fantastical worlds and imaginative storytelling." imageUrl={TotoroImage.src} imageAlt="totoro-img" href="/explore/classics" />
+            <CategoryCard category="Short & Simple" description="Embark on thrilling adventures with unforgettable characters." imageUrl={CatReturnsImage.src} imageAlt="cat-returns-img" href="/explore/short-and-simple" />
         </div>
     </section>
   );
