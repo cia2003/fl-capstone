@@ -167,3 +167,30 @@ Film data comes from the Studio Ghibli API and is provided to the AI before gene
 - It helped with the initial project structure, UI ideas, code generation, refactoring, prompts, and test cases. Most feature implementations were initially generated with AI.
 - The generated output was still reviewed and revised. I changed parts of the folder structure, refined the visual design, fixed generated code that caused errors, and made the final implementation decisions.
 - AI was also used to help write this README, with the project details and decisions coming from the actual implementation.
+
+### Known Limitations
+- Safari and mobile Safari have not yet been included in the browser testing pass.
+
+- Some pages remain below the 90 Lighthouse Performance target, although all audited pages meet the project's minimum performance requirement.
+
+- The Film Detail page still has an image sizing issue identified by Lighthouse.
+
+- Some <select> elements still require associated labels.
+
+- Lighthouse and automated accessibility tools do not replace a full screen-reader evaluation; the current audit included a manual keyboard pass but did not verify VoiceOver, NVDA, or TalkBack behavior.
+
+
+### Future Improvements
+- Complete Safari and mobile Safari testing.
+
+- Improve the remaining pages that are below the 90 
+
+- Performance target, particularly LCP-related issues.
+
+- Fix the remaining unlabeled <select> elements.
+
+- Resolve the remaining image dimension issue on the Film Detail page.
+
+- Perform a dedicated screen-reader accessibility pass.
+
+- Continue refining the mobile 3D carousel interaction and performance.
