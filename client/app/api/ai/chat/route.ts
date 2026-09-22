@@ -37,17 +37,31 @@ export async function POST(req: Request) {
 
     const films = await getFilms()
 
-    const result = streamText({
-        model: google("gemini-3.5-flash-lite"),
-        system: `${filmRecommenderPrompt} Verified film list: ${JSON.stringify(films)}`,
-        messages: await convertToModelMessages(messages),
-        tools: filmTools(films),
-        abortSignal: req.signal
+    const controller = new AbortController()
+
+    const timeout = setTimeout(() => {
+        controller.abort()
+    }, 10_000)
+
+    req.signal.addEventListener("abort", () => {
+        controller.abort()
     })
 
-    return createUIMessageStreamResponse({
-        stream: toUIMessageStream({
-            stream: result.stream,
-        }),
-    })
+    try {
+        const result = streamText({
+            model: google("gemini-3.5-flash-lite"),
+            system: `${filmRecommenderPrompt} Verified film list: ${JSON.stringify(films)}`,
+            messages: await convertToModelMessages(messages),
+            tools: filmTools(films),
+            abortSignal: controller.signal,
+        })
+
+        return createUIMessageStreamResponse({
+            stream: toUIMessageStream({
+                stream: result.stream,
+            }),
+        })
+    } finally {
+        clearTimeout(timeout)
+    }
 }
