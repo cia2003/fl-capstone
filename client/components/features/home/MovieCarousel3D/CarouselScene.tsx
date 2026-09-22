@@ -42,6 +42,11 @@ type CarouselSceneProps = {
 export function CarouselScene({
   config,
 }: CarouselSceneProps) {
+  const activePointerId = useRef<number |null>(null);
+  const dragStartX = useRef(0)
+  const dragStartY = useRef(0)
+  const lastMouseX = useRef(0)
+
   const {
     images,
     radius,
@@ -95,6 +100,10 @@ export function CarouselScene({
     velocityRef,
     isDragging,
     isVerticalDrag,
+    activePointerId,
+    dragStartX,
+    dragStartY,
+    lastMouseX,
     currentIndexRef,
     publishedIndexRef,
     snapTargetIndexRef,

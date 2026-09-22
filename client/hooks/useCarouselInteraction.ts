@@ -12,9 +12,11 @@ export function useCarouselInteraction({
   velocityRef,
   isDragging,
   isVerticalDrag,
+  activePointerId,
+  dragStartX,
+  dragStartY,
+  lastMouseX,
   currentIndexRef,
-  publishedIndexRef,
-  snapTargetIndexRef,
   targetRotationRef,
   isSnapping,
   isSnapSuppressed,
@@ -27,21 +29,12 @@ export function useCarouselInteraction({
     const previousTouchAction =
       canvas.style.touchAction;
 
-    let activePointerId: number | null = null;
-    let activePointerType: PointerEvent["pointerType"] | null =
-      null;
+    let activePointerType:
+      | PointerEvent["pointerType"]
+      | null = null;
 
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let lastMouseX = 0;
-    let lastMoveTime = 0;
-
-    // Lower = slower mouse grab.
-    const MOUSE_DRAG_MULTIPLIER = 0.5;
-
-    const handleWheel = (
-      event: WheelEvent,
-    ) => {
+    const handleWheel = (event: WheelEvent) => {
+      // Only horizontal wheel input controls the carousel.
       if (event.deltaX === 0) return;
 
       event.preventDefault();
@@ -64,103 +57,145 @@ export function useCarouselInteraction({
       isDragging.current = true;
       isVerticalDrag.current = false;
 
-      dragStartX = clientX;
-      dragStartY = clientY;
-      lastMouseX = clientX;
-      lastMoveTime = performance.now();
+      dragStartX.current = clientX;
+      dragStartY.current = clientY;
+      lastMouseX.current = clientX;
 
-      // Stop any in-flight snap/inertia the moment the user grabs the carousel.
-      isSnapping.current = false;
+      // Stop any existing snap/inertia when grabbing.
       velocityRef.current = 0;
+      isSnapping.current = false;
     };
 
     const updateDrag = (
-      clientX: number,
-      clientY: number,
+        clientX: number,
+        clientY: number,
     ) => {
-      if (!isDragging.current) return;
+    if (!isDragging.current) return;
 
-      const deltaX =
-        clientX - dragStartX;
+    const deltaX =
+        clientX - dragStartX.current;
 
-      const deltaY =
-        clientY - dragStartY;
+    const deltaY =
+        clientY - dragStartY.current;
 
-      if (
-        !isVerticalDrag.current &&
-        Math.abs(deltaY) > Math.abs(deltaX)
-      ) {
+    /*
+    * TOUCH
+    *
+    * Vertical movement owns the gesture.
+    * This prevents a vertical mobile scroll from
+    * accidentally becoming a carousel swipe.
+    */
+    if (activePointerType === "touch") {
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
         isVerticalDrag.current = true;
 
         velocityRef.current = 0;
 
         targetRotationRef.current =
-          rotationRef.current;
+            rotationRef.current;
 
         isSnapping.current = false;
         isSnapSuppressed.current = true;
-      }
+        }
 
-      if (isVerticalDrag.current) {
+        if (isVerticalDrag.current) {
+        return;
+        }
+
+        isSnapSuppressed.current = false;
+        lastMouseX.current = clientX;
+
+        return;
+    }
+
+    /*
+    * MOUSE
+    *
+    * Keep the existing vertical-lock behaviour,
+    * but allow horizontal dragging to control the carousel.
+    */
+    if (activePointerType === "mouse") {
+        if (
+        !isVerticalDrag.current &&
+        Math.abs(deltaY) > Math.abs(deltaX)
+        ) {
+        isVerticalDrag.current = true;
+
+        velocityRef.current = 0;
+
+        targetRotationRef.current =
+            rotationRef.current;
+
+        isSnapping.current = false;
+        isSnapSuppressed.current = true;
+        }
+
+        if (isVerticalDrag.current) {
+        return;
+        }
+
+        isSnapSuppressed.current = false;
+
+        const frameDeltaX =
+        clientX - lastMouseX.current;
+
+        const rotationDelta =
+        frameDeltaX *
+        dragSensitivity *
+        0.00001;
+
+        rotationRef.current += rotationDelta;
+
+        velocityRef.current = rotationDelta;
+
+        lastMouseX.current = clientX;
+    }
+    };
+    const endDrag = () => {
+      if (
+        !isDragging.current ||
+        isVerticalDrag.current
+      ) {
+        isDragging.current = false;
+        isVerticalDrag.current = false;
         return;
       }
 
-      isSnapSuppressed.current = false;
+      const deltaX =
+        lastMouseX.current -
+        dragStartX.current;
 
-      const now = performance.now();
+      const swipeThreshold = 40;
 
-      const dt = Math.max(
-        now - lastMoveTime,
-        1,
-      );
-
-      const frameDeltaX =
-        clientX - lastMouseX;
-
-      const sensitivityMultiplier =
-        activePointerType === "mouse"
-          ? MOUSE_DRAG_MULTIPLIER
-          : 1;
-
-      const rotationDelta =
-        -frameDeltaX *
-        dragSensitivity *
-        sensitivityMultiplier *
-        0.01;
-
-      rotationRef.current += rotationDelta;
-
-      // Track instantaneous speed so we can hand off inertia on release.
-      velocityRef.current =
-        (rotationDelta / dt) * 16.67;
-
-      lastMouseX = clientX;
-      lastMoveTime = now;
-    };
-
-    const endDrag = () => {
       if (
-        isDragging.current &&
-        !isVerticalDrag.current
+        Math.abs(deltaX) >=
+        swipeThreshold
       ) {
-        const dragDistance = Math.abs(
-          lastMouseX - dragStartX,
+        const direction =
+          deltaX < 0 ? 1 : -1;
+
+        const nextIndex =
+          (
+            currentIndexRef.current +
+            direction +
+            images.length
+          ) % images.length;
+
+        velocityRef.current = 0;
+        isSnapSuppressed.current = false;
+
+        snapToIndex(nextIndex);
+      } else {
+        /*
+         * Not enough movement:
+         * return to the current film.
+         */
+        velocityRef.current = 0;
+        isSnapSuppressed.current = false;
+
+        snapToIndex(
+          currentIndexRef.current,
         );
-
-        const flickThreshold = 40;
-
-        if (
-          Math.abs(velocityRef.current) >
-            0.0005 ||
-          dragDistance >= flickThreshold
-        ) {
-          // Let inertia carry the motion; the animation loop will snap
-          // to the nearest image once velocity decays.
-          isSnapSuppressed.current = false;
-        } else {
-          // Barely moved: snap straight back to the current image.
-          snapToIndex(currentIndexRef.current);
-        }
       }
 
       isDragging.current = false;
@@ -180,14 +215,16 @@ export function useCarouselInteraction({
         );
       }
 
-      activePointerId = null;
+      activePointerId.current = null;
       activePointerType = null;
+
       canvas.style.cursor = "grab";
     };
 
     const handlePointerDown = (
       event: PointerEvent,
     ) => {
+      // Only respond to the primary mouse button.
       if (
         event.pointerType === "mouse" &&
         event.button !== 0
@@ -195,8 +232,11 @@ export function useCarouselInteraction({
         return;
       }
 
-      activePointerId = event.pointerId;
-      activePointerType = event.pointerType;
+      activePointerId.current =
+        event.pointerId;
+
+      activePointerType =
+        event.pointerType;
 
       beginDrag(
         event.clientX,
@@ -215,7 +255,7 @@ export function useCarouselInteraction({
     ) => {
       if (
         event.pointerId !==
-        activePointerId
+        activePointerId.current
       ) {
         return;
       }
@@ -231,7 +271,7 @@ export function useCarouselInteraction({
     ) => {
       if (
         event.pointerId !==
-        activePointerId
+        activePointerId.current
       ) {
         return;
       }
@@ -245,18 +285,25 @@ export function useCarouselInteraction({
     ) => {
       if (
         event.pointerId !==
-        activePointerId
+        activePointerId.current
       ) {
         return;
       }
 
       isDragging.current = false;
       isVerticalDrag.current = false;
+      velocityRef.current = 0;
 
       finishPointer(event.pointerId);
     };
 
     canvas.style.cursor = "grab";
+
+    /*
+     * Allow normal vertical page scrolling on mobile.
+     *
+     * Horizontal movement is handled by Pointer Events.
+     */
     canvas.style.touchAction = "pan-y";
 
     canvas.addEventListener(
@@ -323,9 +370,11 @@ export function useCarouselInteraction({
     velocityRef,
     isDragging,
     isVerticalDrag,
+    activePointerId,
+    dragStartX,
+    dragStartY,
+    lastMouseX,
     currentIndexRef,
-    publishedIndexRef,
-    snapTargetIndexRef,
     targetRotationRef,
     isSnapping,
     isSnapSuppressed,

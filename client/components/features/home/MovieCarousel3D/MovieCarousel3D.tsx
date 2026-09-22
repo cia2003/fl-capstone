@@ -76,7 +76,7 @@ const defaultControls: CarouselControlValues = {
   farOpacity: 0.8,
   friction: 90,
   wheelSensitivity: 100,
-  dragSensitivity: 1,
+  dragSensitivity: 300,
   enableSnapping: true,
 
 

@@ -38,11 +38,18 @@ export type CarouselInteractionProps =
     images: string[];
     wheelSensitivity: number;
     dragSensitivity: number;
+
+    activePointerId: React.RefObject<number | null>;
+    dragStartX: React.RefObject<number>;
+    dragStartY: React.RefObject<number>;
+    lastMouseX: React.RefObject<number>;
+
     gl: {
       domElement: HTMLCanvasElement;
     };
+
     snapToIndex: (index: number) => void;
-    onImageClick: (index: number) => void;
+    onImageClick?: (index: number) => void;
   };
 
 export type CarouselAnimationProps =
