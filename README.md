@@ -20,12 +20,16 @@ Users can:
 ### Desktop
 
 <table> 
+    <tr>
+        <td>Landing Page</td>
+        <td>Find-My-Film Page</td>
+    </tr>
     <tr> 
-        <td align="center"> 
+        <td> 
             <img src="/client/public/images/readme/desktop-landing-page.png" width="400"><br> 
             <sub>Landing Page</sub> 
         </td> 
-        <td align="center"> 
+        <td> 
             <img src="/client/public/images/readme/desktop-find-my-film-page.png" width="400"><br> 
             <sub>AI Chat</sub> 
         </td> 
@@ -35,13 +39,17 @@ Users can:
 
 ### Mobile
 
-<table> 
+<table>
+    <tr>
+        <td>Landing Page</td>
+        <td>Find-My-Film Page</td>
+    </tr> 
     <tr> 
-        <td align="center"> 
+        <td> 
             <img src="/client/public/images/readme/mobile-landing-page.png" width="200"><br> 
             <sub>Landing</sub> 
         </td> 
-        <td align="center"> 
+        <td> 
             <img src="/client/public/images/readme/mobile-find-my-film-page.png" width="200"><br> 
             <sub>AI Chat</sub> 
         </td> 
