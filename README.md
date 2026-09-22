@@ -103,6 +103,20 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
 
 ## Architecture Overview
 
+The application uses a Next.js frontend with server-side functionality for API-related operations and AI integration.
+
+The main parts are:
+
+* **Frontend UI** — React and Tailwind CSS components for film discovery, film details, watchlist, filters, and the AI chat interface.
+* **Ghibli API integration** — provides the verified Studio Ghibli film data used by the application.
+* **AI API integration** — Google Gemini is used by the Find My Film assistant to interpret user preferences and provide recommendations.
+* **AI tools** — the assistant can work with verified film information rather than relying on generated film facts.
+* **3D experience** — Three.js / React Three Fiber is used for the interactive 3D carousel and shader-based visual experience.
+* **Server routes** — API routes handle AI requests and other server-side operations.
+* **Client-side watchlist** — the user's watchlist is stored using cookies.
+
+### Folder Structure
+
 ```
 client/
 ├── agents/
