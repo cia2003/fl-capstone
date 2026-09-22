@@ -6,7 +6,8 @@ import type { Film } from "@/types";
 import { CarouselSkeleton } from "./CarouselSkeleton";
 
 const CAROUSEL_HEIGHT = 500;
-const TOP_FILM_COUNT = 9;
+const TOP_FILM_COUNT_3D = 9;
+const TOP_FILM_COUNT_FALLBACK = 4;
 
 type MovieCarousel3DHandle = {
   goToPrevious: () => void;
@@ -61,7 +62,12 @@ export function MovieCarousel3DLoader({
   const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<MovieCarousel3DHandle>(null);
 
-  const topFilms = films.slice(0, TOP_FILM_COUNT);
+  const topFilms = films.slice(
+    0,
+    state === "3d"
+      ? TOP_FILM_COUNT_3D
+      : TOP_FILM_COUNT_FALLBACK,
+  );
 
   useEffect(() => {
     const node = containerRef.current;
