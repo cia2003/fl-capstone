@@ -1,5 +1,3 @@
-// hooks/useCarouselInteraction.ts
-
 "use client";
 
 import { useEffect } from "react";
@@ -15,6 +13,8 @@ export function useCarouselInteraction({
   isDragging,
   isVerticalDrag,
   currentIndexRef,
+  publishedIndexRef,
+  snapTargetIndexRef,
   targetRotationRef,
   isSnapping,
   isSnapSuppressed,
@@ -27,15 +27,17 @@ export function useCarouselInteraction({
     const previousTouchAction =
       canvas.style.touchAction;
 
-    let activePointerId: number | null =
+    let activePointerId: number | null = null;
+    let activePointerType: PointerEvent["pointerType"] | null =
       null;
-    
-    let activePointerType: PointerEvent["pointerType"] | null = null
 
     let dragStartX = 0;
     let dragStartY = 0;
     let lastMouseX = 0;
     let lastMoveTime = 0;
+
+    // Lower = slower mouse grab.
+    const MOUSE_DRAG_MULTIPLIER = 0.5;
 
     const handleWheel = (
       event: WheelEvent,
@@ -106,6 +108,7 @@ export function useCarouselInteraction({
       isSnapSuppressed.current = false;
 
       const now = performance.now();
+
       const dt = Math.max(
         now - lastMoveTime,
         1,
@@ -114,11 +117,15 @@ export function useCarouselInteraction({
       const frameDeltaX =
         clientX - lastMouseX;
 
-      // Follow the pointer: translate horizontal pixel movement into
-      // rotation directly, instead of only reacting on pointerup.
+      const sensitivityMultiplier =
+        activePointerType === "mouse"
+          ? MOUSE_DRAG_MULTIPLIER
+          : 1;
+
       const rotationDelta =
-        frameDeltaX *
+        -frameDeltaX *
         dragSensitivity *
+        sensitivityMultiplier *
         0.01;
 
       rotationRef.current += rotationDelta;
@@ -136,34 +143,23 @@ export function useCarouselInteraction({
         isDragging.current &&
         !isVerticalDrag.current
       ) {
-        const dragDeltaX = lastMouseX - dragStartX;
-
         const dragDistance = Math.abs(
           lastMouseX - dragStartX,
         );
 
         const flickThreshold = 40;
 
-        if (activePointerType === "touch") {
-            if (dragDistance >= flickThreshold) {
-                const direction = dragDeltaX < 0 ? 1 : -1;
-
-                snapToIndex(
-                    currentIndexRef.current + direction,
-                )
-            } else {
-                snapToIndex(
-                    currentIndexRef.current
-                )
-            }
-        } else if (
-            Math.abs(velocityRef.current) >
-                0.0005 ||
-            dragDistance >= flickThreshold
+        if (
+          Math.abs(velocityRef.current) >
+            0.0005 ||
+          dragDistance >= flickThreshold
         ) {
-            isSnapSuppressed.current = false;
+          // Let inertia carry the motion; the animation loop will snap
+          // to the nearest image once velocity decays.
+          isSnapSuppressed.current = false;
         } else {
-            snapToIndex(currentIndexRef.current)
+          // Barely moved: snap straight back to the current image.
+          snapToIndex(currentIndexRef.current);
         }
       }
 
@@ -185,6 +181,7 @@ export function useCarouselInteraction({
       }
 
       activePointerId = null;
+      activePointerType = null;
       canvas.style.cursor = "grab";
     };
 
@@ -238,6 +235,7 @@ export function useCarouselInteraction({
       ) {
         return;
       }
+
       endDrag();
       finishPointer(event.pointerId);
     };
@@ -326,6 +324,8 @@ export function useCarouselInteraction({
     isDragging,
     isVerticalDrag,
     currentIndexRef,
+    publishedIndexRef,
+    snapTargetIndexRef,
     targetRotationRef,
     isSnapping,
     isSnapSuppressed,
