@@ -6,10 +6,6 @@ import { Film } from "@/types";
 import { FilmCardSkeleton } from "../films/FilmCardSkeleton";
 import { useWatchlist } from "@/hooks/useWatchlist";
 
-interface WatchlistClientSectionProps {
-  initialFilms: Film[];
-}
-
 const LazyCardFilm = dynamic(
   () =>
     import("@/components/features/films/FilmCard").then(
@@ -24,11 +20,9 @@ const LazyCardFilm = dynamic(
 )
 
 
-export default function WatchlistClientSection({
-  initialFilms,
-}: WatchlistClientSectionProps) {
+export default function WatchlistClientSection({ initialFilms }: { initialFilms: Film[] }) {
   // Pass initialWatchlist dari server ke hook
-  const { watchlist, toggle } = useWatchlist();
+  const { watchlist } = useWatchlist();
 
   // Filter lokal secara real-time saat user melakukan toggle (hapus item)
   const activeFilms = initialFilms.filter((film) =>

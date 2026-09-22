@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import React from "react";
-import localFont from 'next/font/local'
-import './globals.css'
-import Header from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/ui/SkipLink";
+import { ToastContainer } from "react-toastify";
+import React from "react";
+import localFont from 'next/font/local'
+import Header from "@/components/layout/Header";
+import "react-toastify/dist/ReactToastify.css";
+import './globals.css'
 
 const sora = localFont({
   src: '../public/fonts/Sora/Sora-VariableFont_wght.ttf',
@@ -34,6 +36,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header />
         <SkipLink />
+        <ToastContainer
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme="light"
+        />
         {children}
         <Footer />
       </body>

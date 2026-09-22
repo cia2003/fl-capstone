@@ -9,6 +9,7 @@ import type { Film } from "@/types/film";
 import { FilmCard } from "../../films/FilmCard";
 
 export function FilterableFilmGrid({ films }: { films: Film[] }) {
+    const [openFilter, setOpenFilter] = useState<string | null>(null);
     const [search, setSearch] = useState("");
     const [releaseYear, setReleaseYear] = useState("");
     const [rtScore, setRtScore] = useState("");
@@ -86,10 +87,81 @@ export function FilterableFilmGrid({ films }: { films: Film[] }) {
                 <div>
                     <h3 className="text-lg font-medium">Filter Films</h3>
                     <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-1">
-                        <FilterSelect label="Release Year" value={releaseYear} onChange={(e) => handleFilterChange(setReleaseYear, e.target.value)} options={releaseYears.map((year) => ({ value: year, label: year }))} />
-                        <FilterSelect label="Rotten Tomatoes Score" value={rtScore} onChange={(e) => handleFilterChange(setRtScore, e.target.value)} options={rtScores.map((score) => ({ value: score, label: score }))} />
-                        <FilterSelect label="Director" value={director} onChange={(e) => handleFilterChange(setDirector, e.target.value)} options={directors.map((d) => ({ value: d, label: d }))} />
-                        <FilterSelect label="Running Time" value={runningTime} onChange={(e) => handleFilterChange(setRunningTime, e.target.value)} options={runningTimes.map((t) => ({ value: t, label: t }))} />
+                        <FilterSelect
+                        label="Release Year"
+                        value={releaseYear}
+                        onChange={(value) => {
+                            handleFilterChange(setReleaseYear, value);
+                            setOpenFilter(null);
+                        }}
+                        options={releaseYears.map((year) => ({
+                            value: year,
+                            label: year,
+                        }))}
+                        isOpen={openFilter === "releaseYear"}
+                        onToggle={() =>
+                            setOpenFilter((current) =>
+                            current === "releaseYear" ? null : "releaseYear"
+                            )
+                        }
+                        />
+
+                        <FilterSelect
+                        label="Score"
+                        value={rtScore}
+                        onChange={(value) => {
+                            handleFilterChange(setRtScore, value);
+                            setOpenFilter(null);
+                        }}
+                        options={rtScores.map((score) => ({
+                            value: score,
+                            label: score,
+                        }))}
+                        isOpen={openFilter === "rtScore"}
+                        onToggle={() =>
+                            setOpenFilter((current) =>
+                            current === "rtScore" ? null : "rtScore"
+                            )
+                        }
+                        />
+
+                        <FilterSelect
+                        label="Director"
+                        value={director}
+                        onChange={(value) => {
+                            handleFilterChange(setDirector, value);
+                            setOpenFilter(null);
+                        }}
+                        options={directors.map((d) => ({
+                            value: d,
+                            label: d,
+                        }))}
+                        isOpen={openFilter === "director"}
+                        onToggle={() =>
+                            setOpenFilter((current) =>
+                            current === "director" ? null : "director"
+                            )
+                        }
+                        />
+
+                        <FilterSelect
+                        label="Running Time"
+                        value={runningTime}
+                        onChange={(value) => {
+                            handleFilterChange(setRunningTime, value);
+                            setOpenFilter(null);
+                        }}
+                        options={runningTimes.map((t) => ({
+                            value: t,
+                            label: t,
+                        }))}
+                        isOpen={openFilter === "runningTime"}
+                        onToggle={() =>
+                            setOpenFilter((current) =>
+                            current === "runningTime" ? null : "runningTime"
+                            )
+                        }
+                        />
                     </div>
                 </div>
             </aside>
