@@ -1,105 +1,118 @@
 # Ghibli Compass
 
-Next.js frontend for browsing Studio Ghibli films, saving a local watchlist, and finding recommendations from a free-text prompt.
+An AI-assisted fan project for exploring and discovering Studio Ghibli films.
 
-## Structure
+[Ghibli Compass Demo Project](https://fl-capstone.vercel.app/)
 
-- app/ for routes and route handlers
-- components/ for reusable UI and feature modules
-- lib/ for API helpers and validation schemas
-- hooks/ for client-side state hooks
-- agents/ for AI prompt and client wrappers
-- __tests__/ for component and flow tests
+## What It Does
 
-## 3D Movie Carousel
+Ghibli Compass is a frontend project for exploring Studio Ghibli films.
 
-The home page includes a lazy-loaded React Three Fiber carousel with a Three.js WebGPU renderer and poster textures from the nine highest-rated films. It supports horizontal drag/swipe, horizontal wheel input, snapping, previous/next controls, and clicking a poster to open its film detail page.
+Users can:
+- Browse and explore films by category.
+- View film details.
+- Save films to a watchlist.
+- Use AI to find film recommendations through preference questions.
+- Ask the AI for information or story summaries about a film.
 
-For reduced-motion preferences, missing WebGPU, or devices with limited CPU/memory hints, the page uses a clickable static poster grid instead of loading the 3D chunk. The carousel keeps the film count at nine and loads only those poster textures. No GLB models or additional large runtime libraries are used.
+## Screenshots
 
-### FE-10 Performance Check
+### Desktop
 
-The 3D carousel was tested using Chrome DevTools:
+![Desktop — Landing Page](client\public\images\readme\desktop-landing-page.png)
 
-- **Poster textures:** 9 posters
-- **Total transferred size:** approximately 1.43 MB
-- **Frame rate:** approximately 141–144 FPS during carousel interaction, measured using Rendering → Frame rendering stats
-- **Mobile:** carousel drag/swipe, scrolling, and film selection remained usable
-- **Reduced motion:** the 3D carousel is replaced by a clickable static poster grid
+![Desktop — AI Chat](client\public\images\readme\desktop-find-my-film-page.png)
 
-With more time, I would add subtle poster animations to make the carousel feel more alive and enable automatic rotation after a few seconds of user inactivity.
+### AI Recommendation Flow
 
+![AI Recommendation Flow]()
 
-## AI Tool Contracts
+### Mobile
 
-Ghibli Compass uses AI tools with Zod-validated inputs and structured outputs rendered as UI components.
+![Mobile — Landing](client\public\images\readme\mobile-landing-page.png)
 
-### `recommendMovies`
+![Mobile — AI Chat](client\public\images\readme\mobile-find-my-film-page.png)
 
-**Input:**
+## Run Instructions
 
-```ts
-{
-  recommendations: {
-    filmId: string;
-    score: number;      // 0–100
-    reasoning: string;
-  }[];
-}
+## Run Instructions
+
+Clone the repository:
+
+```bash
+git clone https://github.com/cia2003/fl-capstone.git
 ```
 
-**Return:**
+Go to the `client` directory and install dependencies:
 
-```ts
-{
-  message: string;
-  recommendations: {
-    filmId: string;
-    score: number;
-    reasoning: string;
-  }[];
-}
+```bash
+cd client
+npm install
+npm run dev
 ```
 
-**UI:** `RankedResultList`
+The app runs at http://localhost:3000.
 
-### `getFilmInformation`
+To run tests:
 
-**Input:**
-
-```ts
-{
-  title: string;
-  explanation: string;
-}
+```bash
+npm run test
 ```
 
-**Return:**
+To build:
 
-```ts
-{
-  message: string;
-  film: Film;
-}
+```bash
+npm run build
 ```
 
-**UI:** `FilmCard`
+## Environment Variables
 
-### `askMoviePreferences`
+| Variable                       | Description                        |
+| ------------------------------ | ----------------------------------- |
+| `NEXT_PUBLIC_API_BASE_URL`     | Base URL for the Studio Ghibli API |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | API key for Google Gemini          |
 
-**Input:**
+Example:
 
-```ts
-{
-  question: string;
-  options: string[];
-}
+```
+NEXT_PUBLIC_API_BASE_URL=https://ghibliapi.dev
+GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
 ```
 
-**Output:** User-selected preference returned through `addToolOutput()`.
+## Architecture Overview
 
-**UI:** Interactive preference buttons.
+```
+User
+ ↓
+Next.js Chat UI
+ ↓
+AI API Route
+ ↓
+Fetch Ghibli films
+ ↓
+streamText + Google Gemini
+ ↓
+AI Tools
+ ├── askMoviePreferences
+ ├── recommendMovies
+ └── getFilmInformation
+ ↓
+Stream response to User
+```
 
-### Tool Lifecycle
+Film data comes from the Studio Ghibli API and is provided to the AI before generating a response.
 
-All tools render four states: `input-streaming`, `input-available`, `output-available`, and `output-error`.
+## Key Decisions
+
+- Ghibli API as the film source — keeps AI responses tied to the available film data instead of relying entirely on model knowledge.
+- AI tools — recommendations, preference questions, and film information are handled through structured tools rather than plain text responses.
+- Streaming — responses are displayed as they are generated instead of making the user wait for the complete response.
+- Cookies for watchlist — keeps watchlist persistence simple without introducing a database, since the project focuses primarily on the frontend.
+- Vitest — used mainly to test chat message behavior and edge cases.
+
+## How AI Tools Built This
+
+- AI was used as a development assistant throughout the project.
+- It helped with the initial project structure, UI ideas, code generation, refactoring, prompts, and test cases. Most feature implementations were initially generated with AI.
+- The generated output was still reviewed and revised. I changed parts of the folder structure, refined the visual design, fixed generated code that caused errors, and made the final implementation decisions.
+- AI was also used to help write this README, with the project details and decisions coming from the actual implementation.
