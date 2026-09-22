@@ -38,6 +38,7 @@ export default function CarouselFallback({
               overflow-hidden rounded-xl
               p-3.5
               text-left text-white
+              focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-accent
             "
           >
             {/* Movie poster */}

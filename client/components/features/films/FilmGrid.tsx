@@ -1,8 +1,23 @@
 "use client"
 
 import type { Film } from "@/types";
-import { FilmCard } from "./FilmCard";
+import { FilmCardSkeleton } from "./FilmCardSkeleton";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const LazyCardFilm = dynamic(
+  () =>
+    import("./FilmCard").then(
+      (module) => module.FilmCard,
+    ),
+  
+  { 
+    ssr: false,
+    loading: () => <FilmCardSkeleton />, 
+  },
+
+)
+
 
 export function FilmGrid({ films }: { films: Film[] }) {
   const [value, setValue] = useState("title-asc");
@@ -37,7 +52,8 @@ export function FilmGrid({ films }: { films: Film[] }) {
             </select>
         </div>
         <div className="grid gap-element sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto max-w-[1280px] py-section-mobile">
-            {filteredFilms.map(film => <FilmCard key={film.id} film={film} />)}
+            {filteredFilms.map(
+              film => <LazyCardFilm key={film.id} film={film} />)}
         </div>
     </div>
   );

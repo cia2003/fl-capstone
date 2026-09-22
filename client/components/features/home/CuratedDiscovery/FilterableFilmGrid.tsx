@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { FilterSelect } from "@/components/ui/FilterSelect";
 import { Input } from "@/components/ui/Input";
 import type { Film } from "@/types/film";
-import { FilmCard } from "../films/FilmCard";
+import { FilmCard } from "../../films/FilmCard";
 
 export function FilterableFilmGrid({ films }: { films: Film[] }) {
     const [search, setSearch] = useState("");

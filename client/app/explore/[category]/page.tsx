@@ -12,25 +12,21 @@ const categoryInfo: Record<
     description:
       "Explore Studio Ghibli films across the years and discover how its stories and animation have evolved over time.",
   },
-
   director: {
     title: "By Director",
     description:
       "Discover Studio Ghibli films through the unique visions and storytelling styles of its directors.",
   },
-
   "highly-rated": {
     title: "Highly Rated",
     description:
       "Discover some of the most highly rated Studio Ghibli films, loved by audiences around the world.",
   },
-
   classics: {
     title: "Classics",
     description:
       "Revisit the timeless Studio Ghibli films that helped shape the studio's beloved legacy.",
   },
-
   "short-and-simple": {
     title: "Short & Simple",
     description:
@@ -38,13 +34,109 @@ const categoryInfo: Record<
   },
 };
 
+type FilmSection = {
+  title: string;
+  films: Film[];
+};
+
+function CategoryHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
+      <div className="mx-auto max-w-[1280px]">
+        <h1 className="mb-2 text-2xl font-semibold">{title}</h1>
+        <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+          {description}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FilmSections({ sections }: { sections: FilmSection[] }) {
+  return (
+    <div className="space-y-12">
+      {sections.map((section) => (
+        <section key={section.title}>
+          <div className="mx-5 mb-4 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
+            <div className="mx-auto max-w-[1280px]">
+              <h2 className="text-xl font-semibold">{section.title}</h2>
+            </div>
+          </div>
+
+          <FilmGrid films={section.films} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function getReleaseSections(films: Film[]): FilmSection[] {
+  const decades = [
+    [1980, 1990],
+    [1990, 2000],
+    [2000, 2010],
+    [2010, 2020],
+    [2020, Infinity],
+  ];
+
+  return decades.map(([start, end]) => ({
+    title: `${start}s`,
+    films: films.filter((film) => {
+      const year = Number(film.release_date);
+      return year >= start && year < end;
+    }),
+  }));
+}
+
+function getDirectorSections(films: Film[]): FilmSection[] {
+  const directors = [...new Set(films.map((film) => film.director))];
+
+  return directors.map((director) => ({
+    title: director,
+    films: films.filter((film) => film.director === director),
+  }));
+}
+
+function getCategoryFilms(category: string, films: Film[]): Film[] {
+  switch (category) {
+    case "highly-rated":
+      return films
+        .filter((film) => Number(film.rt_score) >= 90)
+        .sort((a, b) => Number(b.rt_score) - Number(a.rt_score));
+
+    case "classics":
+      return films
+        .filter((film) => Number(film.release_date) < 2000)
+        .sort(
+          (a, b) =>
+            Number(a.release_date) - Number(b.release_date),
+        );
+
+    case "short-and-simple":
+      return films
+        .filter((film) => Number(film.running_time) <= 90)
+        .sort(
+          (a, b) =>
+            Number(a.running_time) - Number(b.running_time),
+        );
+
+    default:
+      return [];
+  }
+}
+
 export default async function FilmPage({
   params,
 }: {
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-
   const info = categoryInfo[category];
 
   if (!info) {
@@ -53,215 +145,27 @@ export default async function FilmPage({
 
   const films = (await getFilms()) as Film[];
 
-  /*
-   * By Release Year
-   */
-  if (category === "release") {
-    const releaseSections = [
-      {
-        title: "1980s",
-        films: films.filter(
-          (film) =>
-            Number(film.release_date) >= 1980 &&
-            Number(film.release_date) < 1990
-        ),
-      },
-      {
-        title: "1990s",
-        films: films.filter(
-          (film) =>
-            Number(film.release_date) >= 1990 &&
-            Number(film.release_date) < 2000
-        ),
-      },
-      {
-        title: "2000s",
-        films: films.filter(
-          (film) =>
-            Number(film.release_date) >= 2000 &&
-            Number(film.release_date) < 2010
-        ),
-      },
-      {
-        title: "2010s",
-        films: films.filter(
-          (film) =>
-            Number(film.release_date) >= 2010 &&
-            Number(film.release_date) < 2020
-        ),
-      },
-      {
-        title: "2020s",
-        films: films.filter(
-          (film) => Number(film.release_date) >= 2020
-        ),
-      },
-    ];
+  const sections =
+    category === "release"
+      ? getReleaseSections(films)
+      : category === "director"
+        ? getDirectorSections(films)
+        : [];
 
-    return (
-      <main id="main-content" tabIndex={-1} role="main">
-        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
-          <div className="mx-auto max-w-[1280px]">
-            <h1 className="mb-2 text-2xl font-semibold">
-              {info.title}
-            </h1>
+  const categoryFilms = getCategoryFilms(category, films);
 
-            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-              {info.description}
-            </p>
-          </div>
-        </section>
+  return (
+    <main id="main-content" tabIndex={-1}>
+      <CategoryHeader
+        title={info.title}
+        description={info.description}
+      />
 
-        <div className="space-y-12">
-          {releaseSections.map((section) => (
-            <section key={section.title}>
-              <div className="mx-5 mb-4 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
-                <div className="mx-auto max-w-[1280px]">
-                  <h2 className="text-xl font-semibold">
-                    {section.title}
-                  </h2>
-                </div>
-              </div>
-
-              <FilmGrid films={section.films} />
-            </section>
-          ))}
-        </div>
-      </main>
-    );
-  }
-
-  /*
-   * By Director
-   */
-  if (category === "director") {
-    const directors = [...new Set(films.map((film) => film.director))];
-
-    return (
-      <main id="main-content" tabIndex={-1} role="main">
-        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
-          <div className="mx-auto max-w-[1280px]">
-            <h1 className="mb-2 text-2xl font-semibold">
-              {info.title}
-            </h1>
-
-            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-              {info.description}
-            </p>
-          </div>
-        </section>
-
-        <div className="space-y-12">
-          {directors.map((director) => {
-            const directorFilms = films.filter(
-              (film) => film.director === director
-            );
-
-            return (
-              <section key={director}>
-                <div className="mx-5 mb-4 md:mx-10 lg:mx-16 min-[1440px]:mx-24">
-                  <div className="mx-auto max-w-[1280px]">
-                    <h2 className="text-xl font-semibold">
-                      {director}
-                    </h2>
-                  </div>
-                </div>
-
-                <FilmGrid films={directorFilms} />
-              </section>
-            );
-          })}
-        </div>
-      </main>
-    );
-  }
-
-  /*
-   * Highly Rated
-   */
-  if (category === "highly-rated") {
-    const highlyRatedFilms = films
-      .filter((film) => Number(film.rt_score) >= 90)
-      .sort((a, b) => Number(b.rt_score) - Number(a.rt_score));
-
-    return (
-      <main id="main-content" tabIndex={-1} role="main">
-        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
-          <div className="mx-auto max-w-[1280px]">
-            <h1 className="mb-2 text-2xl font-semibold">
-              {info.title}
-            </h1>
-
-            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-              {info.description}
-            </p>
-          </div>
-        </section>
-
-        <FilmGrid films={highlyRatedFilms} />
-      </main>
-    );
-  }
-
-  /*
-   * Classics
-   */
-  if (category === "classics") {
-    const classicFilms = films
-      .filter((film) => Number(film.release_date) < 2000)
-      .sort(
-        (a, b) =>
-          Number(a.release_date) - Number(b.release_date)
-      );
-
-    return (
-      <main id="main-content" tabIndex={-1} role="main">
-        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
-          <div className="mx-auto max-w-[1280px]">
-            <h1 className="mb-2 text-2xl font-semibold">
-              {info.title}
-            </h1>
-
-            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-              {info.description}
-            </p>
-          </div>
-        </section>
-
-        <FilmGrid films={classicFilms} />
-      </main>
-    );
-  }
-
-  /*
-   * Short & Simple
-   */
-  if (category === "short-and-simple") {
-    const shortFilms = films
-      .filter((film) => Number(film.running_time) <= 90)
-      .sort(
-        (a, b) =>
-          Number(a.running_time) - Number(b.running_time)
-      );
-
-    return (
-      <main id="main-content" tabIndex={-1} role="main">
-        <section className="pt-section-mobile mx-5 md:mx-10 md:pt-section-desktop lg:mx-16 min-[1440px]:mx-24">
-          <div className="mx-auto max-w-[1280px]">
-            <h1 className="mb-2 text-2xl font-semibold">
-              {info.title}
-            </h1>
-
-            <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
-              {info.description}
-            </p>
-          </div>
-        </section>
-
-        <FilmGrid films={shortFilms} />
-      </main>
-    );
-  }
-
-  return notFound();
+      {sections.length > 0 ? (
+        <FilmSections sections={sections} />
+      ) : (
+        <FilmGrid films={categoryFilms} />
+      )}
+    </main>
+  );
 }

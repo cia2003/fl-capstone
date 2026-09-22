@@ -56,8 +56,8 @@ export function MovieCarousel3DLoader({
   films: Film[];
 }) {
   const [state, setState] = useState<LoaderState>("checking");
-  const [inView, setInView] = useState(false);
-
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<MovieCarousel3DHandle>(null);
 
@@ -72,14 +72,15 @@ export function MovieCarousel3DLoader({
       ([entry]) => {
         if (!entry) return;
 
+        setIsVisible(entry.isIntersecting);
+
         if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
+          setHasEnteredViewport(true);
         }
       },
       {
         rootMargin: "0px",
-        threshold: 0,
+        threshold: 0.1,
       },
     );
 
@@ -88,15 +89,23 @@ export function MovieCarousel3DLoader({
     return () => observer.disconnect();
   }, []);
 
-  /**
-   * Decide whether to use the 3D carousel or the lightweight
-   * image-based fallback only after the carousel enters the viewport.
-   */
   useEffect(() => {
-    if (!inView) return;
+    if (!hasEnteredViewport) return;
 
     setState(canRunCarousel3D() ? "3d" : "fallback");
-  }, [inView]);
+  }, [hasEnteredViewport]);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      setIsVisible((prev) => prev && document.visibilityState === "visible");
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  const isPaused = !isVisible;
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "ArrowLeft") {
@@ -137,6 +146,7 @@ export function MovieCarousel3DLoader({
           <LazyMovieCarousel3D
             ref={carouselRef}
             films={topFilms}
+            isPaused={isPaused}
           />
         )}
       </div>

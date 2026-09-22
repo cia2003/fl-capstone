@@ -1,8 +1,8 @@
 "use client";
 
 import { Canvas, type GLProps } from "@react-three/fiber";
-import { useImperativeHandle, useState, useMemo, Suspense, useRef } from "react";
-import { WebGPURenderer, WebGPURendererParameters } from "three/webgpu"
+import { useImperativeHandle, useState, useMemo, Suspense, useRef, type Ref } from "react";
+import { WebGPURenderer, WebGPURendererParameters, PCFShadowMap } from "three/webgpu"
 import type { Film } from "@/types";
 import { CarouselControls, type CarouselControlValues } from "./CarouselControls";
 import { CarouselScene } from "./CarouselScene";
@@ -12,13 +12,22 @@ type R3FDefaultGLProps = Parameters<
     Extract<GLProps, (...args: never[]) => unknown>
 >[0];
 
+export type MovieCarousel3DHandle = {
+    goToPrevious: () => void;
+    goToNext: () => void;
+    focusActiveSlide: () => void;
+};
+
 async function createWebGpuRenderer(props: R3FDefaultGLProps) {
     const renderer = new WebGPURenderer(
         { ...props, alpha: true } as WebGPURendererParameters
     )
 
     await renderer.init()
+    
+    renderer.shadowMap.type = PCFShadowMap
     renderer.setClearColor(0x000000, 0)
+
     return renderer
 }
 
@@ -39,7 +48,15 @@ const defaultControls: CarouselControlValues = {
     enableSnapping: true,
 };
 
-export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
+export function MovieCarousel3D({
+    films,
+    isPaused = false,
+    ref,
+}: {
+    films: Film[];
+    isPaused?: boolean;
+    ref?: Ref<MovieCarousel3DHandle>;
+}) {
     const router = useRouter()
     const [activeIndex, setActiveIndex] = useState(0);
     const [controls, setControls] = useState(defaultControls);
@@ -51,7 +68,6 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
     [topFilms]
     );
 
-    // OLD / DEBUG: console.log("MovieCarousel3D RENDER", { activeIndex, images, topFilms });
     const handleFilmClick = (index: number) => {
         const film = topFilms[index];
         if (film) router.push(`/films/${film.id}`)
@@ -60,14 +76,18 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
         setControls((current) => ({ ...current, [key]: value }));
     }
 
-    useImperativeHandle(ref, () => ({
-      goToPrevious: () =>
-        setActiveIndex((i) => (i - 1 + topFilms.length) % topFilms.length),
-      goToNext: () => setActiveIndex((i) => (i + 1) % topFilms.length),
-      focusActiveSlide: () => {
-        requestAnimationFrame(() => activeSlideRef.current?.focus());
-      },
-    }));
+    useImperativeHandle(
+        ref,
+        () => ({
+            goToPrevious: () =>
+                setActiveIndex((i) => (i - 1 + topFilms.length) % topFilms.length),
+            goToNext: () => setActiveIndex((i) => (i + 1) % topFilms.length),
+            focusActiveSlide: () => {
+                requestAnimationFrame(() => activeSlideRef.current?.focus());
+            },
+        }),
+        [topFilms.length],
+    );
 
   return (
 
@@ -84,15 +104,12 @@ export function MovieCarousel3D({ films, ref }: { films: Film[], ref:any }) {
                 camera={{ position: [0, 0, 11], fov: 55 }}
                 shadows={false}
                 gl={createWebGpuRenderer}
-                // onCreated={({ gl }) => {
-                //     gl.shadowMap.type = THREE.PCFShadowMap
-                // }}
+                frameloop={isPaused ? "never" : "always"}
                 style={{
                     width: "100%",
                     height: "100%",
                     background: "transparent",
                 }}
-                // className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
             >
                 <Suspense fallback={null}>
                     <CarouselScene

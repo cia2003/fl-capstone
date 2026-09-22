@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import type { Film } from "@/types/film";
+import { FilterableFilmGridSkeleton } from "./FilterableFilmGridSkeleton";
 
 const FilterableFilmGrid = dynamic(
   () => import("./FilterableFilmGrid").then((module) => module.FilterableFilmGrid),
@@ -31,5 +32,8 @@ export function DeferredFilterableFilmGrid({ films }: { films: Film[] }) {
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={containerRef}>{shouldLoad && <FilterableFilmGrid films={films} />}</div>;
+  return <div ref={containerRef}>{
+    shouldLoad ? <FilterableFilmGrid films={films} />
+               : <FilterableFilmGridSkeleton />
+    }</div>;
 }

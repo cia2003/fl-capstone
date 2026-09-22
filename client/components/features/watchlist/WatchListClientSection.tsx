@@ -1,13 +1,28 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Film } from "@/types";
-import { FilmCard } from "@/components/features/films/FilmCard";
+import { FilmCardSkeleton } from "../films/FilmCardSkeleton";
 import { useWatchlist } from "@/hooks/useWatchlist";
 
 interface WatchlistClientSectionProps {
   initialFilms: Film[];
 }
+
+const LazyCardFilm = dynamic(
+  () =>
+    import("@/components/features/films/FilmCard").then(
+      (module) => module.FilmCard,
+    ),
+  
+  { 
+    ssr: false,
+    loading: () => <FilmCardSkeleton />, 
+  },
+
+)
+
 
 export default function WatchlistClientSection({
   initialFilms,
@@ -40,7 +55,7 @@ export default function WatchlistClientSection({
   return (
     <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {activeFilms.map((film, index) => (
-        <FilmCard
+        <LazyCardFilm
           key={film.id}
           film={film}
           priority={index === 0} // LCP Image Preload otomatis aktif di HTML pertama dari server!
