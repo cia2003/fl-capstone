@@ -10,6 +10,8 @@ import { injectNetworkFailure } from "./test-scenarios/network-error";
 import { injectMalformedResponse } from "./test-scenarios/malformed-response";
 import { failThenSucceed, doubleClick } from "./test-scenarios/duplicate-retries";
 import { injectPreferenceFollowUp } from "./test-scenarios/preference-follow-up";
+import { injectEmptyResponse } from "./test-scenarios/empty-response";
+import { injectUndefinedToolOutput } from "./test-scenarios/undefined-tool-output";
 
 test.describe("chat failure handling", () => {
   let chatPage: ChatPage;
@@ -195,5 +197,31 @@ test.describe("chat failure handling", () => {
     await expect(page.getByText("Recommendations found")).toBeVisible();
     expect(scenario.requestBodies).toHaveLength(2);
     expect(JSON.stringify(scenario.requestBodies[1])).toContain("I want something with a cat");
+  });
+
+  test("offers regenerate when the assistant response is empty", async ({
+    page,
+  }) => {
+    const scenario = await injectEmptyResponse(page);
+
+    await chatPage.sendUserMessage("Recommend me a movie");
+
+    await expect(chatPage.retryButton).toBeVisible();
+
+    expect(scenario.requestCount()).toBe(1);
+
+    await scenario.dispose();
+  });
+
+  test("shows retry when tool output is undefined", async ({ page }) => {
+    const scenario = await injectUndefinedToolOutput(page);
+
+    await chatPage.sendUserMessage("Recommend me a gentle movie");
+
+    await expect(chatPage.retryButton).toBeVisible();
+
+    expect(scenario.requestCount()).toBe(1);
+
+    await scenario.dispose();
   });
 });
