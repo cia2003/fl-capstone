@@ -78,6 +78,8 @@ const defaultControls: CarouselControlValues = {
   wheelSensitivity: 100,
   dragSensitivity: 300,
   enableSnapping: true,
+
+
 };
 
 export function MovieCarousel3D({
