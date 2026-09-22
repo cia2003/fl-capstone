@@ -136,15 +136,17 @@ export function useCarouselInteraction({
         isDragging.current &&
         !isVerticalDrag.current
       ) {
+        const dragDeltaX = lastMouseX - dragStartX;
+
         const dragDistance = Math.abs(
           lastMouseX - dragStartX,
         );
 
         const flickThreshold = 40;
 
-        if (activePointerType === "touch" || activePointerType === "mouse") {
-            if (Math.abs(dragDistance) >= flickThreshold) {
-                const direction = dragDistance >0 ? -1 : 1;
+        if (activePointerType === "touch") {
+            if (dragDistance >= flickThreshold) {
+                const direction = dragDeltaX < 0 ? 1 : -1;
 
                 snapToIndex(
                     currentIndexRef.current + direction,
@@ -154,19 +156,14 @@ export function useCarouselInteraction({
                     currentIndexRef.current
                 )
             }
+        } else if (
+            Math.abs(velocityRef.current) >
+                0.0005 ||
+            dragDistance >= flickThreshold
+        ) {
+            isSnapSuppressed.current = false;
         } else {
-            if (
-                Math.abs(velocityRef.current) >
-                    0.0005 ||
-                dragDistance >= flickThreshold
-            ) {
-                // Let inertia carry the motion; the animation loop will snap
-                // to the nearest image once velocity decays.
-                isSnapSuppressed.current = false;
-            } else {
-                // Barely moved: snap straight back to the current image.
-                snapToIndex(currentIndexRef.current);
-            }
+            snapToIndex(currentIndexRef.current)
         }
       }
 
