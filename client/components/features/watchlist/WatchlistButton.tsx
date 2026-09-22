@@ -5,6 +5,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 
 export function WatchlistButton({ filmId }: { filmId: string }) {
   const { has, toggle } = useWatchlist();
+
   const saved = has(filmId);
 
   return (
@@ -15,7 +16,9 @@ export function WatchlistButton({ filmId }: { filmId: string }) {
       loadingLabel="Saving..."
       successLabel={saved ? "Removed" : "Saved"}
       errorLabel="Retry"
-      onAction={() => toggle(filmId)}
+      onAction={() => {
+        toggle(filmId);
+      }}
     />
   );
 }
