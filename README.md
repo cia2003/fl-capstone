@@ -93,29 +93,6 @@ NEXT_PUBLIC_API_BASE_URL=https://ghibliapi.dev
 GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
 ```
 
-### AI Recommendation Flow
-
-```
-User
- ↓
-Next.js Chat UI
- ↓
-AI API Route
- ↓
-Fetch Ghibli films
- ↓
-streamText + Google Gemini
- ↓
-AI Tools
- ├── askMoviePreferences
- ├── recommendMovies
- └── getFilmInformation
- ↓
-Stream response to User
-```
-
-Film data comes from the Studio Ghibli API and is provided to the AI before generating a response.
-
 ## Architecture Overview
 
 ```
@@ -143,6 +120,30 @@ client/
 ├── vitest.config.ts
 └── package.json
 ```
+
+### AI Recommendation Flow
+
+```
+User
+ ↓
+Next.js Chat UI
+ ↓
+AI API Route
+ ↓
+Fetch Ghibli films
+ ↓
+streamText + Google Gemini
+ ↓
+AI Tools
+ ├── askMoviePreferences
+ ├── recommendMovies
+ └── getFilmInformation
+ ↓
+Stream response to User
+```
+
+Film data comes from the Studio Ghibli API and is provided to the AI before generating a response.
+
 
 ## Key Decisions
 
