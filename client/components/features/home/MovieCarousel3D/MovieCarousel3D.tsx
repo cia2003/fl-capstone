@@ -51,12 +51,26 @@ export type MovieCarousel3DHandle = {
 };
 
 async function createWebGpuRenderer(props: R3FDefaultGLProps) {
+  const canvas = props.canvas as HTMLCanvasElement;
+  const container = canvas.parentElement;
+
+  const cssWidth = container?.clientWidth || canvas.clientWidth || 300;
+  const cssHeight = container?.clientHeight || canvas.clientHeight || 150;
+  const dpr =
+    typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 2) : 1;
+
   const renderer = new WebGPURenderer({
     ...props,
+    canvas,
     alpha: true,
   } as WebGPURendererParameters);
 
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(cssWidth, cssHeight, false);
+
   await renderer.init();
+
+  renderer.setSize(cssWidth, cssHeight, false);
 
   renderer.shadowMap.type = PCFShadowMap;
   renderer.setClearColor(0x000000, 0);
